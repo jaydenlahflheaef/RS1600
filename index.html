@@ -382,6 +382,8 @@
       .step-2 { border-radius: 4px !important; margin: 0 !important; }
       .step-3 { border-radius: 4px 4px 20px 20px !important; }
       .step-connector { display: none !important; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 24px !important; }
+      .stats-grid > div { border-left: none !important; padding-left: 0 !important; }
     }
 
     /* ── Scroll reveal ── */
@@ -964,7 +966,7 @@
 ════════════════════════════════════════ -->
 <section style="background:#162236; border-top:1px solid rgba(255,255,255,0.05); border-bottom:1px solid rgba(255,255,255,0.05);">
   <div class="section-max" style="padding-top:40px; padding-bottom:40px;">
-    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:32px; text-align:center;">
+    <div class="stats-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:32px; text-align:center;">
 
       <div>
         <p style="margin:0; font-family:'Syne',sans-serif; font-size:36px; font-weight:800; color:#fff; letter-spacing:-0.03em;">500+</p>
