@@ -330,9 +330,10 @@
       color: #94A3B8; transition: transform 0.3s, border-color 0.2s, color 0.2s;
     }
     .faq-btn[aria-expanded="true"] .faq-icon { transform: rotate(45deg); border-color: #2563EB; color: #2563EB; }
-    .faq-body { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.16,1,0.3,1); }
-    .faq-body.open { max-height: 200px; }
-    .faq-body p { padding-bottom: 20px; color: #475569; font-size: 15px; margin: 0; }
+    .faq-body { display: grid; grid-template-rows: 0fr; overflow: hidden; transition: grid-template-rows 0.45s cubic-bezier(0.16,1,0.3,1); }
+    .faq-body.open { grid-template-rows: 1fr; }
+    .faq-body > p { min-height: 0; padding-bottom: 20px; color: #475569; font-size: 15px; margin: 0; opacity: 0; transform: translateY(6px); transition: opacity 0.35s cubic-bezier(0.16,1,0.3,1) 0.05s, transform 0.35s cubic-bezier(0.16,1,0.3,1) 0.05s; }
+    .faq-body.open > p { opacity: 1; transform: translateY(0); }
 
     /* ── Testimonial card ── */
     .star { color: #F59E0B; font-size: 14px; }
