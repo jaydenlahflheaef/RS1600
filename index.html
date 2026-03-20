@@ -373,6 +373,13 @@
     @media (max-width: 900px) {
       .hero-grid { flex-direction: column !important; }
       .hero-right { display: none; }
+      .how-we-teach-grid { grid-template-columns: 1fr !important; }
+      .how-we-teach-cards { grid-template-columns: 1fr !important; }
+      .steps-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+      .step-1 { border-radius: 20px 20px 4px 4px !important; }
+      .step-2 { border-radius: 4px !important; margin: 0 !important; }
+      .step-3 { border-radius: 4px 4px 20px 20px !important; }
+      .step-connector { display: none !important; }
     }
 
     /* ── Scroll reveal ── */
@@ -1060,13 +1067,13 @@
     <div style="background:#0B1728; border-radius:24px; padding:48px; position:relative; overflow:hidden;">
       <div style="position:absolute; top:0; right:0; width:400px; height:400px; background:radial-gradient(circle, rgba(37,99,235,0.15) 0%, transparent 65%); pointer-events:none;"></div>
 
-      <div style="display:grid; grid-template-columns:1fr 2fr; gap:48px; align-items:center; position:relative; z-index:1;">
+      <div class="how-we-teach-grid" style="display:grid; grid-template-columns:1fr 2fr; gap:48px; align-items:center; position:relative; z-index:1;">
         <div>
           <div class="section-tag section-tag-dark">How We Teach</div>
           <h3 class="heading-lg" style="margin:0 0 12px; color:#fff; font-size:clamp(24px,3vw,36px);">Choose Your Format</h3>
           <p style="font-size:15px; color:rgba(255,255,255,0.5); margin:0;">Every student learns differently. We offer three formats to match your pace, schedule, and goals.</p>
         </div>
-        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
+        <div class="how-we-teach-cards" style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
 
           <div class="card-dark reveal reveal-delay-1" style="padding:24px;">
             <div class="icon-container icon-dark" style="margin-bottom:16px;">
@@ -1115,11 +1122,11 @@
       <p style="font-size:17px; color:#475569; max-width:480px; margin:0 auto;">Our process mirrors the structure of the test itself: diagnostic, strategic, and deliberately paced.</p>
     </div>
 
-    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:2px; position:relative;">
+    <div class="steps-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:2px; position:relative;">
 
       <!-- Step 1 -->
-      <div class="reveal reveal-delay-1" style="background:#fff; border-radius:20px 4px 4px 20px; padding:40px 32px; position:relative;">
-        <div style="position:absolute; top:32px; right:-12px; z-index:2; width:24px; height:24px; background:#2563EB; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+      <div class="step-1 reveal reveal-delay-1" style="background:#fff; border-radius:20px 4px 4px 20px; padding:40px 32px; position:relative;">
+        <div class="step-connector" style="position:absolute; top:32px; right:-12px; z-index:2; width:24px; height:24px; background:#2563EB; border-radius:50%; display:flex; align-items:center; justify-content:center;">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </div>
         <div style="display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:12px; background:#EFF6FF; font-family:'Syne',sans-serif; font-size:16px; font-weight:800; color:#2563EB; margin-bottom:20px;">01</div>
@@ -1142,8 +1149,8 @@
       </div>
 
       <!-- Step 2 -->
-      <div class="reveal reveal-delay-2" style="background:#fff; border-radius:4px; padding:40px 32px; position:relative; margin: 0 2px;">
-        <div style="position:absolute; top:32px; right:-12px; z-index:2; width:24px; height:24px; background:#2563EB; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+      <div class="step-2 reveal reveal-delay-2" style="background:#fff; border-radius:4px; padding:40px 32px; position:relative; margin: 0 2px;">
+        <div class="step-connector" style="position:absolute; top:32px; right:-12px; z-index:2; width:24px; height:24px; background:#2563EB; border-radius:50%; display:flex; align-items:center; justify-content:center;">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </div>
         <div style="display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:12px; background:#EFF6FF; font-family:'Syne',sans-serif; font-size:16px; font-weight:800; color:#2563EB; margin-bottom:20px;">02</div>
@@ -1166,7 +1173,7 @@
       </div>
 
       <!-- Step 3 -->
-      <div class="reveal reveal-delay-3" style="background:#0B1728; border-radius:4px 20px 20px 4px; padding:40px 32px; position:relative;">
+      <div class="step-3 reveal reveal-delay-3" style="background:#0B1728; border-radius:4px 20px 20px 4px; padding:40px 32px; position:relative;">
         <div style="display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:12px; background:rgba(37,99,235,0.2); font-family:'Syne',sans-serif; font-size:16px; font-weight:800; color:#3B82F6; margin-bottom:20px;">03</div>
         <h3 class="heading-md" style="margin:0 0 12px; color:#fff;">Expert Coaching</h3>
         <p style="font-size:15px; color:rgba(255,255,255,0.5); margin:0; line-height:1.7;">Work directly with top tutors who scored in the 99th percentile — mastering not just content, but the test-taking mindset.</p>
