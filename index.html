@@ -1936,7 +1936,10 @@
         <div class="consult-success" id="consult-success">
           <div style="font-size:32px; margin-bottom:10px;">🎉</div>
           <p style="font-family:'Syne',sans-serif; font-size:18px; font-weight:700; color:#059669; margin:0 0 6px;">Request received!</p>
-          <p style="font-family:'Outfit',sans-serif; font-size:14px; color:#065F46; margin:0;">We'll be in touch within 24 hours to schedule your free call.</p>
+          <p style="font-family:'Outfit',sans-serif; font-size:14px; color:#065F46; margin:0 0 20px;">We'll be in touch within 24 hours to schedule your free call.</p>
+          <button type="button" onclick="resetConsultForm()" style="font-family:'Outfit',sans-serif; font-size:14px; font-weight:600; color:#059669; background:transparent; border:1.5px solid rgba(16,185,129,0.4); border-radius:10px; padding:9px 20px; cursor:pointer; transition:background 0.15s, border-color 0.15s;">
+            Book another consultation
+          </button>
         </div>
       </form>
     </div>
@@ -2054,6 +2057,22 @@
   document.querySelectorAll('.consult-input, .consult-select, #cf-referral').forEach(el => {
     el.addEventListener('focus', () => el.style.borderColor = '');
   });
+
+  function resetConsultForm() {
+    const form = document.getElementById('consult-form');
+    form.reset();
+    form.style.display = '';
+    document.getElementById('consult-success').classList.remove('show');
+    document.getElementById('cf-exam').value = '';
+    document.querySelectorAll('.exam-btn').forEach(btn => btn.classList.remove('exam-btn-active'));
+    document.getElementById('cf-current').placeholder = 'Select an exam above first';
+    document.getElementById('cf-target').placeholder  = 'Select an exam above first';
+    document.getElementById('cf-current-label').textContent = 'Current Score';
+    document.getElementById('cf-target-label').textContent  = 'Target Score';
+    const submitBtn = document.getElementById('consult-btn');
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Send My Consultation Request';
+  }
 </script>
 <style>
   @keyframes spin { to { transform: rotate(360deg); } }
