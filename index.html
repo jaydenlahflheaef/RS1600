@@ -3533,9 +3533,11 @@
     document.getElementById('dash-date').textContent = d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
     document.getElementById('dash-user-email').textContent = user.email;
 
-    // Set name
-    const name = user.displayName || user.email.split('@')[0];
-    document.getElementById('dash-name').textContent = name;
+    // Set name from members collection by email
+    db.collection('members').where('email', '==', user.email).limit(1).get().then(snap => {
+      const name = (!snap.empty && snap.docs[0].data().name) ? snap.docs[0].data().name.split(' ')[0] : user.email.split('@')[0];
+      document.getElementById('dash-name').textContent = name;
+    });
 
     // Load notes
     db.collection('tutors').doc(user.uid).get().then(doc => {
