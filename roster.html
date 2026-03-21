@@ -378,15 +378,13 @@
       <table>
         <thead>
           <tr>
-            <th onclick="setSort('track')">Track <span class="sort-arrow">↕</span></th>
-            <th onclick="setSort('team')">Team <span class="sort-arrow">↕</span></th>
+            <th onclick="setSort('role')">Role <span class="sort-arrow">↕</span></th>
             <th onclick="setSort('name')">Name <span class="sort-arrow">↕</span></th>
             <th onclick="setSort('email')">Email <span class="sort-arrow">↕</span></th>
             <th onclick="setSort('school')">School <span class="sort-arrow">↕</span></th>
             <th onclick="setSort('grade')">Grade <span class="sort-arrow">↕</span></th>
             <th onclick="setSort('dateAccepted')">Date Accepted <span class="sort-arrow">↕</span></th>
             <th onclick="setSort('createdAt')">Account Created <span class="sort-arrow">↕</span></th>
-            <th>Actions</th>
           </tr>
         </thead>
         <tbody id="table-body"></tbody>
@@ -424,12 +422,8 @@
         <input type="text" class="form-input" id="f-grade" placeholder="Junior" />
       </div>
       <div class="form-group">
-        <label>Track</label>
-        <input type="text" class="form-input" id="f-track" placeholder="SAT" />
-      </div>
-      <div class="form-group">
-        <label>Team</label>
-        <input type="text" class="form-input" id="f-team" placeholder="Team A" />
+        <label>Role</label>
+        <input type="text" class="form-input" id="f-role" placeholder="Tutor" />
       </div>
       <div class="form-group">
         <label>Date Accepted</label>
@@ -469,7 +463,7 @@
   let sortAsc = true;
   let editingId = null;
 
-  const sortFields = ['name', 'school', 'grade', 'track', 'dateAccepted'];
+  const sortFields = ['name', 'school', 'grade', 'role', 'dateAccepted'];
   let sortFieldIndex = 0;
 
   // ── Auth gate ──
@@ -506,8 +500,7 @@
       email: document.getElementById('f-email').value.trim(),
       school: document.getElementById('f-school').value.trim(),
       grade: document.getElementById('f-grade').value.trim(),
-      track: document.getElementById('f-track').value.trim(),
-      team: document.getElementById('f-team').value.trim(),
+      role: document.getElementById('f-role').value.trim(),
       dateAccepted: document.getElementById('f-dateAccepted').value || null,
     };
 
@@ -554,7 +547,7 @@
       (m.name||'').toLowerCase().includes(q) ||
       (m.email||'').toLowerCase().includes(q) ||
       (m.school||'').toLowerCase().includes(q) ||
-      (m.track||'').toLowerCase().includes(q) ||
+      (m.role||'').toLowerCase().includes(q) ||
       (m.grade||'').toLowerCase().includes(q)
     );
 
@@ -574,7 +567,7 @@
 
     const tbody = document.getElementById('table-body');
     if (list.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="9"><div class="empty-state">
+      tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><br>
         No members found
       </div></td></tr>`;
@@ -583,19 +576,13 @@
 
     tbody.innerHTML = list.map(m => `
       <tr>
-        <td class="td-track">${m.track || '<span class="td-dash">—</span>'}</td>
-        <td>${fmt(m.team)}</td>
+        <td>${fmt(m.role)}</td>
         <td><div class="td-name"><div class="avatar">${getInitials(m.name)}</div>${m.name || '—'}</div></td>
         <td class="td-email">${fmt(m.email)}</td>
         <td>${fmt(m.school)}</td>
         <td>${fmt(m.grade)}</td>
         <td class="td-date">${fmtDate(m.dateAccepted)}</td>
         <td class="td-date">${fmtDate(m.createdAt)}</td>
-        <td><div class="td-actions">
-          <button class="action-btn" onclick="emailMember('${(m.email||'').replace(/'/g,"\\'")}')">Email</button>
-          <button class="action-btn" onclick="openEditModal('${m.id}')">Edit</button>
-          <button class="action-btn delete" onclick="deleteMember('${m.id}','${(m.name||'').replace(/'/g,"\\'")}')">Delete</button>
-        </div></td>
       </tr>
     `).join('');
 
@@ -621,7 +608,7 @@
     editingId = null;
     document.getElementById('modal-title').textContent = 'Add Member';
     document.getElementById('modal-save-btn').textContent = 'Add Member';
-    ['firstName','lastName','email','school','grade','track','team','dateAccepted'].forEach(id => {
+    ['firstName','lastName','email','school','grade','role','dateAccepted'].forEach(id => {
       document.getElementById('f-' + id).value = '';
     });
     document.getElementById('member-modal').classList.add('active');
@@ -640,8 +627,7 @@
     document.getElementById('f-email').value = m.email || '';
     document.getElementById('f-school').value = m.school || '';
     document.getElementById('f-grade').value = m.grade || '';
-    document.getElementById('f-track').value = m.track || '';
-    document.getElementById('f-team').value = m.team || '';
+    document.getElementById('f-role').value = m.role || '';
     document.getElementById('f-dateAccepted').value = m.dateAccepted || '';
     document.getElementById('member-modal').classList.add('active');
   }
@@ -679,7 +665,7 @@
     rows.forEach(row => {
       const vals = row.split(',').map(v => v.trim().replace(/^"|"$/g, ''));
       const obj = { createdAt: firebase.firestore.FieldValue.serverTimestamp() };
-      const map = { name:'name', email:'email', school:'school', grade:'grade', track:'track', team:'team', dateaccepted:'dateAccepted' };
+      const map = { name:'name', email:'email', school:'school', grade:'grade', role:'role', dateaccepted:'dateAccepted' };
       headers.forEach((h, i) => { if (map[h]) obj[map[h]] = vals[i] || ''; });
       if (!obj.name) return;
       batch.set(db.collection('members').doc(), obj);
