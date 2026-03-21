@@ -85,32 +85,30 @@ const server = http.createServer((req, res) => {
     req.on('end', async () => {
       try {
         const { messages } = JSON.parse(body);
-        const apiKey = process.env.GEMINI_API_KEY;
+        const apiKey = process.env.ANTHROPIC_API_KEY;
         if (!apiKey) {
           res.writeHead(500, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ error: 'GEMINI_API_KEY not set on server.' }));
+          res.end(JSON.stringify({ error: 'ANTHROPIC_API_KEY not set on server.' }));
           return;
         }
-        const geminiMessages = [
-          { role: 'user',  parts: [{ text: SYSTEM_PROMPT }] },
-          { role: 'model', parts: [{ text: 'Understood! I\'m ready to help as the ReadySet1600 assistant.' }] },
-          ...messages
-            .filter((m, i) => !(i === 0 && m.role === 'assistant'))
-            .map(m => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.content }] })),
-        ];
-        const response = await fetch(
-          `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contents: geminiMessages }),
-          }
-        );
+        const response = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': apiKey,
+            'anthropic-version': '2023-06-01',
+          },
+          body: JSON.stringify({
+            model: 'claude-haiku-4-5-20251001',
+            max_tokens: 1024,
+            system: SYSTEM_PROMPT,
+            messages,
+          }),
+        });
         const data = await response.json();
-        if (!response.ok) throw new Error(data.error?.message || 'Gemini API error');
-        const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!response.ok) throw new Error(data.error?.message || 'API error');
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ content: text }));
+        res.end(JSON.stringify({ content: data.content[0].text }));
       } catch (e) {
         res.writeHead(500, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ error: e.message }));
