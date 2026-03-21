@@ -62,18 +62,19 @@ export default async function handler(req, res) {
 
   try {
     const { messages } = req.body;
-    const geminiMessages = messages
-      .filter((m, i) => !(i === 0 && m.role === 'assistant'))
-      .map(m => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.content }] }));
+    const geminiMessages = [
+      { role: 'user',  parts: [{ text: SYSTEM_PROMPT }] },
+      { role: 'model', parts: [{ text: 'Understood! I\'m ready to help as the ReadySet1600 assistant.' }] },
+      ...messages
+        .filter((m, i) => !(i === 0 && m.role === 'assistant'))
+        .map(m => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.content }] })),
+    ];
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
-          contents: geminiMessages,
-        }),
+        body: JSON.stringify({ contents: geminiMessages }),
       }
     );
     const data = await response.json();
