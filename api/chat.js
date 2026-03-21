@@ -57,28 +57,29 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) return res.status(500).json({ error: 'ANTHROPIC_API_KEY is not configured.' });
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) return res.status(500).json({ error: 'GEMINI_API_KEY is not configured.' });
 
   try {
     const { messages } = req.body;
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 1024,
-        system: SYSTEM_PROMPT,
-        messages,
-      }),
-    });
+    const geminiMessages = messages
+      .filter((m, i) => !(i === 0 && m.role === 'assistant'))
+      .map(m => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.content }] }));
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+          contents: geminiMessages,
+        }),
+      }
+    );
     const data = await response.json();
-    if (!response.ok) throw new Error(data.error?.message || 'Anthropic API error');
-    return res.status(200).json({ content: data.content[0].text });
+    if (!response.ok) throw new Error(data.error?.message || 'Gemini API error');
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    return res.status(200).json({ content: text });
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
