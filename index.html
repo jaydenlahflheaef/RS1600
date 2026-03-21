@@ -113,6 +113,7 @@
       justify-content: space-between;
       gap: 24px;
     }
+    .nav-logo { flex-shrink: 0; }
     .nav-logo img { height: 56px; width: auto; display: block; }
     .nav-links {
       display: flex;
@@ -379,14 +380,68 @@
     @media (max-width: 768px) {
       .nav-links, .nav-cta { display: none; }
       .nav-mobile-btn { display: flex; }
+      .nav-inner { padding: 0 16px; gap: 10px; }
+      .nav-logo img { height: 44px; }
     }
     @media (min-width: 769px) {
       .nav-mobile-btn { display: none; }
+      #mobile-menu { display: none !important; }
     }
     .nav-mobile-btn {
       background: none; border: none; cursor: pointer;
-      color: rgba(255,255,255,0.8); padding: 8px;
+      color: rgba(255,255,255,0.8); padding: 8px; flex-shrink: 0;
     }
+
+    /* ── Mobile menu drawer ── */
+    #mobile-menu {
+      display: none;
+      position: fixed;
+      top: 76px;
+      left: 0; right: 0;
+      background: rgba(11,23,40,0.98);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      z-index: 99;
+      padding: 16px 20px 24px;
+      flex-direction: column;
+      gap: 4px;
+      animation: mobileMenuIn 0.2s cubic-bezier(0.16,1,0.3,1);
+    }
+    #mobile-menu.open { display: flex; }
+    @keyframes mobileMenuIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    #mobile-menu a.mob-link {
+      font-family: 'Outfit', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      padding: 12px 16px;
+      border-radius: 12px;
+      transition: background 0.15s, color 0.15s;
+      display: block;
+    }
+    #mobile-menu a.mob-link:hover { background: rgba(255,255,255,0.07); color: #fff; }
+    #mobile-menu .mob-cta {
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      background: #2563EB;
+      padding: 14px 24px;
+      border-radius: 12px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    #mobile-menu .mob-cta:hover { background: #1D4ED8; }
 
     /* ── Misc utilities ── */
     .section-max { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
@@ -506,13 +561,28 @@
         <svg id="dark-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       </button>
     </div>
-    <button class="nav-mobile-btn" aria-label="Open menu">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <button class="nav-mobile-btn" id="nav-mobile-btn" aria-label="Open menu" onclick="toggleMobileMenu()">
+      <svg id="mob-icon-open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+      <svg id="mob-icon-close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none;">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
       </svg>
     </button>
   </div>
 </nav>
+
+<div id="mobile-menu" role="dialog" aria-label="Navigation menu">
+  <a href="#services"    class="mob-link" data-i18n="nav.services"   onclick="closeMobileMenu()">Services</a>
+  <a href="#how-it-works" class="mob-link" data-i18n="nav.howItWorks" onclick="closeMobileMenu()">How It Works</a>
+  <a href="#results"     class="mob-link" data-i18n="nav.results"    onclick="closeMobileMenu()">Results</a>
+  <a href="#pricing"     class="mob-link" data-i18n="nav.pricing"    onclick="closeMobileMenu()">Pricing</a>
+  <a href="#faq"         class="mob-link" data-i18n="nav.faq"        onclick="closeMobileMenu()">FAQ</a>
+  <a href="#about"       class="mob-link" data-i18n="nav.about"      onclick="closeMobileMenu()">About</a>
+  <a href="#contact" class="mob-cta" onclick="closeMobileMenu()">
+    <span data-i18n="nav.cta">Book Free Consult</span>
+  </a>
+</div>
 
 
 <!-- ════════════════════════════════════════
@@ -2756,6 +2826,22 @@
         ? '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>'
         : '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
     }
+  }
+
+  // ── Mobile menu ──
+  function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const open = document.getElementById('mob-icon-open');
+    const close = document.getElementById('mob-icon-close');
+    const isOpen = menu.classList.toggle('open');
+    open.style.display  = isOpen ? 'none'  : '';
+    close.style.display = isOpen ? ''      : 'none';
+  }
+  function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    menu.classList.remove('open');
+    document.getElementById('mob-icon-open').style.display  = '';
+    document.getElementById('mob-icon-close').style.display = 'none';
   }
 
   // Init on load
