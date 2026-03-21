@@ -1771,7 +1771,7 @@
 
           <div class="consult-field">
             <label class="consult-label" for="cf-name"><span data-i18n="contact.name">Student / Parent Name</span> <span style="color:#EF4444;">*</span></label>
-            <input class="consult-input" id="cf-name" name="name" type="text" placeholder="Full name" required />
+            <input class="consult-input" id="cf-name" name="name" type="text" placeholder="Full name" data-i18n-placeholder="ph.name" required />
           </div>
 
           <div class="consult-field">
@@ -1787,7 +1787,7 @@
           <div class="consult-field">
             <label class="consult-label" for="cf-grade"><span data-i18n="contact.grade">Student Grade</span> <span style="color:#EF4444;">*</span></label>
             <select class="consult-select" id="cf-grade" name="grade" required>
-              <option value="" disabled selected>Select grade</option>
+              <option value="" disabled selected data-i18n="ph.grade">Select grade</option>
               <option value="8">8th Grade</option>
               <option value="9">9th Grade</option>
               <option value="10">10th Grade</option>
@@ -1798,19 +1798,19 @@
 
           <div class="consult-field">
             <label class="consult-label" for="cf-current" data-i18n="contact.current">Current SAT Score</label>
-            <input class="consult-input" id="cf-current" name="currentScore" type="text" placeholder="e.g. 1150 (or No score yet)" />
+            <input class="consult-input" id="cf-current" name="currentScore" type="text" placeholder="e.g. 1150 (or No score yet)" data-i18n-placeholder="ph.current" />
           </div>
 
           <div class="consult-field">
             <label class="consult-label" for="cf-target" data-i18n="contact.targetScore">Target SAT Score</label>
-            <input class="consult-input" id="cf-target" name="targetScore" type="text" placeholder="e.g. 1400" />
+            <input class="consult-input" id="cf-target" name="targetScore" type="text" placeholder="e.g. 1400" data-i18n-placeholder="ph.target" />
           </div>
 
         </div>
 
         <div class="consult-field" style="margin-bottom:24px;">
           <label class="consult-label" for="cf-notes" data-i18n="contact.notes">Anything else we should know?</label>
-          <textarea class="consult-textarea" id="cf-notes" name="notes" placeholder="Test date, specific goals, scheduling preferences, etc."></textarea>
+          <textarea class="consult-textarea" id="cf-notes" name="notes" placeholder="Test date, specific goals, scheduling preferences, etc." data-i18n-placeholder="ph.notes"></textarea>
         </div>
 
         <button type="submit" class="consult-submit" id="consult-btn">
@@ -2138,6 +2138,11 @@
       'footer.location':'New York City, NY',
       'footer.copyright':'© 2026 ReadySet1600. All rights reserved.',
       'footer.tagline2':'SAT · SHSAT · ACT · AMC',
+      'ph.name':'Full name',
+      'ph.grade':'Select grade',
+      'ph.current':'e.g. 1150 (or No score yet)',
+      'ph.target':'e.g. 1400',
+      'ph.notes':'Test date, specific goals, scheduling preferences, etc.',
     },
     zh: {
       'nav.services':'服务','nav.howItWorks':'课程流程','nav.results':'成绩案例',
@@ -2172,6 +2177,11 @@
       'footer.location':'纽约市，纽约州',
       'footer.copyright':'© 2026 ReadySet1600. 保留所有权利。',
       'footer.tagline2':'SAT · SHSAT · ACT · AMC',
+      'ph.name':'全名',
+      'ph.grade':'选择年级',
+      'ph.current':'例如 1150（或尚未考试）',
+      'ph.target':'例如 1400',
+      'ph.notes':'考试日期、具体目标、日程安排偏好等。',
       'stats.students':'辅导学生','stats.gain':'SAT平均提分',
       'stats.rating':'家长评分','stats.target':'达到目标分数',
       'services.tag':'我们的服务','services.heading':'专业备考，全面覆盖',
@@ -2281,6 +2291,11 @@
       'footer.location':'뉴욕시, 뉴욕',
       'footer.copyright':'© 2026 ReadySet1600. 모든 권리 보유.',
       'footer.tagline2':'SAT · SHSAT · ACT · AMC',
+      'ph.name':'성함',
+      'ph.grade':'학년 선택',
+      'ph.current':'예: 1150 (아직 없으면 비워두세요)',
+      'ph.target':'예: 1400',
+      'ph.notes':'시험 날짜, 구체적인 목표, 일정 선호도 등.',
       'stats.students':'지도 학생 수','stats.gain':'평균 SAT 점수 상승',
       'stats.rating':'학부모 평점','stats.target':'목표 점수 달성',
       'services.tag':'서비스','services.heading':'모든 시험을 위한 전문 준비',
@@ -2371,6 +2386,10 @@
     document.querySelectorAll('[data-i18n-html]').forEach(el => {
       const key = el.dataset.i18nHtml;
       if (T[lang] && T[lang][key]) el.innerHTML = T[lang][key];
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const key = el.dataset.i18nPlaceholder;
+      if (T[lang] && T[lang][key]) el.placeholder = T[lang][key];
     });
     document.querySelectorAll('.lang-btn').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.lang === lang);
