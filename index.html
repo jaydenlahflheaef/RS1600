@@ -1868,6 +1868,59 @@
       </form>
     </div>
 
+    <!-- Pricing + Referral info cards -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; max-width:680px; margin:28px auto 0;">
+
+      <!-- Pricing -->
+      <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:18px; padding:24px 26px;">
+        <p style="font-family:'Syne',sans-serif; font-size:13px; font-weight:700; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.1em; margin:0 0 16px;">Pricing</p>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:baseline;">
+            <span style="font-family:'Outfit',sans-serif; font-size:14px; color:rgba(255,255,255,0.6);">Small group (90 min)</span>
+            <span style="font-family:'Syne',sans-serif; font-size:16px; font-weight:800; color:#fff;">$25<span style="font-size:12px; font-weight:500; color:rgba(255,255,255,0.4);">/student</span></span>
+          </div>
+          <div style="border-top:1px solid rgba(255,255,255,0.07);"></div>
+          <div style="display:flex; justify-content:space-between; align-items:baseline;">
+            <span style="font-family:'Outfit',sans-serif; font-size:14px; color:rgba(255,255,255,0.6);">1-on-1 (60 min)</span>
+            <span style="font-family:'Syne',sans-serif; font-size:16px; font-weight:800; color:#fff;">$35<span style="font-size:12px; font-weight:500; color:rgba(255,255,255,0.4);">/hr</span></span>
+          </div>
+          <div style="border-top:1px solid rgba(255,255,255,0.07);"></div>
+          <div style="display:flex; justify-content:space-between; align-items:baseline;">
+            <span style="font-family:'Outfit',sans-serif; font-size:14px; color:rgba(255,255,255,0.6);">16-session package</span>
+            <span style="font-family:'Syne',sans-serif; font-size:16px; font-weight:800; color:#10B981;">$500</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Referral -->
+      <div style="background:rgba(37,99,235,0.08); border:1px solid rgba(37,99,235,0.25); border-radius:18px; padding:24px 26px;">
+        <p style="font-family:'Syne',sans-serif; font-size:13px; font-weight:700; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.1em; margin:0 0 16px;">Refer a Friend</p>
+        <p style="font-family:'Outfit',sans-serif; font-size:12px; font-weight:600; color:rgba(255,255,255,0.35); text-transform:uppercase; letter-spacing:0.08em; margin:0 0 8px;">Book a session</p>
+        <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:16px;">
+          <div style="display:flex; align-items:center; gap:8px; font-family:'Outfit',sans-serif; font-size:13.5px; color:rgba(255,255,255,0.7);">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            They get 1 free session
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; font-family:'Outfit',sans-serif; font-size:13.5px; color:rgba(255,255,255,0.7);">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            You get 1 free session
+          </div>
+        </div>
+        <p style="font-family:'Outfit',sans-serif; font-size:12px; font-weight:600; color:rgba(255,255,255,0.35); text-transform:uppercase; letter-spacing:0.08em; margin:0 0 8px;">Buy a package</p>
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <div style="display:flex; align-items:center; gap:8px; font-family:'Outfit',sans-serif; font-size:13.5px; color:rgba(255,255,255,0.7);">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            They get $25 off
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; font-family:'Outfit',sans-serif; font-size:13.5px; color:rgba(255,255,255,0.7);">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            You get $50 credit
+          </div>
+        </div>
+      </div>
+
+    </div>
+
     <!-- Trust signals -->
     <div style="display:flex; flex-wrap:wrap; gap:24px; justify-content:center; align-items:center; margin-top:36px;">
       <div style="display:flex; align-items:center; gap:8px; font-size:13px; color:rgba(255,255,255,0.4);">
@@ -1956,6 +2009,7 @@
   @keyframes spin { to { transform: rotate(360deg); } }
   @media (max-width: 600px) {
     #consult-form > div:first-of-type { grid-template-columns: 1fr !important; }
+    #contact .info-cards { grid-template-columns: 1fr !important; }
   }
 </style>
 
