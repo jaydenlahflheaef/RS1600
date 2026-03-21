@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Team Directory — ReadySet1600</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: #0B1728; color: #fff; font-family: 'Outfit', sans-serif; min-height: 100vh; }
+
+    /* ── Top bar ── */
+    .topbar {
+      background: #162236;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 16px; }
+    .back-btn {
+      display: flex; align-items: center; gap: 6px;
+      color: rgba(255,255,255,0.4);
+      text-decoration: none;
+      font-size: 13px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      transition: color 0.2s, background 0.2s;
+    }
+    .back-btn:hover { color: #fff; background: rgba(255,255,255,0.08); }
+    .topbar h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+      margin: 0;
+      letter-spacing: -0.03em;
+    }
+    .member-count {
+      font-size: 12px;
+      color: rgba(255,255,255,0.35);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 3px 10px;
+    }
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+    .btn-secondary {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: rgba(255,255,255,0.7);
+      font-size: 13px;
+      font-family: 'Outfit', sans-serif;
+      padding: 8px 14px;
+      cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      transition: color 0.2s, background 0.2s;
+    }
+    .btn-secondary:hover { color: #fff; background: rgba(255,255,255,0.1); }
+    .btn-primary {
+      background: linear-gradient(135deg, #0F766E, #14B8A6);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'Outfit', sans-serif;
+      padding: 8px 16px;
+      cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-primary:active { transform: scale(0.98); }
+
+    /* ── Body ── */
+    .page-body { padding: 32px; max-width: 1400px; margin: 0 auto; }
+
+    /* ── Search + Sort bar ── */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .search-wrap {
+      flex: 1;
+      position: relative;
+    }
+    .search-wrap svg {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255,255,255,0.3);
+      pointer-events: none;
+    }
+    #search-input {
+      width: 100%;
+      background: #162236;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 11px 16px 11px 42px;
+      font-size: 14px;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    #search-input:focus { border-color: rgba(20,184,166,0.5); }
+    #search-input::placeholder { color: rgba(255,255,255,0.2); }
+    .sort-btn {
+      background: #162236;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      color: rgba(255,255,255,0.6);
+      font-size: 13px;
+      font-family: 'Outfit', sans-serif;
+      padding: 11px 16px;
+      cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      white-space: nowrap;
+      transition: color 0.2s, background 0.2s;
+    }
+    .sort-btn:hover { color: #fff; background: rgba(255,255,255,0.06); }
+
+    /* ── Table ── */
+    .table-wrap {
+      background: #162236;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    thead tr {
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    thead th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.2s;
+    }
+    thead th:hover { color: rgba(255,255,255,0.7); }
+    thead th .sort-arrow { margin-left: 4px; opacity: 0.4; }
+    thead th.sorted .sort-arrow { opacity: 1; color: #14B8A6; }
+    tbody tr {
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      transition: background 0.15s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(255,255,255,0.03); }
+    td {
+      padding: 12px 16px;
+      color: rgba(255,255,255,0.75);
+      vertical-align: middle;
+    }
+    .td-track {
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .td-name {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      white-space: nowrap;
+    }
+    .avatar {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0F766E, #14B8A6);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+      letter-spacing: 0.02em;
+    }
+    .td-email { color: rgba(255,255,255,0.45); font-size: 12px; }
+    .td-date { color: rgba(255,255,255,0.35); font-size: 12px; white-space: nowrap; }
+    .td-dash { color: rgba(255,255,255,0.2); }
+    .td-actions { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+    .action-btn {
+      font-size: 12px;
+      font-family: 'Outfit', sans-serif;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.6);
+      transition: color 0.2s, background 0.2s;
+    }
+    .action-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+    .action-btn.delete { border-color: rgba(248,113,113,0.2); color: rgba(248,113,113,0.6); background: rgba(248,113,113,0.05); }
+    .action-btn.delete:hover { color: #F87171; background: rgba(248,113,113,0.1); }
+    .empty-state {
+      text-align: center;
+      padding: 64px 32px;
+      color: rgba(255,255,255,0.25);
+      font-size: 14px;
+    }
+    .empty-state svg { margin-bottom: 12px; opacity: 0.3; }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(11,23,40,0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-card {
+      background: #162236;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 36px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+      position: relative;
+    }
+    .modal-card h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      color: #fff;
+      margin: 0 0 20px;
+      letter-spacing: -0.03em;
+    }
+    .modal-close {
+      position: absolute;
+      top: 16px; right: 16px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: rgba(255,255,255,0.5);
+      cursor: pointer;
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      transition: color 0.2s, background 0.2s;
+    }
+    .modal-close:hover { color: #fff; background: rgba(255,255,255,0.1); }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-group label { font-size: 12px; color: rgba(255,255,255,0.4); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+    .form-input {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 14px;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+    .form-input:focus { border-color: rgba(20,184,166,0.5); }
+    .form-input::placeholder { color: rgba(255,255,255,0.2); }
+    .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: rgba(11,23,40,0.6);
+      backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
+    }
+    .loading-overlay.active { display: flex; }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid rgba(255,255,255,0.1);
+      border-top-color: #14B8A6;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Auth gate ── */
+    #auth-gate {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      flex-direction: column;
+      gap: 12px;
+      color: rgba(255,255,255,0.4);
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .topbar { padding: 0 16px; }
+      .page-body { padding: 16px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .topbar-right .btn-secondary span { display: none; }
+      table { font-size: 12px; }
+      td, th { padding: 10px 10px; }
+      .td-date, .td-track { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="auth-gate">
+  <div class="spinner"></div>
+  Checking authentication…
+</div>
+
+<div id="app" style="display:none;">
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <a href="index.html" class="back-btn" onclick="goBack(event)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Dashboard
+      </a>
+      <h1>Team Directory</h1>
+      <span class="member-count" id="member-count">0 members</span>
+    </div>
+    <div class="topbar-right">
+      <button class="btn-secondary" onclick="triggerImportCSV()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <span>Import CSV</span>
+      </button>
+      <input type="file" id="csv-input" accept=".csv" style="display:none" onchange="importCSV(event)" />
+      <button class="btn-primary" onclick="openAddModal()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Member
+      </button>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="page-body">
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="search-input" placeholder="Search by name, email, school…" oninput="renderTable()" />
+      </div>
+      <button class="sort-btn" onclick="cycleSortField()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="9" y1="18" x2="15" y2="18"/></svg>
+        Sort: <span id="sort-label">Name</span>
+      </button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th onclick="setSort('track')">Track <span class="sort-arrow">↕</span></th>
+            <th onclick="setSort('team')">Team <span class="sort-arrow">↕</span></th>
+            <th onclick="setSort('name')">Name <span class="sort-arrow">↕</span></th>
+            <th onclick="setSort('email')">Email <span class="sort-arrow">↕</span></th>
+            <th onclick="setSort('school')">School <span class="sort-arrow">↕</span></th>
+            <th onclick="setSort('grade')">Grade <span class="sort-arrow">↕</span></th>
+            <th onclick="setSort('dateAccepted')">Date Accepted <span class="sort-arrow">↕</span></th>
+            <th onclick="setSort('createdAt')">Account Created <span class="sort-arrow">↕</span></th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal-overlay" id="member-modal">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeModal()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <h2 id="modal-title">Add Member</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>First Name</label>
+        <input type="text" class="form-input" id="f-firstName" placeholder="Jane" />
+      </div>
+      <div class="form-group">
+        <label>Last Name</label>
+        <input type="text" class="form-input" id="f-lastName" placeholder="Smith" />
+      </div>
+      <div class="form-group full">
+        <label>Email</label>
+        <input type="email" class="form-input" id="f-email" placeholder="jane@example.com" />
+      </div>
+      <div class="form-group full">
+        <label>School</label>
+        <input type="text" class="form-input" id="f-school" placeholder="Stuyvesant High School" />
+      </div>
+      <div class="form-group">
+        <label>Grade</label>
+        <input type="text" class="form-input" id="f-grade" placeholder="Junior" />
+      </div>
+      <div class="form-group">
+        <label>Track</label>
+        <input type="text" class="form-input" id="f-track" placeholder="SAT" />
+      </div>
+      <div class="form-group">
+        <label>Team</label>
+        <input type="text" class="form-input" id="f-team" placeholder="Team A" />
+      </div>
+      <div class="form-group">
+        <label>Date Accepted</label>
+        <input type="date" class="form-input" id="f-dateAccepted" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" id="modal-save-btn" onclick="saveMember()">Add Member</button>
+    </div>
+  </div>
+</div>
+
+<!-- Loading -->
+<div class="loading-overlay" id="loading-overlay">
+  <div class="spinner"></div>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+  firebase.initializeApp({
+    apiKey: "AIzaSyDy-g_ihlNGF19FVZ_-ChX-LfMIAZFKvYM",
+    authDomain: "rs1600-faccd.firebaseapp.com",
+    projectId: "rs1600-faccd",
+    storageBucket: "rs1600-faccd.firebasestorage.app",
+    messagingSenderId: "669933046930",
+    appId: "1:669933046930:web:3179bd9fd14e3e2694ea4b"
+  });
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  let members = [];
+  let sortField = 'name';
+  let sortAsc = true;
+  let editingId = null;
+
+  const sortFields = ['name', 'school', 'grade', 'track', 'dateAccepted'];
+  let sortFieldIndex = 0;
+
+  // ── Auth gate ──
+  auth.onAuthStateChanged(user => {
+    if (!user) {
+      window.location.href = 'index.html';
+      return;
+    }
+    document.getElementById('auth-gate').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    loadMembers();
+  });
+
+  function goBack(e) {
+    e.preventDefault();
+    window.location.href = 'index.html';
+  }
+
+  // ── Firestore ──
+  function loadMembers() {
+    db.collection('members').orderBy('createdAt', 'desc').onSnapshot(snap => {
+      members = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderTable();
+    });
+  }
+
+  async function saveMember() {
+    const firstName = document.getElementById('f-firstName').value.trim();
+    const lastName = document.getElementById('f-lastName').value.trim();
+    if (!firstName || !lastName) { alert('Name is required.'); return; }
+
+    const data = {
+      name: `${firstName} ${lastName}`,
+      email: document.getElementById('f-email').value.trim(),
+      school: document.getElementById('f-school').value.trim(),
+      grade: document.getElementById('f-grade').value.trim(),
+      track: document.getElementById('f-track').value.trim(),
+      team: document.getElementById('f-team').value.trim(),
+      dateAccepted: document.getElementById('f-dateAccepted').value || null,
+    };
+
+    showLoading();
+    try {
+      if (editingId) {
+        await db.collection('members').doc(editingId).update(data);
+      } else {
+        data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+        await db.collection('members').add(data);
+      }
+      closeModal();
+    } catch (e) {
+      alert('Error saving: ' + e.message);
+    }
+    hideLoading();
+  }
+
+  async function deleteMember(id, name) {
+    if (!confirm(`Delete ${name}? This cannot be undone.`)) return;
+    showLoading();
+    await db.collection('members').doc(id).delete();
+    hideLoading();
+  }
+
+  // ── Table rendering ──
+  function getInitials(name) {
+    return (name || '').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+  }
+
+  function fmt(val) {
+    return val || '<span class="td-dash">—</span>';
+  }
+
+  function fmtDate(val) {
+    if (!val) return '<span class="td-dash">—</span>';
+    if (val.toDate) return val.toDate().toLocaleDateString('en-US', { year:'numeric', month:'2-digit', day:'2-digit' });
+    return val;
+  }
+
+  function renderTable() {
+    const q = document.getElementById('search-input').value.toLowerCase();
+    let list = members.filter(m =>
+      (m.name||'').toLowerCase().includes(q) ||
+      (m.email||'').toLowerCase().includes(q) ||
+      (m.school||'').toLowerCase().includes(q) ||
+      (m.track||'').toLowerCase().includes(q) ||
+      (m.grade||'').toLowerCase().includes(q)
+    );
+
+    list.sort((a, b) => {
+      let av = (a[sortField] || '').toString().toLowerCase();
+      let bv = (b[sortField] || '').toString().toLowerCase();
+      if (sortField === 'createdAt') {
+        av = a.createdAt ? (a.createdAt.toDate ? a.createdAt.toDate().getTime() : 0) : 0;
+        bv = b.createdAt ? (b.createdAt.toDate ? b.createdAt.toDate().getTime() : 0) : 0;
+      }
+      if (av < bv) return sortAsc ? -1 : 1;
+      if (av > bv) return sortAsc ? 1 : -1;
+      return 0;
+    });
+
+    document.getElementById('member-count').textContent = `${members.length} member${members.length !== 1 ? 's' : ''}`;
+
+    const tbody = document.getElementById('table-body');
+    if (list.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="9"><div class="empty-state">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><br>
+        No members found
+      </div></td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = list.map(m => `
+      <tr>
+        <td class="td-track">${m.track || '<span class="td-dash">—</span>'}</td>
+        <td>${fmt(m.team)}</td>
+        <td><div class="td-name"><div class="avatar">${getInitials(m.name)}</div>${m.name || '—'}</div></td>
+        <td class="td-email">${fmt(m.email)}</td>
+        <td>${fmt(m.school)}</td>
+        <td>${fmt(m.grade)}</td>
+        <td class="td-date">${fmtDate(m.dateAccepted)}</td>
+        <td class="td-date">${fmtDate(m.createdAt)}</td>
+        <td><div class="td-actions">
+          <button class="action-btn" onclick="emailMember('${(m.email||'').replace(/'/g,"\\'")}')">Email</button>
+          <button class="action-btn" onclick="openEditModal('${m.id}')">Edit</button>
+          <button class="action-btn delete" onclick="deleteMember('${m.id}','${(m.name||'').replace(/'/g,"\\'")}')">Delete</button>
+        </div></td>
+      </tr>
+    `).join('');
+
+    // Update sort arrows
+    document.querySelectorAll('thead th').forEach(th => th.classList.remove('sorted'));
+  }
+
+  // ── Sorting ──
+  function setSort(field) {
+    if (sortField === field) { sortAsc = !sortAsc; }
+    else { sortField = field; sortAsc = true; }
+    document.getElementById('sort-label').textContent = field.charAt(0).toUpperCase() + field.slice(1);
+    renderTable();
+  }
+
+  function cycleSortField() {
+    sortFieldIndex = (sortFieldIndex + 1) % sortFields.length;
+    setSort(sortFields[sortFieldIndex]);
+  }
+
+  // ── Modal ──
+  function openAddModal() {
+    editingId = null;
+    document.getElementById('modal-title').textContent = 'Add Member';
+    document.getElementById('modal-save-btn').textContent = 'Add Member';
+    ['firstName','lastName','email','school','grade','track','team','dateAccepted'].forEach(id => {
+      document.getElementById('f-' + id).value = '';
+    });
+    document.getElementById('member-modal').classList.add('active');
+    setTimeout(() => document.getElementById('f-firstName').focus(), 100);
+  }
+
+  function openEditModal(id) {
+    const m = members.find(x => x.id === id);
+    if (!m) return;
+    editingId = id;
+    document.getElementById('modal-title').textContent = 'Edit Member';
+    document.getElementById('modal-save-btn').textContent = 'Save Changes';
+    const parts = (m.name || '').split(' ');
+    document.getElementById('f-firstName').value = parts[0] || '';
+    document.getElementById('f-lastName').value = parts.slice(1).join(' ') || '';
+    document.getElementById('f-email').value = m.email || '';
+    document.getElementById('f-school').value = m.school || '';
+    document.getElementById('f-grade').value = m.grade || '';
+    document.getElementById('f-track').value = m.track || '';
+    document.getElementById('f-team').value = m.team || '';
+    document.getElementById('f-dateAccepted').value = m.dateAccepted || '';
+    document.getElementById('member-modal').classList.add('active');
+  }
+
+  function closeModal() {
+    document.getElementById('member-modal').classList.remove('active');
+    editingId = null;
+  }
+
+  document.getElementById('member-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  // ── Email ──
+  function emailMember(email) {
+    if (email) window.location.href = 'mailto:' + email;
+  }
+
+  // ── CSV Import ──
+  function triggerImportCSV() {
+    document.getElementById('csv-input').click();
+  }
+
+  async function importCSV(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const text = await file.text();
+    const lines = text.trim().split('\n');
+    const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/\s+/g,''));
+    const rows = lines.slice(1);
+    if (!rows.length) { alert('No data rows found.'); return; }
+
+    showLoading();
+    const batch = db.batch();
+    rows.forEach(row => {
+      const vals = row.split(',').map(v => v.trim().replace(/^"|"$/g, ''));
+      const obj = { createdAt: firebase.firestore.FieldValue.serverTimestamp() };
+      const map = { name:'name', email:'email', school:'school', grade:'grade', track:'track', team:'team', dateaccepted:'dateAccepted' };
+      headers.forEach((h, i) => { if (map[h]) obj[map[h]] = vals[i] || ''; });
+      if (!obj.name) return;
+      batch.set(db.collection('members').doc(), obj);
+    });
+    await batch.commit();
+    hideLoading();
+    e.target.value = '';
+  }
+
+  function showLoading() { document.getElementById('loading-overlay').classList.add('active'); }
+  function hideLoading() { document.getElementById('loading-overlay').classList.remove('active'); }
+</script>
+</body>
+</html>
