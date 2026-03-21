@@ -348,7 +348,7 @@
       <h1>Team Directory</h1>
       <span class="member-count" id="member-count">0 members</span>
     </div>
-    <div class="topbar-right">
+    <div class="topbar-right" id="cofounder-controls" style="display:none;">
       <button class="btn-secondary" onclick="triggerImportCSV()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         <span>Import CSV</span>
@@ -385,6 +385,7 @@
             <th onclick="setSort('grade')">Grade <span class="sort-arrow">↕</span></th>
             <th onclick="setSort('dateAccepted')">Date Accepted <span class="sort-arrow">↕</span></th>
             <th onclick="setSort('createdAt')">Account Created <span class="sort-arrow">↕</span></th>
+            <th id="actions-th" style="display:none;">Actions</th>
           </tr>
         </thead>
         <tbody id="table-body"></tbody>
@@ -462,16 +463,26 @@
   let sortField = 'name';
   let sortAsc = true;
   let editingId = null;
+  let isCofounder = false;
 
   const sortFields = ['name', 'school', 'grade', 'role', 'dateAccepted'];
   let sortFieldIndex = 0;
 
   // ── Auth gate ──
-  auth.onAuthStateChanged(user => {
+  auth.onAuthStateChanged(async user => {
     if (!user) {
       window.location.href = 'index.html';
       return;
     }
+    // Fetch role from users collection
+    const userDoc = await db.collection('users').doc(user.uid).get();
+    isCofounder = userDoc.exists && userDoc.data().role === 'cofounder';
+
+    if (isCofounder) {
+      document.getElementById('cofounder-controls').style.display = 'flex';
+      document.getElementById('actions-th').style.display = '';
+    }
+
     document.getElementById('auth-gate').style.display = 'none';
     document.getElementById('app').style.display = 'block';
     loadMembers();
@@ -567,7 +578,7 @@
 
     const tbody = document.getElementById('table-body');
     if (list.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state">
+      tbody.innerHTML = `<tr><td colspan="${isCofounder ? 8 : 7}"><div class="empty-state">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><br>
         No members found
       </div></td></tr>`;
@@ -583,6 +594,10 @@
         <td>${fmt(m.grade)}</td>
         <td class="td-date">${fmtDate(m.dateAccepted)}</td>
         <td class="td-date">${fmtDate(m.createdAt)}</td>
+        ${isCofounder ? `<td><div class="td-actions">
+          <button class="action-btn" onclick="openEditModal('${m.id}')">Edit</button>
+          <button class="action-btn delete" onclick="deleteMember('${m.id}','${(m.name||'').replace(/'/g,"\\'")}')">Delete</button>
+        </div></td>` : ''}
       </tr>
     `).join('');
 
