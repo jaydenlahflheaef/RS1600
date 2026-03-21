@@ -742,7 +742,7 @@
         if (!bounding) return;
         const { width, height } = bounding;
         lines = []; paths.forEach(p => p.remove()); paths = [];
-        const xGap = 22, yGap = 18;
+        const xGap = 14, yGap = 12;
         const totalLines  = Math.ceil((width  + 200) / xGap);
         const totalPoints = Math.ceil((height +  30) / yGap);
         const xStart = (width  - xGap * totalLines)  / 2;
