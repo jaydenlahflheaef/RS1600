@@ -824,7 +824,7 @@
           <span style="font-family:'Outfit',sans-serif; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.1); padding:6px 14px; border-radius:0 100px 100px 0; border-left:none;" data-i18n="hero.badge">Your Score Journey Starts Here</span>
         </div>
 
-        <h1 class="heading-xl animate-fade-up" style="color:#fff; margin:0 0 24px; line-height:1.04;">
+        <h1 class="heading-xl animate-fade-up" data-i18n-html="hero.headline" style="color:#fff; margin:0 0 24px; line-height:1.04;">
           Ready.<br>Set.<br>
           <span style="color:#10B981;">Outscore</span><br>the SAT.
         </h1>
@@ -862,7 +862,7 @@
           <div class="q-header">
             <div style="display:flex; align-items:center; gap:8px;">
               <span style="width:8px; height:8px; background:#10B981; border-radius:50%; display:inline-block; animation: pulse-dot 2s ease-in-out infinite;"></span>
-              <span style="font-family:'Outfit',sans-serif; font-size:13px; font-weight:600; color:rgba(255,255,255,0.7); letter-spacing:0.04em;">SAT — SECTION 1</span>
+              <span style="font-family:'Outfit',sans-serif; font-size:13px; font-weight:600; color:rgba(255,255,255,0.7); letter-spacing:0.04em;" data-i18n="q.section">SAT — SECTION 1</span>
             </div>
             <div style="display:flex; align-items:center; gap:6px; font-family:'Outfit',sans-serif; font-size:13px; font-weight:600; color:rgba(255,255,255,0.45);">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -874,40 +874,40 @@
 
           <!-- Body -->
           <div class="q-body">
-            <p class="q-label">Question 1 of 5 · Reading and Writing</p>
-            <p class="q-text">
+            <p class="q-label" data-i18n="q.label">Question 1 of 5 · Reading and Writing</p>
+            <p class="q-text" data-i18n-html="q.text">
               A student scored a <strong>1080</strong> on their first SAT attempt. After enrolling in targeted tutoring focused on their specific weak areas, their score improved by over <strong>150 points</strong>. Which factor <em>most likely</em> contributed to this improvement?
             </p>
 
             <div id="choices" role="radiogroup" aria-label="Answer choices">
               <button class="choice-btn" id="choice-A" onclick="selectChoice('A')" aria-pressed="false">
                 <span class="choice-letter">A</span>
-                <span>Completing a generic, one-size-fits-all prep course</span>
+                <span data-i18n="q.A">Completing a generic, one-size-fits-all prep course</span>
               </button>
               <button class="choice-btn" id="choice-B" onclick="selectChoice('B')" aria-pressed="false">
                 <span class="choice-letter">B</span>
-                <span>Memorizing formulas without understanding the test format</span>
+                <span data-i18n="q.B">Memorizing formulas without understanding the test format</span>
               </button>
               <button class="choice-btn" id="choice-C" onclick="selectChoice('C')" aria-pressed="false">
                 <span class="choice-letter">C</span>
-                <span>Personalized instruction targeting their exact weak areas, with timed practice and structured review</span>
+                <span data-i18n="q.C">Personalized instruction targeting their exact weak areas, with timed practice and structured review</span>
               </button>
               <button class="choice-btn" id="choice-D" onclick="selectChoice('D')" aria-pressed="false">
                 <span class="choice-letter">D</span>
-                <span>Cramming the night before with practice tests alone</span>
+                <span data-i18n="q.D">Cramming the night before with practice tests alone</span>
               </button>
             </div>
 
             <!-- Result message -->
             <div class="q-result correct-msg" id="result-correct">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-              Correct! Personalized, targeted prep is the proven path to score gains.
-              <button class="q-try-again" onclick="resetQuestion()">Try Again</button>
+              <span data-i18n="q.correct">Correct! Personalized, targeted prep is the proven path to score gains.</span>
+              <button class="q-try-again" onclick="resetQuestion()" data-i18n="q.tryagain">Try Again</button>
             </div>
             <div class="q-result wrong-msg" id="result-wrong">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-              Not quite — the answer is C. Targeted tutoring makes the difference.
-              <button class="q-try-again" onclick="resetQuestion()">Try Again</button>
+              <span data-i18n="q.wrong">Not quite — the answer is C. Targeted tutoring makes the difference.</span>
+              <button class="q-try-again" onclick="resetQuestion()" data-i18n="q.tryagain">Try Again</button>
             </div>
           </div>
 
@@ -915,10 +915,10 @@
           <div class="q-footer">
             <button class="q-btn-back">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-              Back
+              <span data-i18n="q.back">Back</span>
             </button>
             <button class="q-btn-submit" id="submit-btn" disabled onclick="submitAnswer()">
-              Submit Answer
+              <span data-i18n="q.submit">Submit Answer</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </button>
           </div>
@@ -2112,14 +2112,40 @@
       'faq.q5':'How do I know which program is right for my student?',
       'faq.a5':"Book a free 30-minute consultation. We'll review your student's current scores, target range, timeline, and schedule — then recommend the right format, intensity, and starting point. There's no pressure and no obligation.",
       'about.subtitle':"Expert tutors, former top scorers, and educators who genuinely care about your student's success.",
+      'hero.headline':'Ready.<br>Set.<br><span style="color:#10B981;">Outscore</span><br>the SAT.',
+      'q.section':'SAT — SECTION 1',
+      'q.label':'Question 1 of 5 · Reading and Writing',
+      'q.text':'A student scored a <strong>1080</strong> on their first SAT attempt. After enrolling in targeted tutoring focused on their specific weak areas, their score improved by over <strong>150 points</strong>. Which factor <em>most likely</em> contributed to this improvement?',
+      'q.A':'Completing a generic, one-size-fits-all prep course',
+      'q.B':'Memorizing formulas without understanding the test format',
+      'q.C':'Personalized instruction targeting their exact weak areas, with timed practice and structured review',
+      'q.D':'Cramming the night before with practice tests alone',
+      'q.correct':'Correct! Personalized, targeted prep is the proven path to score gains.',
+      'q.wrong':'Not quite — the answer is C. Targeted tutoring makes the difference.',
+      'q.tryagain':'Try Again',
+      'q.back':'Back',
+      'q.submit':'Submit Answer',
     },
     zh: {
       'nav.services':'服务','nav.howItWorks':'课程流程','nav.results':'成绩案例',
       'nav.pricing':'价格','nav.faq':'常见问题','nav.about':'关于我们','nav.cta':'预约免费咨询',
       'hero.badge':'你的提分之旅从这里开始',
+      'hero.headline':'准备好了。<br>出发。<br><span style="color:#10B981;">超越</span><br>SAT。',
       'hero.subtitle':'个性化SAT辅导，帮助学生从当前水平出发，精准达到目标成绩。不走弯路，只讲成效。',
       'hero.cta1':'开始我的提分计划','hero.cta2':'查看课程',
       'hero.trust1':'平均提分100分','hero.trust2':'数字SAT专家',
+      'q.section':'SAT — 第1节',
+      'q.label':'第1题，共5题 · 阅读与写作',
+      'q.text':'一位学生第一次SAT考了<strong>1080分</strong>。在参加了针对薄弱环节的专项辅导后，成绩提升了超过<strong>150分</strong>。哪个因素<em>最有可能</em>促成了这一进步？',
+      'q.A':'参加了通用型、千篇一律的备考课程',
+      'q.B':'死记硬背公式，而不理解考试格式',
+      'q.C':'针对具体薄弱环节的个性化辅导，结合限时练习和系统复习',
+      'q.D':'考前一晚单靠刷题临时抱佛脚',
+      'q.correct':'正确！个性化、针对性的备考是提分的有效途径。',
+      'q.wrong':'还不对 — 答案是C。针对性辅导才是关键。',
+      'q.tryagain':'再试一次',
+      'q.back':'返回',
+      'q.submit':'提交答案',
       'stats.students':'辅导学生','stats.gain':'SAT平均提分',
       'stats.rating':'家长评分','stats.target':'达到目标分数',
       'services.tag':'我们的服务','services.heading':'专业备考，全面覆盖',
@@ -2200,9 +2226,22 @@
       'nav.services':'서비스','nav.howItWorks':'진행 방식','nav.results':'성과',
       'nav.pricing':'가격','nav.faq':'FAQ','nav.about':'소개','nav.cta':'무료 상담 예약',
       'hero.badge':'점수 향상의 여정이 여기서 시작됩니다',
+      'hero.headline':'준비됐나요.<br>시작해요.<br><span style="color:#10B981;">넘어서요</span><br>SAT를.',
       'hero.subtitle':'맞춤형 SAT 튜터링으로 학생이 현재 있는 곳에서 정확히 목표하는 곳까지. 군더더기 없이, 오직 결과만.',
       'hero.cta1':'점수 플랜 시작하기','hero.cta2':'서비스 보기',
       'hero.trust1':'평균 100점 향상','hero.trust2':'디지털 SAT 전문가',
+      'q.section':'SAT — 섹션 1',
+      'q.label':'5문제 중 1번 · 읽기 및 쓰기',
+      'q.text':'한 학생이 첫 번째 SAT에서 <strong>1080점</strong>을 받았습니다. 약점을 집중적으로 다루는 맞춤형 튜터링에 등록한 후, 점수가 <strong>150점</strong> 이상 향상되었습니다. 이 향상에 <em>가장 크게</em> 기여한 요인은?',
+      'q.A':'획일적인 일반 준비 과정을 수강한 것',
+      'q.B':'시험 형식을 이해하지 않고 공식만 암기한 것',
+      'q.C':'약점을 정확히 겨냥한 맞춤형 지도와 제한 시간 연습, 체계적인 복습',
+      'q.D':'시험 전날 밤 모의고사만으로 벼락치기한 것',
+      'q.correct':'정답! 맞춤형 집중 준비가 점수 향상의 검증된 방법입니다.',
+      'q.wrong':'아쉽게도 — 정답은 C입니다. 맞춤형 튜터링이 차이를 만듭니다.',
+      'q.tryagain':'다시 시도',
+      'q.back':'이전',
+      'q.submit':'답안 제출',
       'stats.students':'지도 학생 수','stats.gain':'평균 SAT 점수 상승',
       'stats.rating':'학부모 평점','stats.target':'목표 점수 달성',
       'services.tag':'서비스','services.heading':'모든 시험을 위한 전문 준비',
@@ -2289,6 +2328,10 @@
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const key = el.dataset.i18n;
       if (T[lang] && T[lang][key]) el.textContent = T[lang][key];
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+      const key = el.dataset.i18nHtml;
+      if (T[lang] && T[lang][key]) el.innerHTML = T[lang][key];
     });
     document.querySelectorAll('.lang-btn').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.lang === lang);
