@@ -3375,6 +3375,11 @@
   }
 </script>
 
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
 <!-- ══════════════════════════════════════
      TUTOR LOGIN MODAL
 ════════════════════════════════════════ -->
@@ -3390,10 +3395,11 @@
       <span style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.35); letter-spacing:0.08em; text-transform:uppercase; font-family:'Syne',sans-serif;">ReadySet1600</span>
     </div>
     <h2>Tutor Portal</h2>
-    <p>Sign in to access your tutor dashboard.</p>
+    <p>Sign in with your tutor account.</p>
+    <input type="email" id="tutor-email" class="tutor-input" placeholder="Email" autocomplete="email" onkeydown="if(event.key==='Enter') document.getElementById('tutor-password').focus()" />
     <input type="password" id="tutor-password" class="tutor-input" placeholder="Password" onkeydown="if(event.key==='Enter') tutorLogin()" autocomplete="current-password" />
-    <div id="tutor-login-error">Incorrect password. Please try again.</div>
-    <button class="tutor-login-btn" onclick="tutorLogin()">Sign In</button>
+    <div id="tutor-login-error">Incorrect email or password.</div>
+    <button class="tutor-login-btn" id="tutor-login-btn" onclick="tutorLogin()">Sign In</button>
   </div>
 </div>
 
@@ -3405,6 +3411,7 @@
     <h1>Tutor Portal</h1>
     <div style="display:flex; align-items:center; gap:16px;">
       <span id="dash-date" style="font-size:13px; color:rgba(255,255,255,0.3);"></span>
+      <span id="dash-user-email" style="font-size:13px; color:rgba(255,255,255,0.35);"></span>
       <button class="dash-logout-btn" onclick="tutorLogout()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         Sign Out
@@ -3451,69 +3458,102 @@
       </div>
     </div>
 
-    <div class="dash-section-title">Session Notes</div>
+    <div class="dash-section-title">My Notes</div>
     <div class="dash-notes">
-      <textarea id="dash-notes-ta" placeholder="Jot down session notes, reminders, or follow-ups here. These are saved locally in your browser." oninput="saveDashNotes()"></textarea>
+      <textarea id="dash-notes-ta" placeholder="Jot down session notes, reminders, or follow-ups. Saved to your account." oninput="saveDashNotes()"></textarea>
     </div>
   </div>
 </div>
 
 <script>
-  // ── Tutor Auth ──
-  const TUTOR_PASSWORD = 'tutor1600';
-  const TUTOR_SESSION_KEY = 'rs1600_tutor_auth';
+  // ── Firebase Init ──
+  const firebaseConfig = {
+    apiKey: "AIzaSyDy-g_ihlNGF19FVZ_-ChX-LfMIAZFKvYM",
+    authDomain: "rs1600-faccd.firebaseapp.com",
+    projectId: "rs1600-faccd",
+    storageBucket: "rs1600-faccd.firebasestorage.app",
+    messagingSenderId: "669933046930",
+    appId: "1:669933046930:web:3179bd9fd14e3e2694ea4b"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
 
+  // ── Tutor Login Modal ──
   function openTutorLogin(e) {
     if (e) e.preventDefault();
+    document.getElementById('tutor-email').value = '';
     document.getElementById('tutor-password').value = '';
     document.getElementById('tutor-login-error').style.display = 'none';
     document.getElementById('tutor-login-overlay').classList.add('active');
-    setTimeout(() => document.getElementById('tutor-password').focus(), 100);
+    setTimeout(() => document.getElementById('tutor-email').focus(), 100);
   }
 
   function closeTutorLogin() {
     document.getElementById('tutor-login-overlay').classList.remove('active');
   }
 
-  function tutorLogin() {
+  async function tutorLogin() {
+    const email = document.getElementById('tutor-email').value.trim();
     const pw = document.getElementById('tutor-password').value;
-    if (pw === TUTOR_PASSWORD) {
-      sessionStorage.setItem(TUTOR_SESSION_KEY, '1');
+    const errEl = document.getElementById('tutor-login-error');
+    const btn = document.getElementById('tutor-login-btn');
+    errEl.style.display = 'none';
+    btn.textContent = 'Signing in…';
+    btn.disabled = true;
+    try {
+      await auth.signInWithEmailAndPassword(email, pw);
       closeTutorLogin();
-      openTutorDashboard();
-    } else {
-      document.getElementById('tutor-login-error').style.display = 'block';
+    } catch (err) {
+      errEl.style.display = 'block';
       document.getElementById('tutor-password').value = '';
       document.getElementById('tutor-password').focus();
+    } finally {
+      btn.textContent = 'Sign In';
+      btn.disabled = false;
     }
   }
 
-  function openTutorDashboard() {
+  // ── Dashboard ──
+  function openTutorDashboard(user) {
     const d = new Date();
     document.getElementById('dash-date').textContent = d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
-    const saved = localStorage.getItem('rs1600_tutor_notes') || '';
-    document.getElementById('dash-notes-ta').value = saved;
+    document.getElementById('dash-user-email').textContent = user.email;
+    db.collection('tutors').doc(user.uid).get().then(doc => {
+      document.getElementById('dash-notes-ta').value = (doc.exists && doc.data().notes) ? doc.data().notes : '';
+    });
     document.getElementById('tutor-dashboard').classList.add('active');
     document.body.style.overflow = 'hidden';
   }
 
   function tutorLogout() {
-    sessionStorage.removeItem(TUTOR_SESSION_KEY);
-    document.getElementById('tutor-dashboard').classList.remove('active');
-    document.body.style.overflow = '';
+    auth.signOut();
   }
 
+  let notesTimeout;
   function saveDashNotes() {
-    localStorage.setItem('rs1600_tutor_notes', document.getElementById('dash-notes-ta').value);
+    clearTimeout(notesTimeout);
+    notesTimeout = setTimeout(() => {
+      const user = auth.currentUser;
+      if (user) {
+        db.collection('tutors').doc(user.uid).set({ notes: document.getElementById('dash-notes-ta').value }, { merge: true });
+      }
+    }, 1000);
   }
 
-  // Close login modal on overlay click
+  // ── Auth State ──
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      openTutorDashboard(user);
+    } else {
+      document.getElementById('tutor-dashboard').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
+
   document.getElementById('tutor-login-overlay').addEventListener('click', function(e) {
     if (e.target === this) closeTutorLogin();
   });
-
-  // Restore session on page load
-  if (sessionStorage.getItem(TUTOR_SESSION_KEY)) openTutorDashboard();
 </script>
 </body>
 </html>
