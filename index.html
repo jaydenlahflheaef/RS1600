@@ -3118,10 +3118,10 @@
     chatShowTyping();
 
     try {
-      const res = await fetch('/chat', {
+      const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: chatMessages.filter(m => m.role !== 'assistant' || chatMessages.indexOf(m) > 0).map(m => ({ role: m.role, content: m.content })) }),
+        body: JSON.stringify({ messages: chatMessages.map(m => ({ role: m.role, content: m.content })) }),
       });
       const data = await res.json();
       chatHideTyping();

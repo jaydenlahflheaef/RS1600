@@ -1,29 +1,3 @@
-import http from 'http';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const PORT = 3000;
-
-const MIME = {
-  '.html': 'text/html',
-  '.css': 'text/css',
-  '.js': 'application/javascript',
-  '.mjs': 'application/javascript',
-  '.json': 'application/json',
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg',
-  '.gif': 'image/gif',
-  '.svg': 'image/svg+xml',
-  '.ico': 'image/x-icon',
-  '.woff': 'font/woff',
-  '.woff2': 'font/woff2',
-  '.ttf': 'font/ttf',
-  '.pdf': 'application/pdf',
-};
-
 const SYSTEM_PROMPT = `You are a friendly and knowledgeable assistant for ReadySet1600, a premier SAT, SHSAT, ACT, and AMC tutoring service based in New York City. Your job is to answer questions from prospective students and parents about our services, pricing, tutors, and process.
 
 ABOUT READYSET1600:
@@ -71,69 +45,41 @@ FAQ:
 - Score guarantee applies to 8-Week Intensive if student attends all sessions and does homework
 - Free 30-minute diagnostic consultation to start
 
-BOOKING: Direct prospective customers to book a free 30-minute consultation at the #contact section of the website, or by scrolling down to "Book a Free Consultation."
+BOOKING: Direct prospective customers to book a free 30-minute consultation at the contact section of the website.
 
 Keep answers concise, warm, and helpful. If you don't know something specific, encourage them to book a free consultation. Do not make up prices or details not listed above.`;
 
-const server = http.createServer((req, res) => {
-  let urlPath = decodeURIComponent(req.url.split('?')[0]);
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // ── Chat API endpoint ──
-  if (req.method === 'POST' && urlPath === '/api/chat') {
-    let body = '';
-    req.on('data', chunk => body += chunk);
-    req.on('end', async () => {
-      try {
-        const { messages } = JSON.parse(body);
-        const apiKey = process.env.ANTHROPIC_API_KEY;
-        if (!apiKey) {
-          res.writeHead(500, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ error: 'ANTHROPIC_API_KEY not set on server.' }));
-          return;
-        }
-        const response = await fetch('https://api.anthropic.com/v1/messages', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-api-key': apiKey,
-            'anthropic-version': '2023-06-01',
-          },
-          body: JSON.stringify({
-            model: 'claude-haiku-4-5-20251001',
-            max_tokens: 1024,
-            system: SYSTEM_PROMPT,
-            messages,
-          }),
-        });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error?.message || 'API error');
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ content: data.content[0].text }));
-      } catch (e) {
-        res.writeHead(500, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: e.message }));
-      }
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) return res.status(500).json({ error: 'ANTHROPIC_API_KEY is not configured.' });
+
+  try {
+    const { messages } = req.body;
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 1024,
+        system: SYSTEM_PROMPT,
+        messages,
+      }),
     });
-    return;
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error?.message || 'Anthropic API error');
+    return res.status(200).json({ content: data.content[0].text });
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
   }
-
-  if (urlPath === '/') urlPath = '/index.html';
-
-  const filePath = path.join(__dirname, urlPath);
-  const ext = path.extname(filePath).toLowerCase();
-  const contentType = MIME[ext] || 'application/octet-stream';
-
-  fs.readFile(filePath, (err, data) => {
-    if (err) {
-      res.writeHead(404, { 'Content-Type': 'text/plain' });
-      res.end('404 Not Found');
-      return;
-    }
-    res.writeHead(200, { 'Content-Type': contentType });
-    res.end(data);
-  });
-});
-
-server.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-});
+}
