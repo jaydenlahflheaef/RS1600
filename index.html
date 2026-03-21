@@ -773,7 +773,7 @@
       }
 
       function movePoints(time) {
-        const RADIUS = 220, PUSH = 0.55, DRAG_MUL = 0.0009;
+        const RADIUS = 280, PUSH = 0.85, DRAG_MUL = 0.0012;
         const hasMouse = mouse.set;
         const msx = mouse.sx, msy = mouse.sy, mvsq = mouse.vs, ma = mouse.a;
         for (let li = 0; li < lines.length; li++) {
@@ -823,8 +823,8 @@
       function tick(time) {
         if (!visible) { rafId = null; return; }
         if (mouse.set) {
-          mouse.sx += (mouse.x - mouse.sx) * 0.12;
-          mouse.sy += (mouse.y - mouse.sy) * 0.12;
+          mouse.sx += (mouse.x - mouse.sx) * 0.3;
+          mouse.sy += (mouse.y - mouse.sy) * 0.3;
           const ddx = mouse.x - mouse.lx, ddy = mouse.y - mouse.ly;
           const spd = Math.hypot(ddx, ddy);
           mouse.vs += (spd - mouse.vs) * 0.1;
