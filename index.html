@@ -2077,7 +2077,7 @@
 
         <!-- Exam picker -->
         <div class="consult-field" style="margin-bottom:20px;">
-          <label class="consult-label">Which exam are you preparing for? <span style="color:#EF4444;">*</span></label>
+          <label class="consult-label"><span data-i18n="contact.examLabel">Which exam are you preparing for?</span> <span style="color:#EF4444;">*</span></label>
           <input type="hidden" id="cf-exam" name="exam" />
           <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:8px;">
             <button type="button" class="exam-btn" data-exam="SAT" onclick="selectExam('SAT')">SAT</button>
@@ -2085,7 +2085,7 @@
             <button type="button" class="exam-btn" data-exam="ACT" onclick="selectExam('ACT')">ACT</button>
             <button type="button" class="exam-btn" data-exam="AMC" onclick="selectExam('AMC')">AMC</button>
           </div>
-          <p id="cf-exam-error" style="font-size:12px; color:#EF4444; margin:6px 0 0; display:none;">Please select an exam to continue.</p>
+          <p id="cf-exam-error" style="font-size:12px; color:#EF4444; margin:6px 0 0; display:none;" data-i18n="contact.examError">Please select an exam to continue.</p>
         </div>
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
@@ -2119,12 +2119,12 @@
 
           <div class="consult-field">
             <label class="consult-label" for="cf-current"><span id="cf-current-label">Current Score</span></label>
-            <input class="consult-input" id="cf-current" name="currentScore" type="text" placeholder="Select an exam above first" />
+            <input class="consult-input" id="cf-current" name="currentScore" type="text" placeholder="Select an exam above first" data-i18n-placeholder="contact.scorePlaceholder" />
           </div>
 
           <div class="consult-field">
             <label class="consult-label" for="cf-target"><span id="cf-target-label">Target Score</span></label>
-            <input class="consult-input" id="cf-target" name="targetScore" type="text" placeholder="Select an exam above first" />
+            <input class="consult-input" id="cf-target" name="targetScore" type="text" placeholder="Select an exam above first" data-i18n-placeholder="contact.scorePlaceholder" />
           </div>
 
         </div>
@@ -2132,16 +2132,16 @@
         <!-- Referral code -->
         <div class="consult-field" style="margin-bottom:16px;">
           <label class="consult-label" for="cf-referral">
-            Referral Code
-            <span style="font-weight:400; color:#94A3B8; margin-left:6px;">(optional)</span>
+            <span data-i18n="contact.referralLabel">Referral Code</span>
+            <span style="font-weight:400; color:#94A3B8; margin-left:6px;" data-i18n="contact.referralOptional">(optional)</span>
           </label>
           <div style="position:relative;">
             <div style="position:absolute; left:14px; top:50%; transform:translateY(-50%); pointer-events:none;">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             </div>
-            <input class="consult-input" id="cf-referral" name="referralCode" type="text" placeholder="e.g. JANE2025" style="padding-left:38px; text-transform:uppercase; letter-spacing:0.05em;" oninput="this.value=this.value.toUpperCase()" />
+            <input class="consult-input" id="cf-referral" name="referralCode" type="text" placeholder="e.g. JANE2025" data-i18n-placeholder="contact.referralPlaceholder" style="padding-left:38px; text-transform:uppercase; letter-spacing:0.05em;" oninput="this.value=this.value.toUpperCase()" />
           </div>
-          <p style="font-size:12px; color:#94A3B8; margin:6px 0 0; line-height:1.5;">Were you referred by a current student? Enter their code and you'll both get 50% off a session.</p>
+          <p style="font-size:12px; color:#94A3B8; margin:6px 0 0; line-height:1.5;" data-i18n="contact.referralHint">Were you referred by a current student? Enter their code and you'll both get 50% off a session.</p>
         </div>
 
         <div class="consult-field" style="margin-bottom:24px;">
@@ -2210,8 +2210,9 @@
     const hints = examScoreHints[exam];
     document.getElementById('cf-current').placeholder = hints.current;
     document.getElementById('cf-target').placeholder  = hints.target;
-    document.getElementById('cf-current-label').textContent = 'Current ' + hints.label;
-    document.getElementById('cf-target-label').textContent  = 'Target '  + hints.label;
+    const t = T[currentLang] || T['en'];
+    document.getElementById('cf-current-label').textContent = (t['contact.scoreCurrentPrefix'] || 'Current ') + exam + (t['contact.scoreSuffix'] || ' Score');
+    document.getElementById('cf-target-label').textContent  = (t['contact.scoreTargetPrefix']  || 'Target ')  + exam + (t['contact.scoreSuffix'] || ' Score');
     document.getElementById('cf-exam-error').style.display  = 'none';
   }
 
@@ -2288,10 +2289,11 @@
     document.getElementById('consult-success').classList.remove('show');
     document.getElementById('cf-exam').value = '';
     document.querySelectorAll('.exam-btn').forEach(btn => btn.classList.remove('exam-btn-active'));
-    document.getElementById('cf-current').placeholder = 'Select an exam above first';
-    document.getElementById('cf-target').placeholder  = 'Select an exam above first';
-    document.getElementById('cf-current-label').textContent = 'Current Score';
-    document.getElementById('cf-target-label').textContent  = 'Target Score';
+    const t = T[currentLang] || T['en'];
+    document.getElementById('cf-current').placeholder = t['contact.scorePlaceholder'] || 'Select an exam above first';
+    document.getElementById('cf-target').placeholder  = t['contact.scorePlaceholder'] || 'Select an exam above first';
+    document.getElementById('cf-current-label').textContent = t['contact.scoreCurrentDefault'] || 'Current Score';
+    document.getElementById('cf-target-label').textContent  = t['contact.scoreTargetDefault']  || 'Target Score';
     const submitBtn = document.getElementById('consult-btn');
     submitBtn.disabled = false;
     submitBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Send My Consultation Request';
@@ -2555,6 +2557,18 @@
       'ph.current':'e.g. 1150 (or No score yet)',
       'ph.target':'e.g. 1400',
       'ph.notes':'Test date, specific goals, scheduling preferences, etc.',
+      'contact.examLabel':'Which exam are you preparing for?',
+      'contact.examError':'Please select an exam to continue.',
+      'contact.scorePlaceholder':'Select an exam above first',
+      'contact.scoreCurrentDefault':'Current Score',
+      'contact.scoreTargetDefault':'Target Score',
+      'contact.scoreCurrentPrefix':'Current ',
+      'contact.scoreTargetPrefix':'Target ',
+      'contact.scoreSuffix':' Score',
+      'contact.referralLabel':'Referral Code',
+      'contact.referralOptional':'(optional)',
+      'contact.referralPlaceholder':'e.g. JANE2025',
+      'contact.referralHint':"Were you referred by a current student? Enter their code and you'll both get 50% off a session.",
     },
     zh: {
       'nav.services':'服务','nav.howItWorks':'课程流程','nav.results':'成绩案例',
@@ -2594,6 +2608,18 @@
       'ph.current':'例如 1150（或尚未考试）',
       'ph.target':'例如 1400',
       'ph.notes':'考试日期、具体目标、日程安排偏好等。',
+      'contact.examLabel':'您正在备考哪门考试？',
+      'contact.examError':'请先选择一门考试。',
+      'contact.scorePlaceholder':'请先在上方选择考试',
+      'contact.scoreCurrentDefault':'当前成绩',
+      'contact.scoreTargetDefault':'目标成绩',
+      'contact.scoreCurrentPrefix':'当前',
+      'contact.scoreTargetPrefix':'目标',
+      'contact.scoreSuffix':'成绩',
+      'contact.referralLabel':'推荐码',
+      'contact.referralOptional':'（可选）',
+      'contact.referralPlaceholder':'例如 JANE2025',
+      'contact.referralHint':'是否由在读学员推荐？输入他们的推荐码，双方各享一节课5折优惠。',
       'stats.students':'辅导学生人数','stats.gain':'SAT平均提分',
       'stats.rating':'综合教学经验','stats.target':'达到目标分数',
       'services.tag':'我们的服务','services.heading':'专业备考，全面覆盖',
@@ -2717,6 +2743,18 @@
       'ph.current':'예: 1150 (아직 없으면 비워두세요)',
       'ph.target':'예: 1400',
       'ph.notes':'시험 날짜, 구체적인 목표, 일정 선호도 등.',
+      'contact.examLabel':'어떤 시험을 준비하고 계신가요?',
+      'contact.examError':'시험을 먼저 선택해 주세요.',
+      'contact.scorePlaceholder':'위에서 시험을 먼저 선택해 주세요',
+      'contact.scoreCurrentDefault':'현재 점수',
+      'contact.scoreTargetDefault':'목표 점수',
+      'contact.scoreCurrentPrefix':'현재 ',
+      'contact.scoreTargetPrefix':'목표 ',
+      'contact.scoreSuffix':' 점수',
+      'contact.referralLabel':'추천 코드',
+      'contact.referralOptional':'(선택 사항)',
+      'contact.referralPlaceholder':'예: JANE2025',
+      'contact.referralHint':'현재 수강 중인 학생에게 추천을 받으셨나요? 코드를 입력하시면 두 분 모두 한 세션 50% 할인 혜택을 받으실 수 있습니다.',
       'stats.students':'지도 학생 수','stats.gain':'평균 SAT 점수 상승',
       'stats.rating':'총 교육 경력','stats.target':'목표 점수 달성',
       'services.tag':'서비스','services.heading':'모든 시험을 위한 전문 준비',
@@ -2826,6 +2864,18 @@
     });
     // Update html lang attr
     document.documentElement.lang = lang === 'zh' ? 'zh-CN' : lang === 'ko' ? 'ko' : 'en';
+    // Re-apply score field labels (they're set by JS, not data-i18n)
+    const currentExam = document.getElementById('cf-exam').value;
+    const t = T[lang] || T['en'];
+    if (currentExam) {
+      document.getElementById('cf-current-label').textContent = (t['contact.scoreCurrentPrefix'] || 'Current ') + currentExam + (t['contact.scoreSuffix'] || ' Score');
+      document.getElementById('cf-target-label').textContent  = (t['contact.scoreTargetPrefix']  || 'Target ')  + currentExam + (t['contact.scoreSuffix'] || ' Score');
+    } else {
+      document.getElementById('cf-current-label').textContent = t['contact.scoreCurrentDefault'] || 'Current Score';
+      document.getElementById('cf-target-label').textContent  = t['contact.scoreTargetDefault']  || 'Target Score';
+      document.getElementById('cf-current').placeholder = t['contact.scorePlaceholder'] || 'Select an exam above first';
+      document.getElementById('cf-target').placeholder  = t['contact.scorePlaceholder'] || 'Select an exam above first';
+    }
   }
 
   // ── Dark mode ──
