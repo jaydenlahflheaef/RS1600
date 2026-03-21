@@ -30,6 +30,10 @@
         var c = document.createElement('canvas');
         c.width = size; c.height = size;
         var ctx = c.getContext('2d');
+        ctx.beginPath();
+        ctx.arc(size/2, size/2, size/2, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.clip();
         ctx.fillStyle = '#fff';
         ctx.fillRect(0, 0, size, size);
         var cw = maxX - minX, ch = maxY - minY;
