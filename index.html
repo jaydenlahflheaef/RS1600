@@ -801,9 +801,6 @@
     }
 
     window.initWaves = function(containerId, svgId, dotId) {
-      // Skip on touch/mobile devices — no mouse to track
-      if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
-
       const container = document.getElementById(containerId);
       const svgEl     = document.getElementById(svgId);
       if (!container || !svgEl) return;
@@ -933,7 +930,11 @@
       setLines();
       window.addEventListener('resize', () => { setSize(); setLines(); });
       window.addEventListener('scroll', () => { bounding = container.getBoundingClientRect(); }, { passive: true });
-      window.addEventListener('mousemove', e => updateMouse(e.clientX, e.clientY), { passive: true });
+      // Mouse tracking only on non-touch devices
+      const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      if (!isTouch) {
+        window.addEventListener('mousemove', e => updateMouse(e.clientX, e.clientY), { passive: true });
+      }
     };
   })();
 
