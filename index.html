@@ -72,9 +72,9 @@
       --navy:       #0B1728;
       --navy-mid:   #162236;
       --navy-light: #1E3250;
-      --blue:       #2563EB;
-      --blue-light: #3B82F6;
-      --blue-pale:  #EFF6FF;
+      --blue:       #0F766E;
+      --blue-light: #14B8A6;
+      --blue-pale:  #F0FDFA;
       --green:      #10B981;
       --green-pale: #ECFDF5;
       --amber:      #F59E0B;
@@ -147,19 +147,19 @@
       font-weight: 600;
       font-size: 15px;
       color: #fff;
-      background: #2563EB;
+      background: #0F766E;
       padding: 13px 26px;
       border-radius: 12px;
       border: none;
       cursor: pointer;
       text-decoration: none;
       transition: background 0.2s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
-      box-shadow: 0 2px 12px rgba(37,99,235,0.35);
+      box-shadow: 0 2px 12px rgba(15,118,110,0.35);
       white-space: nowrap;
     }
-    .btn-primary:hover { background: #1d4ed8; transform: translateY(-2px); box-shadow: 0 6px 24px rgba(37,99,235,0.45); }
+    .btn-primary:hover { background: #0a5c56; transform: translateY(-2px); box-shadow: 0 6px 24px rgba(15,118,110,0.45); }
     .btn-primary:active { transform: translateY(0); }
-    .btn-primary:focus-visible { outline: 2px solid #3B82F6; outline-offset: 3px; }
+    .btn-primary:focus-visible { outline: 2px solid #14B8A6; outline-offset: 3px; }
 
     .btn-primary-lg {
       font-size: 16px;
@@ -203,9 +203,9 @@
       text-decoration: none;
       transition: border-color 0.2s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
     }
-    .btn-secondary:hover { border-color: #2563EB; color: #2563EB; transform: translateY(-2px); box-shadow: 0 4px 16px rgba(37,99,235,0.12); }
+    .btn-secondary:hover { border-color: #0F766E; color: #0F766E; transform: translateY(-2px); box-shadow: 0 4px 16px rgba(15,118,110,0.12); }
     .btn-secondary:active { transform: translateY(0); }
-    .btn-secondary:focus-visible { outline: 2px solid #2563EB; outline-offset: 3px; }
+    .btn-secondary:focus-visible { outline: 2px solid #0F766E; outline-offset: 3px; }
 
     .btn-white {
       display: inline-flex;
@@ -238,8 +238,8 @@
       font-weight: 600;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: #2563EB;
-      background: #EFF6FF;
+      color: #0F766E;
+      background: #F0FDFA;
       padding: 5px 12px;
       border-radius: 100px;
       margin-bottom: 16px;
@@ -256,7 +256,7 @@
       border-radius: 20px;
       transition: box-shadow 0.25s, transform 0.22s cubic-bezier(0.34,1.56,0.64,1), border-color 0.25s;
     }
-    .card:hover { box-shadow: 0 8px 40px rgba(37,99,235,0.1), 0 2px 8px rgba(0,0,0,0.05); transform: translateY(-3px); border-color: #bfdbfe; }
+    .card:hover { box-shadow: 0 8px 40px rgba(15,118,110,0.1), 0 2px 8px rgba(0,0,0,0.05); transform: translateY(-3px); border-color: #bfdbfe; }
 
     .card-dark {
       background: #162236;
@@ -273,7 +273,7 @@
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
     }
-    .icon-light { background: #EFF6FF; }
+    .icon-light { background: #F0FDFA; }
     .icon-dark { background: rgba(255,255,255,0.08); }
     .icon-green { background: #ECFDF5; }
     .icon-amber { background: #FEF3C7; }
@@ -286,7 +286,7 @@
       padding: 4px 10px; border-radius: 100px;
     }
     .score-badge-green { background: #ECFDF5; color: #059669; }
-    .score-badge-blue { background: #EFF6FF; color: #2563EB; }
+    .score-badge-blue { background: #F0FDFA; color: #0F766E; }
     .score-badge-amber { background: #FEF3C7; color: #D97706; }
 
     /* ── Progress bar ── */
@@ -301,7 +301,7 @@
       border-radius: 100px;
       transition: width 0.6s ease;
     }
-    .progress-blue { background: linear-gradient(90deg, #2563EB, #3B82F6); }
+    .progress-blue { background: linear-gradient(90deg, #0F766E, #14B8A6); }
     .progress-green { background: linear-gradient(90deg, #10B981, #34d399); }
     .progress-amber { background: linear-gradient(90deg, #F59E0B, #fbbf24); }
 
@@ -320,7 +320,7 @@
     .step-connector {
       flex: 1;
       height: 1px;
-      background: linear-gradient(90deg, #2563EB33, transparent);
+      background: linear-gradient(90deg, #0F766E33, transparent);
       margin: 0 8px;
     }
 
@@ -363,15 +363,15 @@
       color: #1E293B; text-align: left; gap: 16px;
       transition: color 0.2s;
     }
-    .faq-btn:hover { color: #2563EB; }
-    .faq-btn:focus-visible { outline: 2px solid #2563EB; outline-offset: 2px; border-radius: 4px; }
+    .faq-btn:hover { color: #0F766E; }
+    .faq-btn:focus-visible { outline: 2px solid #0F766E; outline-offset: 2px; border-radius: 4px; }
     .faq-icon {
       width: 24px; height: 24px; flex-shrink: 0;
       border: 1.5px solid #E2E8F0; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       color: #94A3B8; transition: transform 0.3s, border-color 0.2s, color 0.2s;
     }
-    .faq-btn[aria-expanded="true"] .faq-icon { transform: rotate(45deg); border-color: #2563EB; color: #2563EB; }
+    .faq-btn[aria-expanded="true"] .faq-icon { transform: rotate(45deg); border-color: #0F766E; color: #0F766E; }
     .faq-body { display: grid; grid-template-rows: 0fr; overflow: hidden; transition: grid-template-rows 0.45s cubic-bezier(0.16,1,0.3,1); }
     .faq-body.open { grid-template-rows: 1fr; }
     .faq-body > p { min-height: 0; padding-bottom: 20px; color: #475569; font-size: 15px; margin: 0; opacity: 0; transform: translateY(6px); transition: opacity 0.35s cubic-bezier(0.16,1,0.3,1) 0.05s, transform 0.35s cubic-bezier(0.16,1,0.3,1) 0.05s; }
@@ -439,13 +439,13 @@
       font-size: 15px;
       font-weight: 600;
       color: #fff;
-      background: #2563EB;
+      background: #0F766E;
       padding: 14px 24px;
       border-radius: 12px;
       text-decoration: none;
       transition: background 0.2s;
     }
-    #mobile-menu .mob-cta:hover { background: #1D4ED8; }
+    #mobile-menu .mob-cta:hover { background: #0A5C56; }
 
     /* ── Misc utilities ── */
     .section-max { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
@@ -499,8 +499,8 @@
     html.dark .card { background:#111827 !important; border-color:rgba(255,255,255,0.08) !important; }
     html.dark .step-1, html.dark .step-2 { background:#111827 !important; }
     html.dark .step-1 p, html.dark .step-2 p { color:#94A3B8 !important; }
-    html.dark #referral-card { background:rgba(37,99,235,0.1) !important; border-color:rgba(37,99,235,0.25) !important; }
-    html.dark #referral-card .referral-icon-bg { background:rgba(37,99,235,0.2) !important; }
+    html.dark #referral-card { background:rgba(15,118,110,0.1) !important; border-color:rgba(15,118,110,0.25) !important; }
+    html.dark #referral-card .referral-icon-bg { background:rgba(15,118,110,0.2) !important; }
     html.dark #referral-card .referral-heading { color:#F1F5F9 !important; }
     html.dark #referral-card .referral-desc { color:rgba(255,255,255,0.5) !important; }
     html.dark #referral-card .referral-item { color:rgba(255,255,255,0.7) !important; }
@@ -516,24 +516,10 @@
     html.dark [style*="border-top:1px solid #F1F5F9"], html.dark [style*="border-left:1px solid #F1F5F9"] { border-color:rgba(255,255,255,0.06) !important; }
     html.dark [style*="background:#fff; border:1.5px solid #E2E8F0"], html.dark [style*="background:#fff; border-radius:28px"] { background:#111827 !important; border-color:rgba(255,255,255,0.08) !important; }
     html.dark [style*="max-width:680px"][style*="background:#fff"] { background:#111827 !important; }
-    html.dark .section-tag:not(.section-tag-dark) { background:rgba(37,99,235,0.15) !important; color:#60A5FA !important; }
+    html.dark .section-tag:not(.section-tag-dark) { background:rgba(15,118,110,0.15) !important; color:#60A5FA !important; }
     html.dark [style*="background:#162236"] { background:#0D1520 !important; }
 
-    /* ── Scroll reveal ── */
-    .reveal {
-      opacity: 0;
-      transform: translateY(32px);
-      transition: opacity 0.65s cubic-bezier(0.16,1,0.3,1), transform 0.65s cubic-bezier(0.16,1,0.3,1);
-    }
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .reveal-delay-1 { transition-delay: 0.08s; }
-    .reveal-delay-2 { transition-delay: 0.16s; }
-    .reveal-delay-3 { transition-delay: 0.24s; }
-    .reveal-delay-4 { transition-delay: 0.32s; }
-    .reveal-delay-5 { transition-delay: 0.40s; }
+    /* ── Scroll reveal — removed fade-in, content visible by default ── */
   </style>
 </head>
 <body>
@@ -629,7 +615,7 @@
   .q-progress-fill {
     position: absolute; top:0; left:0; height:100%;
     width: 20%;
-    background: #2563EB;
+    background: #0F766E;
     border-radius: 0 2px 2px 0;
     transition: width 0.5s ease;
   }
@@ -667,7 +653,7 @@
     background: rgba(255,255,255,0.06);
     transform: translateX(2px);
   }
-  .choice-btn:focus-visible { outline: 2px solid #2563EB; outline-offset: 2px; }
+  .choice-btn:focus-visible { outline: 2px solid #0F766E; outline-offset: 2px; }
   .choice-letter {
     flex-shrink: 0;
     width: 26px; height: 26px; border-radius: 50%;
@@ -679,11 +665,11 @@
 
   /* Selected state */
   .choice-btn.selected {
-    border-color: #2563EB;
-    background: rgba(37,99,235,0.1);
+    border-color: #0F766E;
+    background: rgba(15,118,110,0.1);
   }
   .choice-btn.selected .choice-letter {
-    background: #2563EB; border-color: #2563EB; color: #fff;
+    background: #0F766E; border-color: #0F766E; color: #fff;
   }
 
   /* Correct state */
@@ -726,13 +712,13 @@
   .q-btn-submit {
     display: inline-flex; align-items: center; gap: 7px;
     font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700;
-    color: #fff; background: #2563EB;
+    color: #fff; background: #0F766E;
     border: none; cursor: pointer;
     padding: 10px 20px; border-radius: 10px;
     transition: background 0.2s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1), opacity 0.2s;
-    box-shadow: 0 2px 12px rgba(37,99,235,0.4);
+    box-shadow: 0 2px 12px rgba(15,118,110,0.4);
   }
-  .q-btn-submit:hover:not(:disabled) { background: #1d4ed8; transform: translateY(-1px); }
+  .q-btn-submit:hover:not(:disabled) { background: #0a5c56; transform: translateY(-1px); }
   .q-btn-submit:disabled { opacity: 0.35; cursor: default; transform: none; }
 
   /* Result message */
@@ -770,7 +756,7 @@
 ">
   <!-- Radial gradients -->
   <div style="position:absolute; inset:0; pointer-events:none; z-index:0;">
-    <div style="position:absolute; top:-20%; left:-10%; width:900px; height:900px; background:radial-gradient(circle, rgba(37,99,235,0.15) 0%, transparent 65%); border-radius:50%;"></div>
+    <div style="position:absolute; top:-20%; left:-10%; width:900px; height:900px; background:radial-gradient(circle, rgba(15,118,110,0.15) 0%, transparent 65%); border-radius:50%;"></div>
     <div style="position:absolute; bottom:-30%; right:5%; width:600px; height:600px; background:radial-gradient(circle, rgba(16,185,129,0.08) 0%, transparent 65%); border-radius:50%;"></div>
   </div>
 
@@ -962,7 +948,7 @@
 
         <!-- Module badge -->
         <div style="display:inline-flex; align-items:center; gap:0; margin-bottom:28px;">
-          <span style="font-family:'Outfit',sans-serif; font-size:11px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:#fff; background:#2563EB; padding:6px 14px; border-radius:100px 0 0 100px;">MODULE 1</span>
+          <span style="font-family:'Outfit',sans-serif; font-size:11px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:#fff; background:#0F766E; padding:6px 14px; border-radius:100px 0 0 100px;">MODULE 1</span>
           <span style="font-family:'Outfit',sans-serif; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.1); padding:6px 14px; border-radius:0 100px 100px 0; border-left:none;" data-i18n="hero.badge">Your Score Journey Starts Here</span>
         </div>
 
@@ -1162,7 +1148,7 @@
         <p style="margin:4px 0 0; font-size:13px; color:rgba(255,255,255,0.45);" data-i18n="stats.students">Students Tutored</p>
       </div>
       <div style="border-left:1px solid rgba(255,255,255,0.07); padding-left:32px;">
-        <p style="margin:0; font-family:'Syne',sans-serif; font-size:36px; font-weight:800; color:#3B82F6; letter-spacing:-0.03em;">+130</p>
+        <p style="margin:0; font-family:'Syne',sans-serif; font-size:36px; font-weight:800; color:#14B8A6; letter-spacing:-0.03em;">+130</p>
         <p style="margin:4px 0 0; font-size:13px; color:rgba(255,255,255,0.45);" data-i18n="stats.gain">Avg. SAT Score Gain</p>
       </div>
       <div style="border-left:1px solid rgba(255,255,255,0.07); padding-left:32px;">
@@ -1196,7 +1182,7 @@
 
       <div class="card reveal reveal-delay-1" style="padding:28px; cursor:default;">
         <div class="icon-container icon-light" style="margin-bottom:20px;">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0F766E" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
         </div>
         <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
           <h3 class="heading-md" style="margin:0; color:#0B1728; font-size:18px;">SAT</h3>
@@ -1205,7 +1191,7 @@
         <p style="font-size:14px; color:#475569; margin:0 0 20px; line-height:1.65;" data-i18n="sat.desc">Full digital SAT prep — adaptive modules, timing strategy, and test-day readiness built into every session.</p>
         <div style="border-top:1px solid #F1F5F9; padding-top:16px;">
           <p style="margin:0; font-size:12px; color:#94A3B8; font-weight:600; letter-spacing:0.06em; text-transform:uppercase;" data-i18n="sat.range.label">Target Range</p>
-          <p style="margin:4px 0 0; font-family:'Syne',sans-serif; font-size:20px; font-weight:700; color:#2563EB;">1200–1600</p>
+          <p style="margin:4px 0 0; font-family:'Syne',sans-serif; font-size:20px; font-weight:700; color:#0F766E;">1200–1600</p>
         </div>
       </div>
 
@@ -1258,7 +1244,7 @@
 
     <!-- Delivery formats -->
     <div style="background:#0B1728; border-radius:24px; padding:48px; position:relative; overflow:hidden;">
-      <div style="position:absolute; top:0; right:0; width:400px; height:400px; background:radial-gradient(circle, rgba(37,99,235,0.15) 0%, transparent 65%); pointer-events:none;"></div>
+      <div style="position:absolute; top:0; right:0; width:400px; height:400px; background:radial-gradient(circle, rgba(15,118,110,0.15) 0%, transparent 65%); pointer-events:none;"></div>
 
       <div class="how-we-teach-grid" style="display:grid; grid-template-columns:1fr 2fr; gap:48px; align-items:center; position:relative; z-index:1;">
         <div>
@@ -1270,18 +1256,18 @@
 
           <div class="card-dark reveal reveal-delay-1" style="padding:24px;">
             <div class="icon-container icon-dark" style="margin-bottom:16px;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="1.75" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" stroke-width="1.75" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             </div>
             <h4 style="margin:0 0 8px; font-family:'Syne',sans-serif; font-size:16px; font-weight:700; color:#fff;" data-i18n="teach.1on1.title">1-on-1</h4>
             <p style="margin:0; font-size:13px; color:rgba(255,255,255,0.45); line-height:1.6;" data-i18n="teach.1on1.desc">Fully tailored. Your pace, your gaps, your schedule — entirely customized sessions.</p>
           </div>
 
-          <div class="card-dark reveal reveal-delay-2" style="padding:24px; border-color:rgba(37,99,235,0.3); box-shadow: 0 0 0 1px rgba(37,99,235,0.2);">
+          <div class="card-dark reveal reveal-delay-2" style="padding:24px; border-color:rgba(15,118,110,0.3); box-shadow: 0 0 0 1px rgba(15,118,110,0.2);">
             <div style="position:absolute; top:-1px; left:50%; transform:translateX(-50%);">
-              <span style="background:#2563EB; color:#fff; font-size:10px; font-weight:700; padding:3px 10px; border-radius:0 0 8px 8px; letter-spacing:0.06em; text-transform:uppercase; white-space:nowrap;" data-i18n="teach.group.badge">Most Popular</span>
+              <span style="background:#0F766E; color:#fff; font-size:10px; font-weight:700; padding:3px 10px; border-radius:0 0 8px 8px; letter-spacing:0.06em; text-transform:uppercase; white-space:nowrap;" data-i18n="teach.group.badge">Most Popular</span>
             </div>
-            <div class="icon-container" style="background:rgba(37,99,235,0.15); margin-bottom:16px; margin-top:12px;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="1.75" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <div class="icon-container" style="background:rgba(15,118,110,0.15); margin-bottom:16px; margin-top:12px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" stroke-width="1.75" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             </div>
             <h4 style="margin:0 0 8px; font-family:'Syne',sans-serif; font-size:16px; font-weight:700; color:#fff;" data-i18n="teach.group.title">Small Group</h4>
             <p style="margin:0; font-size:13px; color:rgba(255,255,255,0.45); line-height:1.6;" data-i18n="teach.group.desc">2–4 students, collaborative energy, expert guidance — and a lower price point.</p>
@@ -1319,10 +1305,10 @@
 
       <!-- Step 1 -->
       <div class="step-1 reveal reveal-delay-1" style="background:#fff; border-radius:20px 4px 4px 20px; padding:40px 32px; position:relative;">
-        <div class="step-connector" style="position:absolute; top:32px; right:-12px; z-index:2; width:24px; height:24px; background:#2563EB; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+        <div class="step-connector" style="position:absolute; top:32px; right:-12px; z-index:2; width:24px; height:24px; background:#0F766E; border-radius:50%; display:flex; align-items:center; justify-content:center;">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </div>
-        <div style="display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:12px; background:#EFF6FF; font-family:'Syne',sans-serif; font-size:16px; font-weight:800; color:#2563EB; margin-bottom:20px;">01</div>
+        <div style="display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:12px; background:#F0FDFA; font-family:'Syne',sans-serif; font-size:16px; font-weight:800; color:#0F766E; margin-bottom:20px;">01</div>
         <h3 class="heading-md" style="margin:0 0 12px; color:#0B1728;" data-i18n="process.step1">Diagnostic Assessment</h3>
         <p style="font-size:15px; color:#475569; margin:0; line-height:1.7;" data-i18n="process.step1.desc">We start with a real, full-length practice test. That gives us a complete breakdown by skill area, so we know exactly where to focus before we teach anything.</p>
         <div style="margin-top:24px; display:flex; flex-direction:column; gap:8px;">
@@ -1343,10 +1329,10 @@
 
       <!-- Step 2 -->
       <div class="step-2 reveal reveal-delay-2" style="background:#fff; border-radius:4px; padding:40px 32px; position:relative; margin: 0 2px;">
-        <div class="step-connector" style="position:absolute; top:32px; right:-12px; z-index:2; width:24px; height:24px; background:#2563EB; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+        <div class="step-connector" style="position:absolute; top:32px; right:-12px; z-index:2; width:24px; height:24px; background:#0F766E; border-radius:50%; display:flex; align-items:center; justify-content:center;">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </div>
-        <div style="display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:12px; background:#EFF6FF; font-family:'Syne',sans-serif; font-size:16px; font-weight:800; color:#2563EB; margin-bottom:20px;">02</div>
+        <div style="display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:12px; background:#F0FDFA; font-family:'Syne',sans-serif; font-size:16px; font-weight:800; color:#0F766E; margin-bottom:20px;">02</div>
         <h3 class="heading-md" style="margin:0 0 12px; color:#0B1728;" data-i18n="process.step2">Custom Study Plan</h3>
         <p style="font-size:15px; color:#475569; margin:0; line-height:1.7;" data-i18n="process.step2.desc">Your tutor builds the plan around what the diagnostic found, not a preset curriculum. Each session targets something specific.</p>
         <div style="margin-top:24px; display:flex; flex-direction:column; gap:8px;">
@@ -1367,7 +1353,7 @@
 
       <!-- Step 3 -->
       <div class="step-3 reveal reveal-delay-3" style="background:#0B1728; border-radius:4px 20px 20px 4px; padding:40px 32px; position:relative;">
-        <div style="display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:12px; background:rgba(37,99,235,0.2); font-family:'Syne',sans-serif; font-size:16px; font-weight:800; color:#3B82F6; margin-bottom:20px;">03</div>
+        <div style="display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:12px; background:rgba(15,118,110,0.2); font-family:'Syne',sans-serif; font-size:16px; font-weight:800; color:#14B8A6; margin-bottom:20px;">03</div>
         <h3 class="heading-md" style="margin:0 0 12px; color:#fff;" data-i18n="process.step3">Expert Coaching</h3>
         <p style="font-size:15px; color:rgba(255,255,255,0.5); margin:0; line-height:1.7;" data-i18n="process.step3.desc">You work directly with tutors who scored in the 99th percentile. The goal is understanding how the test thinks, not just memorizing content.</p>
         <div style="margin-top:24px; display:flex; flex-direction:column; gap:8px;">
@@ -1386,7 +1372,7 @@
         </div>
 
         <!-- Score up badge -->
-        <div style="margin-top:28px; padding:16px; background:rgba(37,99,235,0.12); border:1px solid rgba(37,99,235,0.25); border-radius:14px; display:flex; align-items:center; gap:12px;">
+        <div style="margin-top:28px; padding:16px; background:rgba(15,118,110,0.12); border:1px solid rgba(15,118,110,0.25); border-radius:14px; display:flex; align-items:center; gap:12px;">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
           <div>
             <p style="margin:0; font-size:11px; color:rgba(255,255,255,0.4); font-weight:600; letter-spacing:0.06em; text-transform:uppercase;" data-i18n="process.outcome.label">Average outcome</p>
@@ -1418,7 +1404,7 @@
       <!-- Testimonial 1 — James Park -->
       <div class="card reveal reveal-delay-1" style="padding:28px;">
         <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
-          <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#2563EB,#3B82F6);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:#fff;flex-shrink:0;">J</div>
+          <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#0F766E,#14B8A6);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:#fff;flex-shrink:0;">J</div>
           <div>
             <p style="margin:0; font-weight:600; color:#0B1728; font-size:15px;">James Park</p>
             <p style="margin:0; font-size:12px; color:#94A3B8;" data-i18n="james.role">SAT Prep · Now at UMich Ross</p>
@@ -1439,7 +1425,7 @@
           </div>
           <div style="border-left:1px solid #F1F5F9; padding-left:16px;">
             <p style="margin:0; font-size:11px; color:#94A3B8;" data-i18n="results.label.ended">Ended</p>
-            <p style="margin:2px 0 0; font-weight:700; color:#2563EB; font-size:15px;">1540</p>
+            <p style="margin:2px 0 0; font-weight:700; color:#0F766E; font-size:15px;">1540</p>
           </div>
           <div style="border-left:1px solid #F1F5F9; padding-left:16px;">
             <p style="margin:0; font-size:11px; color:#94A3B8;" data-i18n="results.label.notat">Now At</p>
@@ -1449,7 +1435,7 @@
       </div>
 
       <!-- Testimonial 2 -->
-      <div class="card reveal reveal-delay-2" style="padding:28px; border-color:#bfdbfe; box-shadow:0 4px 24px rgba(37,99,235,0.08);">
+      <div class="card reveal reveal-delay-2" style="padding:28px; border-color:#bfdbfe; box-shadow:0 4px 24px rgba(15,118,110,0.08);">
         <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
           <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#F59E0B,#D97706);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:#fff;flex-shrink:0;">M</div>
           <div>
@@ -1518,7 +1504,7 @@
 
     <!-- Parent quote strip -->
     <div style="background:#0B1728; border-radius:20px; padding:40px 48px; display:flex; align-items:center; gap:48px; flex-wrap:wrap;">
-      <div style="width:4px; height:80px; background:linear-gradient(180deg,#2563EB,#10B981); border-radius:2px; flex-shrink:0;"></div>
+      <div style="width:4px; height:80px; background:linear-gradient(180deg,#0F766E,#10B981); border-radius:2px; flex-shrink:0;"></div>
       <div style="flex:1; min-width:280px;">
         <p style="font-family:'Syne',sans-serif; font-size:20px; font-weight:600; color:#fff; margin:0 0 12px; line-height:1.5;" data-i18n="results.parent.quote">"ReadySet1600 didn't just improve my son's score. They changed how he thinks about problems. He walked into the test room calm. That's worth more than any number."</p>
         <p style="margin:0; font-size:14px; color:rgba(255,255,255,0.45);" data-i18n="results.parent.author">— Parent of Aiden L., SAT 1520</p>
@@ -1587,9 +1573,9 @@
       </div>
 
       <!-- Intensive (featured) -->
-      <div style="background:#0B1728; border:1.5px solid rgba(37,99,235,0.4); border-radius:28px; padding:36px; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.2), 0 0 0 1px rgba(37,99,235,0.15);">
+      <div style="background:#0B1728; border:1.5px solid rgba(15,118,110,0.4); border-radius:28px; padding:36px; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.2), 0 0 0 1px rgba(15,118,110,0.15);">
         <div style="position:absolute; top:-16px; left:50%; transform:translateX(-50%); white-space:nowrap;">
-          <span style="background:linear-gradient(135deg,#2563EB,#3B82F6); color:#fff; font-size:11px; font-weight:700; padding:6px 16px; border-radius:100px; letter-spacing:0.06em; text-transform:uppercase; box-shadow:0 4px 12px rgba(37,99,235,0.4);" data-i18n="intensive.badge">Most Popular</span>
+          <span style="background:linear-gradient(135deg,#0F766E,#14B8A6); color:#fff; font-size:11px; font-weight:700; padding:6px 16px; border-radius:100px; letter-spacing:0.06em; text-transform:uppercase; box-shadow:0 4px 12px rgba(15,118,110,0.4);" data-i18n="intensive.badge">Most Popular</span>
         </div>
         <div class="section-tag section-tag-dark" style="margin-bottom:24px;" data-i18n="intensive.name">8-Week Intensive</div>
         <div style="margin-bottom:24px;">
@@ -1670,16 +1656,16 @@
 
     <!-- Referral info card -->
     <div style="max-width:680px; margin:40px auto 0;">
-      <div id="referral-card" style="background:#EFF6FF; border:1.5px solid rgba(37,99,235,0.2); border-radius:18px; padding:24px 28px; display:flex; flex-wrap:wrap; gap:28px; align-items:flex-start;">
+      <div id="referral-card" style="background:#F0FDFA; border:1.5px solid rgba(15,118,110,0.2); border-radius:18px; padding:24px 28px; display:flex; flex-wrap:wrap; gap:28px; align-items:flex-start;">
         <div style="flex:0 0 auto;">
           <div class="referral-icon-bg" style="width:44px; height:44px; border-radius:12px; background:#DBEAFE; display:flex; align-items:center; justify-content:center;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F766E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
           </div>
         </div>
         <div style="flex:1; min-width:220px;">
           <p class="referral-heading" style="font-family:'Syne',sans-serif; font-size:14px; font-weight:700; color:#0B1728; margin:0 0 4px;">Refer a Friend</p>
           <p class="referral-desc" style="font-family:'Outfit',sans-serif; font-size:13.5px; color:#475569; margin:0 0 4px; line-height:1.6;">Know a student who could use a score boost? Share ReadySet1600 and both of you benefit.</p>
-          <p style="font-family:'Outfit',sans-serif; font-size:12.5px; color:#2563EB; margin:0 0 16px; font-weight:500;">Every enrolled student gets a personal referral code to share.</p>
+          <p style="font-family:'Outfit',sans-serif; font-size:12.5px; color:#0F766E; margin:0 0 16px; font-weight:500;">Every enrolled student gets a personal referral code to share.</p>
           <div style="display:flex; flex-wrap:wrap; gap:24px;">
             <div>
               <p style="font-family:'Outfit',sans-serif; font-size:11px; font-weight:600; color:#94A3B8; text-transform:uppercase; letter-spacing:0.08em; margin:0 0 6px;">Book a session</p>
@@ -1811,7 +1797,7 @@
     color: #94A3B8;
   }
   .consult-input:focus, .consult-select:focus, .consult-textarea:focus {
-    border-color: #2563EB; box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+    border-color: #0F766E; box-shadow: 0 0 0 3px rgba(15,118,110,0.12);
     background: #fff;
   }
   .consult-select {
@@ -1825,18 +1811,18 @@
   .consult-submit {
     width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px;
     font-family: 'Outfit', sans-serif; font-size: 17px; font-weight: 700;
-    color: #fff; background: #2563EB;
+    color: #fff; background: #0F766E;
     border: none; border-radius: 100px; padding: 18px 32px;
     cursor: pointer; margin-top: 4px;
-    box-shadow: 0 4px 24px rgba(37,99,235,0.4), 0 1px 4px rgba(37,99,235,0.2);
+    box-shadow: 0 4px 24px rgba(15,118,110,0.4), 0 1px 4px rgba(15,118,110,0.2);
     transition: background 0.2s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
   }
   .consult-submit:hover:not(:disabled) {
-    background: #1d4ed8; transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(37,99,235,0.5);
+    background: #0a5c56; transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(15,118,110,0.5);
   }
   .consult-submit:active { transform: translateY(0); }
-  .consult-submit:focus-visible { outline: 2px solid #3B82F6; outline-offset: 3px; }
+  .consult-submit:focus-visible { outline: 2px solid #14B8A6; outline-offset: 3px; }
   .consult-submit:disabled { opacity: 0.55; cursor: default; transform: none; }
   .consult-success {
     display: none; text-align: center; padding: 24px 16px;
@@ -1853,7 +1839,7 @@
 
   <!-- Subtle radial glow -->
   <div style="position:absolute; inset:0; pointer-events:none; z-index:0;">
-    <div style="position:absolute; top:-30%; right:-5%; width:700px; height:700px; background:radial-gradient(circle, rgba(37,99,235,0.12) 0%, transparent 65%); border-radius:50%;"></div>
+    <div style="position:absolute; top:-30%; right:-5%; width:700px; height:700px; background:radial-gradient(circle, rgba(15,118,110,0.12) 0%, transparent 65%); border-radius:50%;"></div>
     <div style="position:absolute; bottom:-20%; left:-5%; width:600px; height:600px; background:radial-gradient(circle, rgba(16,185,129,0.07) 0%, transparent 65%); border-radius:50%;"></div>
   </div>
 
@@ -1872,19 +1858,19 @@
     <!-- ── CO-FOUNDERS ── -->
     <div style="margin-bottom:52px;">
       <div style="display:flex; align-items:center; gap:16px; margin-bottom:32px;">
-        <div style="height:1.5px; flex:1; background:linear-gradient(to right, transparent, rgba(37,99,235,0.45));"></div>
-        <span style="font-family:'Syne',sans-serif; font-size:12px; font-weight:700; color:#2563EB; text-transform:uppercase; letter-spacing:0.14em; white-space:nowrap;" data-i18n="about.founders.label">Co-Founders</span>
-        <div style="height:1.5px; flex:1; background:linear-gradient(to left, transparent, rgba(37,99,235,0.45));"></div>
+        <div style="height:1.5px; flex:1; background:linear-gradient(to right, transparent, rgba(15,118,110,0.45));"></div>
+        <span style="font-family:'Syne',sans-serif; font-size:12px; font-weight:700; color:#0F766E; text-transform:uppercase; letter-spacing:0.14em; white-space:nowrap;" data-i18n="about.founders.label">Co-Founders</span>
+        <div style="height:1.5px; flex:1; background:linear-gradient(to left, transparent, rgba(15,118,110,0.45));"></div>
       </div>
       <div class="about-founders-grid">
 
         <!-- Jayden Kim -->
-        <div class="reveal reveal-delay-1 team-card" style="background:rgba(255,255,255,0.04); border:1.5px solid rgba(255,255,255,0.08); border-radius:24px; padding:28px 24px; text-align:center; transition:background 0.25s, border-color 0.25s, transform 0.22s cubic-bezier(0.34,1.56,0.64,1);" onmouseover="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(37,99,235,0.3)';this.style.transform='translateY(-4px)'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='translateY(0)'">
-          <div style="width:88px; height:88px; border-radius:50%; overflow:hidden; margin:0 auto 16px; border:2.5px solid rgba(37,99,235,0.5); box-shadow:0 0 0 4px rgba(37,99,235,0.1);">
+        <div class="reveal reveal-delay-1 team-card" style="background:rgba(255,255,255,0.04); border:1.5px solid rgba(255,255,255,0.08); border-radius:24px; padding:28px 24px; text-align:center; transition:background 0.25s, border-color 0.25s, transform 0.22s cubic-bezier(0.34,1.56,0.64,1);" onmouseover="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(15,118,110,0.3)';this.style.transform='translateY(-4px)'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='translateY(0)'">
+          <div style="width:88px; height:88px; border-radius:50%; overflow:hidden; margin:0 auto 16px; border:2.5px solid rgba(15,118,110,0.5); box-shadow:0 0 0 4px rgba(15,118,110,0.1);">
             <img src="headshots/jayden.png" alt="Jayden Kim" style="width:100%; height:100%; object-fit:cover; display:block;" />
           </div>
           <p style="font-family:'Syne',sans-serif; font-size:17px; font-weight:700; color:#fff; margin:0 0 4px; letter-spacing:-0.01em;">Jayden Kim</p>
-          <p style="font-family:'Outfit',sans-serif; font-size:11px; font-weight:600; color:#2563EB; margin:0 0 12px; text-transform:uppercase; letter-spacing:0.1em;" data-i18n="about.role.founder">Co-Founder</p>
+          <p style="font-family:'Outfit',sans-serif; font-size:11px; font-weight:600; color:#0F766E; margin:0 0 12px; text-transform:uppercase; letter-spacing:0.1em;" data-i18n="about.role.founder">Co-Founder</p>
           <p style="font-family:'Outfit',sans-serif; font-size:13px; color:rgba(255,255,255,0.5); line-height:1.7; margin:0 0 16px;" data-i18n="about.jayden.bio">Hi I'm Jayden Kim, class of 2027 at Stuyvesant. I love math and physics. As the Physics Event Leader of Stuyvesant Science Olympiad, I have taught groups of students and prepared them for competitions. As a member of ARISTA, I have experience with 1-on-1 tutoring for exams such as the ones we're providing. I supported women in the women's day run.</p>
           <div style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center;">
             <span class="ach-pill">1550 SAT</span>
@@ -1899,12 +1885,12 @@
         </div>
 
         <!-- Daniel Li -->
-        <div class="reveal reveal-delay-2 team-card" style="background:rgba(255,255,255,0.04); border:1.5px solid rgba(255,255,255,0.08); border-radius:24px; padding:28px 24px; text-align:center; transition:background 0.25s, border-color 0.25s, transform 0.22s cubic-bezier(0.34,1.56,0.64,1);" onmouseover="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(37,99,235,0.3)';this.style.transform='translateY(-4px)'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='translateY(0)'">
-          <div style="width:88px; height:88px; border-radius:50%; overflow:hidden; margin:0 auto 16px; border:2.5px solid rgba(37,99,235,0.5); box-shadow:0 0 0 4px rgba(37,99,235,0.1);">
+        <div class="reveal reveal-delay-2 team-card" style="background:rgba(255,255,255,0.04); border:1.5px solid rgba(255,255,255,0.08); border-radius:24px; padding:28px 24px; text-align:center; transition:background 0.25s, border-color 0.25s, transform 0.22s cubic-bezier(0.34,1.56,0.64,1);" onmouseover="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(15,118,110,0.3)';this.style.transform='translateY(-4px)'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='translateY(0)'">
+          <div style="width:88px; height:88px; border-radius:50%; overflow:hidden; margin:0 auto 16px; border:2.5px solid rgba(15,118,110,0.5); box-shadow:0 0 0 4px rgba(15,118,110,0.1);">
             <img src="headshots/daniel.png" alt="Daniel Li" style="width:100%; height:100%; object-fit:cover; display:block;" />
           </div>
           <p style="font-family:'Syne',sans-serif; font-size:17px; font-weight:700; color:#fff; margin:0 0 4px; letter-spacing:-0.01em;">Daniel Li</p>
-          <p style="font-family:'Outfit',sans-serif; font-size:11px; font-weight:600; color:#2563EB; margin:0 0 12px; text-transform:uppercase; letter-spacing:0.1em;" data-i18n="about.role.founder">Co-Founder</p>
+          <p style="font-family:'Outfit',sans-serif; font-size:11px; font-weight:600; color:#0F766E; margin:0 0 12px; text-transform:uppercase; letter-spacing:0.1em;" data-i18n="about.role.founder">Co-Founder</p>
           <p style="font-family:'Outfit',sans-serif; font-size:13px; color:rgba(255,255,255,0.5); line-height:1.7; margin:0 0 16px;" data-i18n="about.daniel.bio">Hi I'm Daniel Li, class of 2027 in Stuyvesant HS. I love biology and math. I am a varsity fencer and I play the violin. If you don't find me sleeeping you can catch me eating.</p>
           <div style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center;">
             <span class="ach-pill">1570 SAT</span>
@@ -1918,12 +1904,12 @@
         </div>
 
         <!-- Ethan Zhang -->
-        <div class="reveal reveal-delay-3 team-card" style="background:rgba(255,255,255,0.04); border:1.5px solid rgba(255,255,255,0.08); border-radius:24px; padding:28px 24px; text-align:center; transition:background 0.25s, border-color 0.25s, transform 0.22s cubic-bezier(0.34,1.56,0.64,1);" onmouseover="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(37,99,235,0.3)';this.style.transform='translateY(-4px)'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='translateY(0)'">
-          <div style="width:88px; height:88px; border-radius:50%; overflow:hidden; margin:0 auto 16px; border:2.5px solid rgba(37,99,235,0.5); box-shadow:0 0 0 4px rgba(37,99,235,0.1);">
+        <div class="reveal reveal-delay-3 team-card" style="background:rgba(255,255,255,0.04); border:1.5px solid rgba(255,255,255,0.08); border-radius:24px; padding:28px 24px; text-align:center; transition:background 0.25s, border-color 0.25s, transform 0.22s cubic-bezier(0.34,1.56,0.64,1);" onmouseover="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(15,118,110,0.3)';this.style.transform='translateY(-4px)'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='translateY(0)'">
+          <div style="width:88px; height:88px; border-radius:50%; overflow:hidden; margin:0 auto 16px; border:2.5px solid rgba(15,118,110,0.5); box-shadow:0 0 0 4px rgba(15,118,110,0.1);">
             <img src="headshots/ethan.png" alt="Ethan Zhang" style="width:100%; height:100%; object-fit:cover; display:block;" />
           </div>
           <p style="font-family:'Syne',sans-serif; font-size:17px; font-weight:700; color:#fff; margin:0 0 4px; letter-spacing:-0.01em;">Ethan Zhang</p>
-          <p style="font-family:'Outfit',sans-serif; font-size:11px; font-weight:600; color:#2563EB; margin:0 0 12px; text-transform:uppercase; letter-spacing:0.1em;" data-i18n="about.role.founder">Co-Founder</p>
+          <p style="font-family:'Outfit',sans-serif; font-size:11px; font-weight:600; color:#0F766E; margin:0 0 12px; text-transform:uppercase; letter-spacing:0.1em;" data-i18n="about.role.founder">Co-Founder</p>
           <p style="font-family:'Outfit',sans-serif; font-size:13px; color:rgba(255,255,255,0.5); line-height:1.7; margin:0 0 16px;" data-i18n="about.ethan.bio">Hi I'm Ethan Zhang, class of 2027 at Stuyvesant. I like math, finance, and CS. As the Vice President of the Stuyvesant Study Society, I helped coordinate a team of 90+ tutors for 150+ students and provided 100+ hours of 1-on-1 tutoring myself. I'm also on the rowing team and play classical piano. I like Jayden Kim.</p>
           <div style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center;">
             <span class="ach-pill">1600 SAT</span>
@@ -1935,12 +1921,12 @@
         </div>
 
         <!-- Tae Kim -->
-        <div class="reveal reveal-delay-4 team-card" style="background:rgba(255,255,255,0.04); border:1.5px solid rgba(255,255,255,0.08); border-radius:24px; padding:28px 24px; text-align:center; transition:background 0.25s, border-color 0.25s, transform 0.22s cubic-bezier(0.34,1.56,0.64,1);" onmouseover="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(37,99,235,0.3)';this.style.transform='translateY(-4px)'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='translateY(0)'">
-          <div style="width:88px; height:88px; border-radius:50%; overflow:hidden; margin:0 auto 16px; border:2.5px solid rgba(37,99,235,0.5); box-shadow:0 0 0 4px rgba(37,99,235,0.1);">
+        <div class="reveal reveal-delay-4 team-card" style="background:rgba(255,255,255,0.04); border:1.5px solid rgba(255,255,255,0.08); border-radius:24px; padding:28px 24px; text-align:center; transition:background 0.25s, border-color 0.25s, transform 0.22s cubic-bezier(0.34,1.56,0.64,1);" onmouseover="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(15,118,110,0.3)';this.style.transform='translateY(-4px)'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='translateY(0)'">
+          <div style="width:88px; height:88px; border-radius:50%; overflow:hidden; margin:0 auto 16px; border:2.5px solid rgba(15,118,110,0.5); box-shadow:0 0 0 4px rgba(15,118,110,0.1);">
             <img src="headshots/tae.png" alt="Tae Kim" style="width:100%; height:100%; object-fit:cover; display:block;" />
           </div>
           <p style="font-family:'Syne',sans-serif; font-size:17px; font-weight:700; color:#fff; margin:0 0 4px; letter-spacing:-0.01em;">Tae Kim</p>
-          <p style="font-family:'Outfit',sans-serif; font-size:11px; font-weight:600; color:#2563EB; margin:0 0 12px; text-transform:uppercase; letter-spacing:0.1em;" data-i18n="about.role.founder">Co-Founder</p>
+          <p style="font-family:'Outfit',sans-serif; font-size:11px; font-weight:600; color:#0F766E; margin:0 0 12px; text-transform:uppercase; letter-spacing:0.1em;" data-i18n="about.role.founder">Co-Founder</p>
           <p style="font-family:'Outfit',sans-serif; font-size:13px; color:rgba(255,255,255,0.5); line-height:1.7; margin:0 0 16px;" data-i18n="about.tae.bio">Hi I'm Tae Kim, class of 2028 at Stuyvesant High School in New York City. I study classical guitar with Gohar Vardanyan and I play at the national level. I enjoy mathematics and I am good at competition math. I am cute and also highly ranked in Roblox Volleyball Legends.</p>
           <div style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center;">
             <span class="ach-pill">1580 SAT</span>
@@ -2027,8 +2013,8 @@
     font-size:11px;
     font-weight:600;
     color:rgba(255,255,255,0.65);
-    background:rgba(37,99,235,0.12);
-    border:1px solid rgba(37,99,235,0.2);
+    background:rgba(15,118,110,0.12);
+    border:1px solid rgba(15,118,110,0.2);
     border-radius:6px;
     padding:3px 8px;
     line-height:1.4;
@@ -2056,7 +2042,7 @@
 ════════════════════════════════════════ -->
 <section id="contact" class="noise" style="position:relative; background:#0B1728; overflow:hidden;">
   <div style="position:absolute; inset:0; pointer-events:none; z-index:0;">
-    <div style="position:absolute; top:-50%; left:-10%; width:900px; height:900px; background:radial-gradient(circle, rgba(37,99,235,0.2) 0%, transparent 60%); border-radius:50%;"></div>
+    <div style="position:absolute; top:-50%; left:-10%; width:900px; height:900px; background:radial-gradient(circle, rgba(15,118,110,0.2) 0%, transparent 60%); border-radius:50%;"></div>
     <div style="position:absolute; bottom:-40%; right:-5%; width:700px; height:700px; background:radial-gradient(circle, rgba(16,185,129,0.1) 0%, transparent 60%); border-radius:50%;"></div>
   </div>
 
@@ -2331,8 +2317,8 @@
     transition: color 0.15s, background 0.15s, border-color 0.15s, transform 0.15s cubic-bezier(0.34,1.56,0.64,1);
   }
   .exam-btn:hover { background: #E2E8F0; border-color: #CBD5E1; color: #1E293B; transform: translateY(-1px); }
-  .exam-btn:focus-visible { outline: 2px solid #2563EB; outline-offset: 2px; }
-  .exam-btn-active { color: #fff !important; background: #2563EB !important; border-color: #2563EB !important; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
+  .exam-btn:focus-visible { outline: 2px solid #0F766E; outline-offset: 2px; }
+  .exam-btn-active { color: #fff !important; background: #0F766E !important; border-color: #0F766E !important; box-shadow: 0 4px 12px rgba(15,118,110,0.3); }
   @media (max-width: 600px) {
     #consult-form > div:first-of-type { grid-template-columns: 1fr !important; }
     #contact .info-cards { grid-template-columns: 1fr !important; }
@@ -2436,17 +2422,6 @@
     });
   }, { threshold: 0.3 });
 
-  // ── Scroll reveal ──
-  const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        revealObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-
-  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
   // ══════════════════════════════════════════
   //  TRANSLATIONS
@@ -2946,18 +2921,18 @@
   #chat-widget { position:fixed; bottom:24px; right:24px; z-index:9999; font-family:'Outfit',sans-serif; }
 
   #chat-toggle {
-    width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,#2563EB,#3B82F6);
+    width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,#0F766E,#14B8A6);
     border:none; cursor:pointer; display:flex; align-items:center; justify-content:center;
-    box-shadow:0 4px 20px rgba(37,99,235,0.45); transition:transform 0.2s, box-shadow 0.2s;
+    box-shadow:0 4px 20px rgba(15,118,110,0.45); transition:transform 0.2s, box-shadow 0.2s;
   }
-  #chat-toggle:hover { transform:scale(1.08); box-shadow:0 6px 28px rgba(37,99,235,0.55); }
+  #chat-toggle:hover { transform:scale(1.08); box-shadow:0 6px 28px rgba(15,118,110,0.55); }
   #chat-toggle svg { transition:transform 0.25s, opacity 0.2s; }
 
   #chat-panel {
     position:absolute; bottom:68px; right:0;
     width:360px; max-height:560px;
     background:#fff; border:1.5px solid #E2E8F0; border-radius:20px;
-    box-shadow:0 24px 60px rgba(0,0,0,0.12), 0 0 0 1px rgba(37,99,235,0.06);
+    box-shadow:0 24px 60px rgba(0,0,0,0.12), 0 0 0 1px rgba(15,118,110,0.06);
     display:flex; flex-direction:column; overflow:hidden;
     transform-origin:bottom right;
     transition:opacity 0.22s ease, transform 0.22s ease, visibility 0.22s;
@@ -2971,7 +2946,7 @@
   }
   .chat-avatar {
     width:36px; height:36px; border-radius:50%;
-    background:#EFF6FF;
+    background:#F0FDFA;
     display:flex; align-items:center; justify-content:center; flex-shrink:0;
     overflow:hidden;
   }
@@ -2992,7 +2967,7 @@
 
   .msg-avatar {
     width:28px; height:28px; border-radius:50%; flex-shrink:0;
-    background:#EFF6FF;
+    background:#F0FDFA;
     display:flex; align-items:center; justify-content:center;
     overflow:hidden;
   }
@@ -3000,7 +2975,7 @@
     padding:10px 14px; border-radius:14px; font-size:13.5px; line-height:1.55;
   }
   .chat-msg.ai   .msg-bubble { background:#F1F5F9; color:#1E293B; border-radius:4px 14px 14px 14px; }
-  .chat-msg.user .msg-bubble { background:linear-gradient(135deg,#2563EB,#3B82F6); color:#fff; border-radius:14px 4px 14px 14px; }
+  .chat-msg.user .msg-bubble { background:linear-gradient(135deg,#0F766E,#14B8A6); color:#fff; border-radius:14px 4px 14px 14px; }
 
   .chat-typing { display:flex; gap:4px; align-items:center; padding:10px 14px; }
   .chat-typing span { width:6px; height:6px; background:#CBD5E1; border-radius:50%; animation:typing-bounce 1.2s ease-in-out infinite; }
@@ -3010,7 +2985,7 @@
 
   #chat-footer { padding:12px; border-top:1px solid #F1F5F9; }
   #chat-form { display:flex; gap:8px; align-items:flex-end; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:8px 8px 8px 14px; transition:border-color 0.2s; }
-  #chat-form:focus-within { border-color:rgba(37,99,235,0.4); }
+  #chat-form:focus-within { border-color:rgba(15,118,110,0.4); }
   #chat-input {
     flex:1; background:none; border:none; outline:none; resize:none;
     color:#0B1728; font-family:'Outfit',sans-serif; font-size:13.5px; line-height:1.5;
@@ -3019,7 +2994,7 @@
   #chat-input::placeholder { color:#94A3B8; }
 
   /* Dark mode overrides */
-  html.dark #chat-panel { background:#0B1728; border-color:rgba(37,99,235,0.3); box-shadow:0 24px 60px rgba(0,0,0,0.45), 0 0 0 1px rgba(37,99,235,0.1); }
+  html.dark #chat-panel { background:#0B1728; border-color:rgba(15,118,110,0.3); box-shadow:0 24px 60px rgba(0,0,0,0.45), 0 0 0 1px rgba(15,118,110,0.1); }
   html.dark #chat-header { border-bottom-color:rgba(255,255,255,0.07); }
   html.dark .chat-avatar { background:rgba(255,255,255,0.08); }
   html.dark .msg-avatar  { background:rgba(255,255,255,0.08); }
@@ -3031,11 +3006,11 @@
   html.dark .chat-typing span { background:rgba(255,255,255,0.4); }
   html.dark #chat-footer { border-top-color:rgba(255,255,255,0.07); }
   html.dark #chat-form { background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.1); }
-  html.dark #chat-form:focus-within { border-color:rgba(37,99,235,0.5); }
+  html.dark #chat-form:focus-within { border-color:rgba(15,118,110,0.5); }
   html.dark #chat-input { color:#fff; }
   html.dark #chat-input::placeholder { color:rgba(255,255,255,0.3); }
   #chat-send {
-    width:32px; height:32px; border-radius:10px; background:linear-gradient(135deg,#2563EB,#3B82F6);
+    width:32px; height:32px; border-radius:10px; background:linear-gradient(135deg,#0F766E,#14B8A6);
     border:none; cursor:pointer; display:flex; align-items:center; justify-content:center;
     flex-shrink:0; transition:opacity 0.2s, transform 0.15s;
   }
