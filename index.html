@@ -3420,8 +3420,20 @@
     </div>
   </div>
   <div class="dash-body">
-    <div class="dash-greeting">Welcome back.</div>
+    <div class="dash-greeting">Welcome back, <span id="dash-name">—</span>.</div>
     <div class="dash-subtext">Here's your tutor hub for ReadySet1600.</div>
+
+    <div id="upcoming-session-banner" style="display:none; background:rgba(20,184,166,0.08); border:1px solid rgba(20,184,166,0.25); border-radius:14px; padding:16px 20px; margin-bottom:32px; display:none; align-items:center; gap:16px;">
+      <div style="width:36px;height:36px;background:rgba(20,184,166,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#14B8A6;flex-shrink:0;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </div>
+      <div style="flex:1;">
+        <div style="font-size:11px;font-weight:700;color:#14B8A6;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:3px;">Upcoming Session</div>
+        <div style="font-size:15px;font-weight:600;color:#fff;" id="upcoming-student">—</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.45);margin-top:2px;" id="upcoming-details">—</div>
+      </div>
+      <a href="schedule.html" style="font-size:13px;font-weight:600;color:#14B8A6;text-decoration:none;white-space:nowrap;opacity:0.8;transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">View Schedule →</a>
+    </div>
 
     <div class="dash-section-title" style="margin-bottom:16px;">Quick Links</div>
     <div class="dash-cards">
@@ -3520,9 +3532,42 @@
     const d = new Date();
     document.getElementById('dash-date').textContent = d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
     document.getElementById('dash-user-email').textContent = user.email;
+
+    // Set name
+    const name = user.displayName || user.email.split('@')[0];
+    document.getElementById('dash-name').textContent = name;
+
+    // Load notes
     db.collection('tutors').doc(user.uid).get().then(doc => {
       document.getElementById('dash-notes-ta').value = (doc.exists && doc.data().notes) ? doc.data().notes : '';
     });
+
+    // Load upcoming session
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const todayIdx = new Date().getDay();
+    db.collection('sessions').where('assignedTutorId', '==', user.uid).get().then(snap => {
+      if (snap.empty) return;
+      const mySessions = snap.docs.map(d => d.data());
+      // Sort by day-of-week starting from today
+      mySessions.sort((a, b) => {
+        const ai = (days.indexOf(a.day) - todayIdx + 7) % 7;
+        const bi = (days.indexOf(b.day) - todayIdx + 7) % 7;
+        if (ai !== bi) return ai - bi;
+        return (a.time || '').localeCompare(b.time || '');
+      });
+      const next = mySessions[0];
+      if (!next) return;
+      // Format time
+      const [h, m] = (next.time || '0:0').split(':').map(Number);
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      const fmt = `${h % 12 || 12}:${m.toString().padStart(2,'0')} ${ampm}`;
+      const isToday = days[todayIdx] === next.day;
+      document.getElementById('upcoming-student').textContent = next.studentName;
+      document.getElementById('upcoming-details').textContent = `${isToday ? 'Today' : next.day} at ${fmt}${next.notes ? ' · ' + next.notes : ''}`;
+      const banner = document.getElementById('upcoming-session-banner');
+      banner.style.display = 'flex';
+    });
+
     document.getElementById('tutor-dashboard').classList.add('active');
     document.body.style.overflow = 'hidden';
   }
