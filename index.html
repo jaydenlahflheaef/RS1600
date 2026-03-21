@@ -2971,8 +2971,9 @@
   }
   .chat-avatar {
     width:36px; height:36px; border-radius:50%;
-    background:linear-gradient(135deg,#2563EB,#3B82F6);
+    background:#fff;
     display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    overflow:hidden;
   }
   #chat-header-text h3 { margin:0; font-family:'Syne',sans-serif; font-size:14px; font-weight:700; color:#fff; }
   #chat-header-text p  { margin:0; font-size:11px; color:rgba(255,255,255,0.4); }
@@ -2991,8 +2992,9 @@
 
   .msg-avatar {
     width:28px; height:28px; border-radius:50%; flex-shrink:0;
-    background:linear-gradient(135deg,#2563EB,#3B82F6);
+    background:#fff;
     display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
   }
   .msg-bubble {
     padding:10px 14px; border-radius:14px; font-size:13.5px; line-height:1.55;
@@ -3032,7 +3034,7 @@
   <div id="chat-panel" role="dialog" aria-label="Chat with ReadySet1600 AI">
     <div id="chat-header">
       <div class="chat-avatar">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20z"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 2-3 3-3 5"/><circle cx="12" cy="17" r=".5" fill="#fff"/></svg>
+        <img src="brand assets/onlylogoall.png" alt="RS1600" style="width:100%; height:100%; object-fit:contain;" />
       </div>
       <div id="chat-header-text">
         <h3><span class="chat-online-dot"></span>RS1600 Assistant</h3>
@@ -3080,7 +3082,7 @@
     const div = document.createElement('div');
     div.className = 'chat-msg ' + role;
     if (role === 'ai') {
-      div.innerHTML = `<div class="msg-avatar"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20z"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 2-3 3-3 5"/><circle cx="12" cy="17" r=".5" fill="#fff"/></svg></div><div class="msg-bubble"></div>`;
+      div.innerHTML = `<div class="msg-avatar"><img src="brand assets/onlylogoall.png" alt="RS1600" style="width:100%; height:100%; object-fit:contain;" /></div><div class="msg-bubble"></div>`;
       div.querySelector('.msg-bubble').textContent = text;
     } else {
       div.innerHTML = `<div class="msg-bubble"></div>`;
@@ -3094,7 +3096,7 @@
     const list = document.getElementById('chat-messages');
     const div = document.createElement('div');
     div.className = 'chat-msg ai'; div.id = 'chat-typing-indicator';
-    div.innerHTML = `<div class="msg-avatar"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20z"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 2-3 3-3 5"/><circle cx="12" cy="17" r=".5" fill="#fff"/></svg></div><div class="msg-bubble chat-typing"><span></span><span></span><span></span></div>`;
+    div.innerHTML = `<div class="msg-avatar"><img src="brand assets/onlylogoall.png" alt="RS1600" style="width:100%; height:100%; object-fit:contain;" /></div><div class="msg-bubble chat-typing"><span></span><span></span><span></span></div>`;
     list.appendChild(div);
     list.scrollTop = list.scrollHeight;
   }
