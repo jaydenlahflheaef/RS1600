@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Schedule — ReadySet1600</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: #0B1728; color: #fff; font-family: 'Outfit', sans-serif; min-height: 100vh; }
+
+    /* ── Top bar ── */
+    .topbar {
+      background: #162236;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 16px; }
+    .back-btn {
+      display: flex; align-items: center; gap: 6px;
+      color: rgba(255,255,255,0.4);
+      text-decoration: none;
+      font-size: 13px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      transition: color 0.2s, background 0.2s;
+    }
+    .back-btn:hover { color: #fff; background: rgba(255,255,255,0.08); }
+    .topbar h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+      margin: 0;
+      letter-spacing: -0.03em;
+    }
+    .session-count {
+      font-size: 12px;
+      color: rgba(255,255,255,0.35);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 3px 10px;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #0F766E, #14B8A6);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'Outfit', sans-serif;
+      padding: 8px 16px;
+      cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-secondary {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: rgba(255,255,255,0.7);
+      font-size: 13px;
+      font-family: 'Outfit', sans-serif;
+      padding: 8px 14px;
+      cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      transition: color 0.2s, background 0.2s;
+    }
+    .btn-secondary:hover { color: #fff; background: rgba(255,255,255,0.1); }
+
+    /* ── Body ── */
+    .page-body { padding: 32px; max-width: 960px; margin: 0 auto; }
+
+    /* ── Filter bar ── */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      font-size: 13px;
+      font-family: 'Outfit', sans-serif;
+      padding: 7px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.5);
+      transition: all 0.2s;
+    }
+    .filter-btn.active { background: rgba(20,184,166,0.15); border-color: rgba(20,184,166,0.4); color: #14B8A6; }
+    .filter-btn:hover:not(.active) { color: #fff; background: rgba(255,255,255,0.08); }
+
+    /* ── Date group ── */
+    .date-group { margin-bottom: 32px; }
+    .date-label {
+      font-family: 'Syne', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .sessions-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* ── Session card ── */
+    .session-card {
+      background: #162236;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: border-color 0.2s;
+    }
+    .session-card:hover { border-color: rgba(255,255,255,0.1); }
+    .session-card.assigned { border-color: rgba(20,184,166,0.15); }
+    .session-card.mine { border-color: rgba(20,184,166,0.35); background: rgba(20,184,166,0.05); }
+
+    .session-time-block {
+      text-align: center;
+      min-width: 60px;
+      flex-shrink: 0;
+    }
+    .session-time {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+    }
+    .session-ampm {
+      font-size: 11px;
+      color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .session-divider {
+      width: 1px;
+      height: 36px;
+      background: rgba(255,255,255,0.07);
+      flex-shrink: 0;
+    }
+
+    .session-info { flex: 1; min-width: 0; }
+    .session-student {
+      font-weight: 600;
+      font-size: 15px;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .session-notes {
+      font-size: 13px;
+      color: rgba(255,255,255,0.35);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .session-status { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .status-badge {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .status-badge.open {
+      background: rgba(245,158,11,0.12);
+      color: #F59E0B;
+      border: 1px solid rgba(245,158,11,0.2);
+    }
+    .status-badge.taken {
+      background: rgba(20,184,166,0.1);
+      color: #14B8A6;
+      border: 1px solid rgba(20,184,166,0.2);
+    }
+    .status-badge.mine-badge {
+      background: rgba(20,184,166,0.2);
+      color: #14B8A6;
+      border: 1px solid rgba(20,184,166,0.35);
+    }
+
+    .claim-btn {
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'Outfit', sans-serif;
+      padding: 7px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      border: none;
+      background: linear-gradient(135deg, #0F766E, #14B8A6);
+      color: #fff;
+      transition: opacity 0.2s, transform 0.15s;
+      white-space: nowrap;
+    }
+    .claim-btn:hover { opacity: 0.85; }
+    .claim-btn:active { transform: scale(0.97); }
+    .unclaim-btn {
+      font-size: 13px;
+      font-family: 'Outfit', sans-serif;
+      padding: 7px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.5);
+      transition: color 0.2s, background 0.2s;
+      white-space: nowrap;
+    }
+    .unclaim-btn:hover { color: #F87171; border-color: rgba(248,113,113,0.3); background: rgba(248,113,113,0.06); }
+    .delete-session-btn {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.2);
+      cursor: pointer;
+      padding: 4px;
+      display: flex; align-items: center;
+      transition: color 0.2s;
+    }
+    .delete-session-btn:hover { color: #F87171; }
+
+    /* ── Empty state ── */
+    .empty-state {
+      text-align: center;
+      padding: 80px 32px;
+      color: rgba(255,255,255,0.25);
+      font-size: 14px;
+    }
+    .empty-state svg { margin-bottom: 16px; display: block; margin-left: auto; margin-right: auto; opacity: 0.25; }
+    .empty-state p { margin: 0; }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(11,23,40,0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-card {
+      background: #162236;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 36px;
+      width: 100%;
+      max-width: 460px;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+      position: relative;
+    }
+    .modal-card h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      color: #fff;
+      margin: 0 0 20px;
+      letter-spacing: -0.03em;
+    }
+    .modal-close {
+      position: absolute;
+      top: 16px; right: 16px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: rgba(255,255,255,0.5);
+      cursor: pointer;
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      transition: color 0.2s, background 0.2s;
+    }
+    .modal-close:hover { color: #fff; background: rgba(255,255,255,0.1); }
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+    .form-group label { font-size: 12px; color: rgba(255,255,255,0.4); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+    .form-input {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 14px;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+    .form-input:focus { border-color: rgba(20,184,166,0.5); }
+    .form-input::placeholder { color: rgba(255,255,255,0.2); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
+
+    /* ── Auth gate ── */
+    #auth-gate {
+      display: flex; align-items: center; justify-content: center;
+      height: 100vh; flex-direction: column; gap: 12px;
+      color: rgba(255,255,255,0.4); font-size: 14px;
+    }
+    .spinner { width: 36px; height: 36px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #14B8A6; border-radius: 50%; animation: spin 0.7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-overlay { display: none; position: fixed; inset: 0; z-index: 99999; background: rgba(11,23,40,0.6); backdrop-filter: blur(4px); align-items: center; justify-content: center; }
+    .loading-overlay.active { display: flex; }
+
+    @media (max-width: 640px) {
+      .topbar { padding: 0 16px; }
+      .page-body { padding: 16px; }
+      .session-card { flex-wrap: wrap; gap: 12px; }
+      .session-notes { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="auth-gate">
+  <div class="spinner"></div>
+  Checking authentication…
+</div>
+
+<div id="app" style="display:none;">
+  <div class="topbar">
+    <div class="topbar-left">
+      <a href="index.html" class="back-btn" onclick="goBack(event)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Dashboard
+      </a>
+      <h1>Session Schedule</h1>
+      <span class="session-count" id="session-count">0 sessions</span>
+    </div>
+    <div id="cofounder-controls" style="display:none;">
+      <button class="btn-primary" onclick="openAddModal()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Session
+      </button>
+    </div>
+  </div>
+
+  <div class="page-body">
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+      <button class="filter-btn" onclick="setFilter('open', this)">Open</button>
+      <button class="filter-btn" onclick="setFilter('mine', this)">My Sessions</button>
+      <button class="filter-btn" onclick="setFilter('taken', this)">Assigned</button>
+    </div>
+    <div id="sessions-container"></div>
+  </div>
+</div>
+
+<!-- Add Session Modal -->
+<div class="modal-overlay" id="session-modal">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeModal()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <h2>Add Session</h2>
+    <div class="form-group">
+      <label>Student Name</label>
+      <input type="text" class="form-input" id="f-student" placeholder="Jane Smith" />
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" class="form-input" id="f-date" />
+      </div>
+      <div class="form-group">
+        <label>Time</label>
+        <input type="time" class="form-input" id="f-time" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Notes (optional)</label>
+      <input type="text" class="form-input" id="f-notes" placeholder="e.g. SAT Math focus, first session" />
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="addSession()">Add Session</button>
+    </div>
+  </div>
+</div>
+
+<div class="loading-overlay" id="loading-overlay">
+  <div class="spinner"></div>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+  firebase.initializeApp({
+    apiKey: "AIzaSyDy-g_ihlNGF19FVZ_-ChX-LfMIAZFKvYM",
+    authDomain: "rs1600-faccd.firebaseapp.com",
+    projectId: "rs1600-faccd",
+    storageBucket: "rs1600-faccd.firebasestorage.app",
+    messagingSenderId: "669933046930",
+    appId: "1:669933046930:web:3179bd9fd14e3e2694ea4b"
+  });
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  let sessions = [];
+  let currentUser = null;
+  let currentUserName = '';
+  let isCofounder = false;
+  let activeFilter = 'all';
+
+  // ── Auth ──
+  auth.onAuthStateChanged(async user => {
+    if (!user) { window.location.href = 'index.html'; return; }
+    currentUser = user;
+    currentUserName = user.displayName || user.email.split('@')[0];
+
+    const userDoc = await db.collection('users').doc(user.uid).get();
+    isCofounder = userDoc.exists && userDoc.data().role === 'cofounder';
+    if (isCofounder) document.getElementById('cofounder-controls').style.display = 'flex';
+
+    document.getElementById('auth-gate').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    loadSessions();
+  });
+
+  function goBack(e) { e.preventDefault(); window.location.href = 'index.html'; }
+
+  // ── Load ──
+  function loadSessions() {
+    db.collection('sessions').orderBy('date').orderBy('time').onSnapshot(snap => {
+      sessions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderSessions();
+    });
+  }
+
+  // ── Render ──
+  function setFilter(f, btn) {
+    activeFilter = f;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderSessions();
+  }
+
+  function formatTime(t) {
+    if (!t) return { time: '—', ampm: '' };
+    const [h, m] = t.split(':').map(Number);
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const h12 = h % 12 || 12;
+    return { time: `${h12}:${m.toString().padStart(2,'0')}`, ampm };
+  }
+
+  function formatDateLabel(dateStr) {
+    if (!dateStr) return 'Unknown Date';
+    const [y, mo, d] = dateStr.split('-').map(Number);
+    const date = new Date(y, mo - 1, d);
+    const today = new Date(); today.setHours(0,0,0,0);
+    const tomorrow = new Date(today); tomorrow.setDate(today.getDate() + 1);
+    if (date.getTime() === today.getTime()) return 'Today';
+    if (date.getTime() === tomorrow.getTime()) return 'Tomorrow';
+    return date.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+  }
+
+  function renderSessions() {
+    let list = sessions;
+    if (activeFilter === 'open') list = sessions.filter(s => !s.assignedTutorId);
+    else if (activeFilter === 'mine') list = sessions.filter(s => s.assignedTutorId === currentUser.uid);
+    else if (activeFilter === 'taken') list = sessions.filter(s => !!s.assignedTutorId);
+
+    document.getElementById('session-count').textContent = `${sessions.length} session${sessions.length !== 1 ? 's' : ''}`;
+
+    const container = document.getElementById('sessions-container');
+    if (list.length === 0) {
+      container.innerHTML = `<div class="empty-state">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <p>${activeFilter === 'mine' ? "You haven't claimed any sessions yet." : activeFilter === 'open' ? 'No open sessions right now.' : 'No sessions scheduled yet.'}</p>
+      </div>`;
+      return;
+    }
+
+    // Group by date
+    const groups = {};
+    list.forEach(s => {
+      const key = s.date || 'unscheduled';
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(s);
+    });
+
+    container.innerHTML = Object.keys(groups).sort().map(dateKey => `
+      <div class="date-group">
+        <div class="date-label">${formatDateLabel(dateKey)}</div>
+        <div class="sessions-grid">
+          ${groups[dateKey].map(s => renderCard(s)).join('')}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function renderCard(s) {
+    const { time, ampm } = formatTime(s.time);
+    const isMine = s.assignedTutorId === currentUser.uid;
+    const isAssigned = !!s.assignedTutorId;
+
+    let cardClass = 'session-card';
+    if (isMine) cardClass += ' mine';
+    else if (isAssigned) cardClass += ' assigned';
+
+    let statusHtml = '';
+    let actionHtml = '';
+
+    if (isMine) {
+      statusHtml = `<span class="status-badge mine-badge">You're tutoring</span>`;
+      actionHtml = `<button class="unclaim-btn" onclick="unclaimSession('${s.id}')">Unclaim</button>`;
+    } else if (isAssigned) {
+      statusHtml = `<span class="status-badge taken">${escHtml(s.assignedTutorName)} assigned</span>`;
+    } else {
+      statusHtml = `<span class="status-badge open">Open</span>`;
+      actionHtml = `<button class="claim-btn" onclick="claimSession('${s.id}')">Claim</button>`;
+    }
+
+    const deleteBtn = isCofounder
+      ? `<button class="delete-session-btn" onclick="deleteSession('${s.id}','${escAttr(s.studentName)}')" title="Delete session">
+           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+         </button>`
+      : '';
+
+    return `
+      <div class="${cardClass}" id="card-${s.id}">
+        <div class="session-time-block">
+          <div class="session-time">${time}</div>
+          <div class="session-ampm">${ampm}</div>
+        </div>
+        <div class="session-divider"></div>
+        <div class="session-info">
+          <div class="session-student">${escHtml(s.studentName)}</div>
+          ${s.notes ? `<div class="session-notes">${escHtml(s.notes)}</div>` : ''}
+        </div>
+        <div class="session-status">
+          ${statusHtml}
+          ${actionHtml}
+          ${deleteBtn}
+        </div>
+      </div>
+    `;
+  }
+
+  // ── Actions ──
+  async function claimSession(id) {
+    showLoading();
+    try {
+      await db.collection('sessions').doc(id).update({
+        assignedTutorId: currentUser.uid,
+        assignedTutorName: currentUserName
+      });
+    } catch(e) { alert('Error: ' + e.message); }
+    hideLoading();
+  }
+
+  async function unclaimSession(id) {
+    showLoading();
+    try {
+      await db.collection('sessions').doc(id).update({
+        assignedTutorId: null,
+        assignedTutorName: null
+      });
+    } catch(e) { alert('Error: ' + e.message); }
+    hideLoading();
+  }
+
+  async function deleteSession(id, name) {
+    if (!confirm(`Delete session for ${name}?`)) return;
+    showLoading();
+    await db.collection('sessions').doc(id).delete();
+    hideLoading();
+  }
+
+  // ── Add Modal ──
+  function openAddModal() {
+    document.getElementById('f-student').value = '';
+    document.getElementById('f-date').value = '';
+    document.getElementById('f-time').value = '';
+    document.getElementById('f-notes').value = '';
+    document.getElementById('session-modal').classList.add('active');
+    setTimeout(() => document.getElementById('f-student').focus(), 100);
+  }
+
+  function closeModal() {
+    document.getElementById('session-modal').classList.remove('active');
+  }
+
+  async function addSession() {
+    const student = document.getElementById('f-student').value.trim();
+    const date = document.getElementById('f-date').value;
+    const time = document.getElementById('f-time').value;
+    if (!student || !date || !time) { alert('Student name, date, and time are required.'); return; }
+
+    showLoading();
+    try {
+      await db.collection('sessions').add({
+        studentName: student,
+        date,
+        time,
+        notes: document.getElementById('f-notes').value.trim(),
+        assignedTutorId: null,
+        assignedTutorName: null,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      closeModal();
+    } catch(e) { alert('Error: ' + e.message); }
+    hideLoading();
+  }
+
+  document.getElementById('session-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  // ── Helpers ──
+  function escHtml(s) {
+    return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function escAttr(s) {
+    return (s || '').replace(/'/g,"\\'");
+  }
+  function showLoading() { document.getElementById('loading-overlay').classList.add('active'); }
+  function hideLoading() { document.getElementById('loading-overlay').classList.remove('active'); }
+</script>
+</body>
+</html>
