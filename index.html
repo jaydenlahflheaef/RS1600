@@ -1961,11 +1961,14 @@
     const btn  = document.getElementById('consult-btn');
 
     // Basic validation
-    const name  = form.name.value.trim();
-    const email = form.email.value.trim();
-    const grade = form.grade.value;
+    const nameEl  = document.getElementById('cf-name');
+    const emailEl = document.getElementById('cf-email');
+    const gradeEl = document.getElementById('cf-grade');
+    const name  = nameEl.value.trim();
+    const email = emailEl.value.trim();
+    const grade = gradeEl.value;
     if (!name || !email || !grade) {
-      [form.name, form.email, form.grade].forEach(el => {
+      [nameEl, emailEl, gradeEl].forEach(el => {
         if (!el.value.trim()) { el.style.borderColor = '#EF4444'; el.focus(); }
       });
       return;
@@ -1977,11 +1980,12 @@
     const payload = {
       name,
       email,
-      phone:        form.phone.value.trim(),
+      phone:        document.getElementById('cf-phone').value.trim(),
       grade,
-      currentScore: form.currentScore.value.trim(),
-      targetScore:  form.targetScore.value.trim(),
-      notes:        form.notes.value.trim(),
+      currentScore: document.getElementById('cf-current').value.trim(),
+      targetScore:  document.getElementById('cf-target').value.trim(),
+      notes:        document.getElementById('cf-notes').value.trim(),
+      referralCode: document.getElementById('cf-referral').value.trim(),
       submittedAt:  new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })
     };
 
@@ -2007,7 +2011,7 @@
   });
 
   // Remove red border on input focus
-  document.querySelectorAll('.consult-input, .consult-select').forEach(el => {
+  document.querySelectorAll('.consult-input, .consult-select, #cf-referral').forEach(el => {
     el.addEventListener('focus', () => el.style.borderColor = '');
   });
 </script>
