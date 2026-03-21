@@ -499,6 +499,11 @@
     html.dark .card { background:#111827 !important; border-color:rgba(255,255,255,0.08) !important; }
     html.dark .step-1, html.dark .step-2 { background:#111827 !important; }
     html.dark .step-1 p, html.dark .step-2 p { color:#94A3B8 !important; }
+    html.dark #referral-card { background:rgba(37,99,235,0.1) !important; border-color:rgba(37,99,235,0.25) !important; }
+    html.dark #referral-card .referral-icon-bg { background:rgba(37,99,235,0.2) !important; }
+    html.dark #referral-card .referral-heading { color:#F1F5F9 !important; }
+    html.dark #referral-card .referral-desc { color:rgba(255,255,255,0.5) !important; }
+    html.dark #referral-card .referral-item { color:rgba(255,255,255,0.7) !important; }
     html.dark .faq-item { border-color:rgba(255,255,255,0.08) !important; }
     html.dark .faq-btn { color:#E2E8F0 !important; }
     html.dark .faq-body > p { color:#94A3B8 !important; }
@@ -1665,25 +1670,25 @@
 
     <!-- Referral info card -->
     <div style="max-width:680px; margin:40px auto 0;">
-      <div style="background:#EFF6FF; border:1.5px solid rgba(37,99,235,0.2); border-radius:18px; padding:24px 28px; display:flex; flex-wrap:wrap; gap:28px; align-items:flex-start;">
+      <div id="referral-card" style="background:#EFF6FF; border:1.5px solid rgba(37,99,235,0.2); border-radius:18px; padding:24px 28px; display:flex; flex-wrap:wrap; gap:28px; align-items:flex-start;">
         <div style="flex:0 0 auto;">
-          <div style="width:44px; height:44px; border-radius:12px; background:#DBEAFE; display:flex; align-items:center; justify-content:center;">
+          <div class="referral-icon-bg" style="width:44px; height:44px; border-radius:12px; background:#DBEAFE; display:flex; align-items:center; justify-content:center;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
           </div>
         </div>
         <div style="flex:1; min-width:220px;">
-          <p style="font-family:'Syne',sans-serif; font-size:14px; font-weight:700; color:#0B1728; margin:0 0 4px;">Refer a Friend</p>
-          <p style="font-family:'Outfit',sans-serif; font-size:13.5px; color:#475569; margin:0 0 4px; line-height:1.6;">Know a student who could use a score boost? Share ReadySet1600 and both of you benefit.</p>
+          <p class="referral-heading" style="font-family:'Syne',sans-serif; font-size:14px; font-weight:700; color:#0B1728; margin:0 0 4px;">Refer a Friend</p>
+          <p class="referral-desc" style="font-family:'Outfit',sans-serif; font-size:13.5px; color:#475569; margin:0 0 4px; line-height:1.6;">Know a student who could use a score boost? Share ReadySet1600 and both of you benefit.</p>
           <p style="font-family:'Outfit',sans-serif; font-size:12.5px; color:#2563EB; margin:0 0 16px; font-weight:500;">Every enrolled student gets a personal referral code to share.</p>
           <div style="display:flex; flex-wrap:wrap; gap:24px;">
             <div>
               <p style="font-family:'Outfit',sans-serif; font-size:11px; font-weight:600; color:#94A3B8; text-transform:uppercase; letter-spacing:0.08em; margin:0 0 6px;">Book a session</p>
               <div style="display:flex; flex-direction:column; gap:5px;">
-                <div style="display:flex; align-items:center; gap:7px; font-family:'Outfit',sans-serif; font-size:13.5px; color:#1E293B;">
+                <div style="display:flex; align-items:center; gap:7px; font-family:'Outfit',sans-serif; font-size:13.5px; color:#1E293B;" class="referral-item">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
                   They get 50% off a session
                 </div>
-                <div style="display:flex; align-items:center; gap:7px; font-family:'Outfit',sans-serif; font-size:13.5px; color:#1E293B;">
+                <div style="display:flex; align-items:center; gap:7px; font-family:'Outfit',sans-serif; font-size:13.5px; color:#1E293B;" class="referral-item">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
                   You get 50% off a session
                 </div>
@@ -1692,11 +1697,11 @@
             <div>
               <p style="font-family:'Outfit',sans-serif; font-size:11px; font-weight:600; color:#94A3B8; text-transform:uppercase; letter-spacing:0.08em; margin:0 0 6px;">Buy a package</p>
               <div style="display:flex; flex-direction:column; gap:5px;">
-                <div style="display:flex; align-items:center; gap:7px; font-family:'Outfit',sans-serif; font-size:13.5px; color:#1E293B;">
+                <div style="display:flex; align-items:center; gap:7px; font-family:'Outfit',sans-serif; font-size:13.5px; color:#1E293B;" class="referral-item">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
                   They get $25 off
                 </div>
-                <div style="display:flex; align-items:center; gap:7px; font-family:'Outfit',sans-serif; font-size:13.5px; color:#1E293B;">
+                <div style="display:flex; align-items:center; gap:7px; font-family:'Outfit',sans-serif; font-size:13.5px; color:#1E293B;" class="referral-item">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
                   You get $50 credit
                 </div>
