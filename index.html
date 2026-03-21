@@ -524,6 +524,7 @@
   </style>
 </head>
 <body>
+<div id="auth-veil" style="position:fixed;inset:0;z-index:9997;background:#0B1728;transition:opacity 0.2s;pointer-events:none;"></div>
 
 <!-- ════════════════════════════════════════
      NAV
@@ -3542,11 +3543,6 @@
   }
 
   // ── Auth State ──
-  // Cover the page until Firebase resolves auth, preventing flicker
-  const authVeil = document.createElement('div');
-  authVeil.style.cssText = 'position:fixed;inset:0;z-index:9997;background:#0B1728;transition:opacity 0.15s;';
-  document.body.appendChild(authVeil);
-
   auth.onAuthStateChanged(user => {
     if (user) {
       openTutorDashboard(user);
@@ -3554,9 +3550,9 @@
       document.getElementById('tutor-dashboard').classList.remove('active');
       document.body.style.overflow = '';
     }
-    // Fade out the veil once auth state is known
-    authVeil.style.opacity = '0';
-    setTimeout(() => authVeil.remove(), 150);
+    const veil = document.getElementById('auth-veil');
+    veil.style.opacity = '0';
+    setTimeout(() => veil.remove(), 200);
   });
 
   document.getElementById('tutor-login-overlay').addEventListener('click', function(e) {
