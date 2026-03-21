@@ -487,7 +487,7 @@
     .lang-btn:hover:not(.active) { color:rgba(255,255,255,0.75); }
     .dark-toggle { width:32px; height:32px; border-radius:50%; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.07); color:rgba(255,255,255,0.6); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background 0.2s,color 0.2s; }
     .dark-toggle:hover { background:rgba(255,255,255,0.14); color:#fff; }
-    @media (max-width:768px) { .lang-btn { font-size:10px; padding:3px 7px; } .nav-controls { gap:5px; } }
+    @media (max-width:768px) { .nav-controls { display:none; } }
 
     /* ── Dark mode ── */
     html.dark body { background:#0A0F1A; color:#CBD5E1; }
@@ -582,6 +582,16 @@
   <a href="#contact" class="mob-cta" onclick="closeMobileMenu()">
     <span data-i18n="nav.cta">Book Free Consult</span>
   </a>
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-top:16px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.07);">
+    <div class="lang-switcher">
+      <button class="lang-btn active" onclick="setLang('en')" data-lang="en">EN</button>
+      <button class="lang-btn" onclick="setLang('zh')" data-lang="zh">中文</button>
+      <button class="lang-btn" onclick="setLang('ko')" data-lang="ko">한국어</button>
+    </div>
+    <button class="dark-toggle" onclick="toggleDark()" aria-label="Toggle dark mode">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </div>
 </div>
 
 
