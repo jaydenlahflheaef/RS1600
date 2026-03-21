@@ -1562,7 +1562,8 @@
         </div>
         <div style="flex:1; min-width:220px;">
           <p style="font-family:'Syne',sans-serif; font-size:14px; font-weight:700; color:#0B1728; margin:0 0 4px;">Refer a Friend</p>
-          <p style="font-family:'Outfit',sans-serif; font-size:13.5px; color:#475569; margin:0 0 16px; line-height:1.6;">Know a student who could use a score boost? Share ReadySet1600 and both of you benefit.</p>
+          <p style="font-family:'Outfit',sans-serif; font-size:13.5px; color:#475569; margin:0 0 4px; line-height:1.6;">Know a student who could use a score boost? Share ReadySet1600 and both of you benefit.</p>
+          <p style="font-family:'Outfit',sans-serif; font-size:12.5px; color:#2563EB; margin:0 0 16px; font-weight:500;">Every enrolled student gets a personal referral code to share.</p>
           <div style="display:flex; flex-wrap:wrap; gap:24px;">
             <div>
               <p style="font-family:'Outfit',sans-serif; font-size:11px; font-weight:600; color:#94A3B8; text-transform:uppercase; letter-spacing:0.08em; margin:0 0 6px;">Book a session</p>
@@ -1891,6 +1892,21 @@
             <input class="consult-input" id="cf-target" name="targetScore" type="text" placeholder="e.g. 1400" data-i18n-placeholder="ph.target" />
           </div>
 
+        </div>
+
+        <!-- Referral code -->
+        <div class="consult-field" style="margin-bottom:16px;">
+          <label class="consult-label" for="cf-referral">
+            Referral Code
+            <span style="font-weight:400; color:#94A3B8; margin-left:6px;">(optional)</span>
+          </label>
+          <div style="position:relative;">
+            <div style="position:absolute; left:14px; top:50%; transform:translateY(-50%); pointer-events:none;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <input class="consult-input" id="cf-referral" name="referralCode" type="text" placeholder="e.g. JANE2025" style="padding-left:38px; text-transform:uppercase; letter-spacing:0.05em;" oninput="this.value=this.value.toUpperCase()" />
+          </div>
+          <p style="font-size:12px; color:#94A3B8; margin:6px 0 0; line-height:1.5;">Were you referred by a current student? Enter their code and you'll both get a reward.</p>
         </div>
 
         <div class="consult-field" style="margin-bottom:24px;">
