@@ -1853,6 +1853,20 @@
       </p>
 
       <form id="consult-form" novalidate>
+
+        <!-- Exam picker -->
+        <div class="consult-field" style="margin-bottom:20px;">
+          <label class="consult-label">Which exam are you preparing for? <span style="color:#EF4444;">*</span></label>
+          <input type="hidden" id="cf-exam" name="exam" />
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:8px;">
+            <button type="button" class="exam-btn" data-exam="SAT" onclick="selectExam('SAT')">SAT</button>
+            <button type="button" class="exam-btn" data-exam="SHSAT" onclick="selectExam('SHSAT')">SHSAT</button>
+            <button type="button" class="exam-btn" data-exam="ACT" onclick="selectExam('ACT')">ACT</button>
+            <button type="button" class="exam-btn" data-exam="AMC" onclick="selectExam('AMC')">AMC</button>
+          </div>
+          <p id="cf-exam-error" style="font-size:12px; color:#EF4444; margin:6px 0 0; display:none;">Please select an exam to continue.</p>
+        </div>
+
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
 
           <div class="consult-field">
@@ -1883,13 +1897,13 @@
           </div>
 
           <div class="consult-field">
-            <label class="consult-label" for="cf-current" data-i18n="contact.current">Current SAT Score</label>
-            <input class="consult-input" id="cf-current" name="currentScore" type="text" placeholder="e.g. 1150 (or No score yet)" data-i18n-placeholder="ph.current" />
+            <label class="consult-label" for="cf-current"><span id="cf-current-label">Current Score</span></label>
+            <input class="consult-input" id="cf-current" name="currentScore" type="text" placeholder="Select an exam above first" />
           </div>
 
           <div class="consult-field">
-            <label class="consult-label" for="cf-target" data-i18n="contact.targetScore">Target SAT Score</label>
-            <input class="consult-input" id="cf-target" name="targetScore" type="text" placeholder="e.g. 1400" data-i18n-placeholder="ph.target" />
+            <label class="consult-label" for="cf-target"><span id="cf-target-label">Target Score</span></label>
+            <input class="consult-input" id="cf-target" name="targetScore" type="text" placeholder="Select an exam above first" />
           </div>
 
         </div>
@@ -1955,18 +1969,43 @@
   // STEP 1: Replace this URL with your deployed Google Apps Script URL
   const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxvtF161AnumxthIvCpDcm698x_YpSZe4ze3hnlTbHk_NLaQkPyypoKXC7azKixGoYo/exec';
 
+  const examScoreHints = {
+    SAT:   { current: 'e.g. 1150 (or No score yet)', target: 'e.g. 1400',  label: 'SAT Score'   },
+    SHSAT: { current: 'e.g. 500 (or No score yet)',  target: 'e.g. 650',   label: 'SHSAT Score' },
+    ACT:   { current: 'e.g. 24 (or No score yet)',   target: 'e.g. 32',    label: 'ACT Score'   },
+    AMC:   { current: 'e.g. 80 (or No score yet)',   target: 'e.g. 100',   label: 'AMC Score'   },
+  };
+
+  function selectExam(exam) {
+    document.getElementById('cf-exam').value = exam;
+    document.querySelectorAll('.exam-btn').forEach(btn => {
+      btn.classList.toggle('exam-btn-active', btn.dataset.exam === exam);
+    });
+    const hints = examScoreHints[exam];
+    document.getElementById('cf-current').placeholder = hints.current;
+    document.getElementById('cf-target').placeholder  = hints.target;
+    document.getElementById('cf-current-label').textContent = 'Current ' + hints.label;
+    document.getElementById('cf-target-label').textContent  = 'Target '  + hints.label;
+    document.getElementById('cf-exam-error').style.display  = 'none';
+  }
+
   document.getElementById('consult-form').addEventListener('submit', async function(e) {
     e.preventDefault();
     const form = e.target;
     const btn  = document.getElementById('consult-btn');
 
     // Basic validation
+    const exam    = document.getElementById('cf-exam').value;
     const nameEl  = document.getElementById('cf-name');
     const emailEl = document.getElementById('cf-email');
     const gradeEl = document.getElementById('cf-grade');
     const name  = nameEl.value.trim();
     const email = emailEl.value.trim();
     const grade = gradeEl.value;
+    if (!exam) {
+      document.getElementById('cf-exam-error').style.display = 'block';
+      return;
+    }
     if (!name || !email || !grade) {
       [nameEl, emailEl, gradeEl].forEach(el => {
         if (!el.value.trim()) { el.style.borderColor = '#EF4444'; el.focus(); }
@@ -1982,6 +2021,7 @@
       email,
       phone:        document.getElementById('cf-phone').value.trim(),
       grade,
+      exam,
       currentScore: document.getElementById('cf-current').value.trim(),
       targetScore:  document.getElementById('cf-target').value.trim(),
       notes:        document.getElementById('cf-notes').value.trim(),
@@ -2017,6 +2057,21 @@
 </script>
 <style>
   @keyframes spin { to { transform: rotate(360deg); } }
+  .exam-btn {
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #475569;
+    background: #F1F5F9;
+    border: 1.5px solid #E2E8F0;
+    border-radius: 10px;
+    padding: 10px 22px;
+    cursor: pointer;
+    transition: color 0.15s, background 0.15s, border-color 0.15s, transform 0.15s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .exam-btn:hover { background: #E2E8F0; border-color: #CBD5E1; color: #1E293B; transform: translateY(-1px); }
+  .exam-btn:focus-visible { outline: 2px solid #2563EB; outline-offset: 2px; }
+  .exam-btn-active { color: #fff !important; background: #2563EB !important; border-color: #2563EB !important; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
   @media (max-width: 600px) {
     #consult-form > div:first-of-type { grid-template-columns: 1fr !important; }
     #contact .info-cards { grid-template-columns: 1fr !important; }
