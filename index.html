@@ -4315,6 +4315,12 @@
   }
 
   // ── Auth State ──
+  // Fallback: remove veil if Firebase auth never fires (e.g. blocked by ad blocker)
+  setTimeout(() => {
+    const v = document.getElementById('auth-veil');
+    if (v) { v.style.opacity = '0'; setTimeout(() => v.remove(), 200); }
+  }, 3000);
+
   auth.onAuthStateChanged(async user => {
     const veil = document.getElementById('auth-veil');
     if (!user) {
