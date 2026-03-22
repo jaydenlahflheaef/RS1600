@@ -943,21 +943,24 @@
   .tutee-send-btn:hover { opacity: 0.88; }
 
   /* ── Tutor cards (tutee browsing) ── */
-  .tutor-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 18px 20px; margin-bottom: 12px; }
-  .tutor-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-  .tutor-card-headshot {
-    width: 44px; height: 44px; border-radius: 50%; object-fit: cover; flex-shrink: 0;
-    border: 2px solid rgba(20,184,166,0.3);
-  }
-  .tutor-card-headshot-fallback {
-    width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
-    background: linear-gradient(135deg, #0F766E, #14B8A6);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px; font-weight: 700; color: #fff; letter-spacing: 0.02em;
-    border: 2px solid rgba(20,184,166,0.3);
-  }
-  .tutor-card-name { font-size: 16px; font-weight: 700; color: #fff; }
+  .tutor-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 18px 20px; margin-bottom: 12px; display: flex; align-items: stretch; gap: 20px; }
+  .tutor-card-content { flex: 1; min-width: 0; }
+  .tutor-card-name { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 12px; }
   .tutor-card-slots { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tutor-card-photo {
+    width: 110px; flex-shrink: 0;
+    border-radius: 10px; overflow: hidden;
+    background: rgba(255,255,255,0.04);
+    align-self: stretch;
+  }
+  .tutor-card-photo img {
+    width: 100%; height: 100%; object-fit: cover; object-position: top;
+    display: block;
+  }
+  @media (max-width: 480px) {
+    .tutor-card { flex-direction: column-reverse; gap: 14px; }
+    .tutor-card-photo { width: 100%; height: 160px; align-self: auto; }
+  }
   .avail-slot-btn { background: rgba(20,184,166,0.1); border: 1px solid rgba(20,184,166,0.3); color: #14B8A6; font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 100px; cursor: pointer; transition: background 0.2s, border-color 0.2s; font-family: 'Outfit', sans-serif; }
   .avail-slot-btn:hover { background: rgba(20,184,166,0.22); border-color: rgba(20,184,166,0.5); }
   .avail-slot-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
@@ -4351,16 +4354,16 @@
             onclick="bookTutorFromBtn(this)">${s.day} · ${fmt}</button>`;
         }).join('');
         const firstName = tutor.name.split(' ')[0].toLowerCase();
-        const initials = tutor.name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
         return `<div class="tutor-card">
-          <div class="tutor-card-header">
-            <img class="tutor-card-headshot" src="headshots/${firstName}.png"
-              onerror="this.onerror=null;this.src='headshots/${firstName}.jpg';this.onerror=function(){this.style.display='none';this.nextElementSibling.style.display='flex'};"
-              alt="${tutor.name}" />
-            <div class="tutor-card-headshot-fallback" style="display:none;">${initials}</div>
+          <div class="tutor-card-content">
             <div class="tutor-card-name">${tutor.name}</div>
+            <div class="tutor-card-slots">${slotsHtml}</div>
           </div>
-          <div class="tutor-card-slots">${slotsHtml}</div>
+          <div class="tutor-card-photo">
+            <img src="headshots/${firstName}.png"
+              onerror="this.onerror=null;this.src='headshots/${firstName}.jpg';this.onerror=function(){this.closest('.tutor-card-photo').style.display='none'};"
+              alt="${tutor.name}" />
+          </div>
         </div>`;
       }).join('');
     }).catch(err => {
