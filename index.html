@@ -4025,15 +4025,19 @@
     await db.collection('assignments').doc(id).delete();
   }
 
-  async function sendTutorReply() {
+  function sendTutorReply() {
     if (!activeTuteeUid) return;
     const input = document.getElementById('tutor-reply-input');
+    const box = document.getElementById('tutor-thread-messages');
     const text = input.value.trim();
     if (!text) return;
     input.value = '';
-    await db.collection('messages').doc(activeTuteeUid).collection('thread').add({
+    db.collection('messages').doc(activeTuteeUid).collection('thread').add({
       from: 'tutor', text,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).catch(err => {
+      input.value = text;
+      box.innerHTML += `<div style="font-size:12px;color:#F87171;padding:4px 0;">Send failed: ${err.message}</div>`;
     });
   }
 
@@ -4165,7 +4169,7 @@
     const displayName = tutorName || 'your tutor';
 
     tuteeMessageListener = db.collection('messages').doc(uid).collection('thread')
-      .orderBy('createdAt').onSnapshot(snap => {
+      .orderBy('createdAt', 'asc').onSnapshot(snap => {
         if (snap.empty) {
           box.innerHTML = `<div style="font-size:13px;color:rgba(255,255,255,0.25);text-align:center;margin:auto;">No messages yet. Say hi to ${displayName}!</div>`;
           return;
@@ -4185,25 +4189,19 @@
       });
   }
 
-  async function sendTuteeMessage() {
+  function sendTuteeMessage() {
     const user = auth.currentUser;
-    if (!user) return;
     const input = document.getElementById('tutee-msg-input');
+    const box = document.getElementById('tutee-chat-messages');
     const text = input.value.trim();
-    if (!text) return;
+    if (!user || !text) return;
     input.value = '';
-    input.disabled = true;
-    try {
-      const msg = { from: 'tutee', text, createdAt: firebase.firestore.FieldValue.serverTimestamp() };
-      if (tuteeTutorId) msg.tutorId = tuteeTutorId;
-      await db.collection('messages').doc(user.uid).collection('thread').add(msg);
-    } catch (err) {
-      input.value = text; // restore on failure
-      alert('Could not send message: ' + err.message);
-    } finally {
-      input.disabled = false;
-      input.focus();
-    }
+    const msg = { from: 'tutee', text, createdAt: firebase.firestore.FieldValue.serverTimestamp() };
+    if (tuteeTutorId) msg.tutorId = tuteeTutorId;
+    db.collection('messages').doc(user.uid).collection('thread').add(msg).catch(err => {
+      input.value = text;
+      box.innerHTML += `<div style="font-size:12px;color:#F87171;padding:4px 0;">Send failed: ${err.message}</div>`;
+    });
   }
 
   // ── Auth State ──
