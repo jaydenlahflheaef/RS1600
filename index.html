@@ -838,6 +838,53 @@
     display: none; font-size: 13px; color: #F87171; margin-bottom: 12px;
   }
 
+  /* ── Tutee session glow cards ── */
+  .tutee-session-glow {
+    position: relative;
+    background: linear-gradient(135deg, rgba(20,184,166,0.12), rgba(15,118,110,0.06));
+    border: 1px solid rgba(20,184,166,0.3);
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    box-shadow: 0 0 24px rgba(20,184,166,0.08), 0 4px 16px rgba(0,0,0,0.25);
+    overflow: hidden;
+  }
+  .tutee-session-glow::before {
+    content: '';
+    position: absolute;
+    top: -40px; left: -40px;
+    width: 120px; height: 120px;
+    background: radial-gradient(circle, rgba(20,184,166,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .tutee-session-glow-icon {
+    width: 44px; height: 44px; flex-shrink: 0;
+    background: rgba(20,184,166,0.15);
+    border: 1px solid rgba(20,184,166,0.25);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    color: #14B8A6;
+  }
+  .tutee-session-day {
+    font-size: 11px; font-weight: 700; color: #14B8A6;
+    letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px;
+  }
+  .tutee-session-time {
+    font-size: 18px; font-weight: 700; color: #fff;
+    font-family: 'Syne', sans-serif; letter-spacing: -0.02em;
+  }
+  .tutee-session-meta {
+    font-size: 13px; color: rgba(255,255,255,0.45); margin-top: 3px;
+  }
+
+  /* ── Tutor thread close ── */
+  .tutor-thread-header {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;
+  }
+
   /* ── Tutee Dashboard ── */
   #tutee-dashboard {
     display: none; position: fixed; inset: 0; z-index: 9000;
@@ -3601,10 +3648,8 @@
     <div class="dash-subtext">Here's your student hub for ReadySet1600.</div>
 
     <div class="dash-section-title" style="margin-bottom:14px;">Upcoming Sessions</div>
-    <div class="dash-panel" style="margin-bottom:32px;">
-      <div class="dash-panel-list" id="tutee-sessions-list">
-        <div style="padding:16px 20px; font-size:14px; color:rgba(255,255,255,0.25);">Loading sessions…</div>
-      </div>
+    <div id="tutee-sessions-list" style="margin-bottom:32px;">
+      <div style="font-size:14px; color:rgba(255,255,255,0.25);">Loading sessions…</div>
     </div>
 
     <div class="dash-section-title" style="margin-bottom:14px;">My Assignments</div>
@@ -3720,7 +3765,12 @@
         <div style="padding:16px 20px; font-size:14px; color:rgba(255,255,255,0.25);">No student conversations yet.</div>
       </div>
       <div class="dash-thread" id="tutor-thread" style="display:none;">
-        <div style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.35); text-transform:uppercase; letter-spacing:0.07em; margin-bottom:10px;" id="tutor-thread-label"></div>
+        <div class="tutor-thread-header">
+          <div style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.35); text-transform:uppercase; letter-spacing:0.07em;" id="tutor-thread-label"></div>
+          <button onclick="closeTutorThread()" style="background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.3);display:flex;align-items:center;transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.3)'">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
         <div class="dash-thread-messages" id="tutor-thread-messages"></div>
         <div class="dash-reply-row">
           <input type="text" id="tutor-reply-input" placeholder="Reply to student…" onkeydown="if(event.key==='Enter') sendTutorReply()" />
@@ -3976,7 +4026,15 @@
     });
   }
 
+  function closeTutorThread() {
+    document.getElementById('tutor-thread').style.display = 'none';
+    document.querySelectorAll('.dash-convo-btn').forEach(b => b.classList.remove('active'));
+    if (tutorThreadListener) { tutorThreadListener(); tutorThreadListener = null; }
+    activeTuteeUid = null; activeTuteeEmail = null;
+  }
+
   function openTutorThread(uid, name) {
+    if (activeTuteeUid === uid) { closeTutorThread(); return; }
     activeTuteeUid = uid;
     activeTuteeEmail = name;
     document.getElementById('tutor-thread').style.display = '';
@@ -4119,18 +4177,21 @@
 
         const list = document.getElementById('tutee-sessions-list');
         if (!mine.length) {
-          list.innerHTML = '<div style="padding:16px 20px;font-size:14px;color:rgba(255,255,255,0.25);">No upcoming sessions. Check back soon!</div>';
+          list.innerHTML = '<div style="font-size:14px;color:rgba(255,255,255,0.25);">No upcoming sessions. Check back soon!</div>';
         } else {
           list.innerHTML = mine.map(s => {
             const [h, m] = (s.time || '0:0').split(':').map(Number);
             const ampm = h >= 12 ? 'PM' : 'AM';
             const fmt = `${h % 12 || 12}:${(m||0).toString().padStart(2,'0')} ${ampm}`;
             const isToday = days[todayIdx] === s.day;
-            return `<div class="dash-assign-row">
-              <div class="dash-assign-dot"></div>
-              <div class="dash-assign-info">
-                <div class="dash-assign-title">${isToday ? 'Today' : s.day} at ${fmt}</div>
-                <div class="dash-assign-meta">${s.assignedTutorName ? 'with ' + s.assignedTutorName : 'No tutor assigned yet'}${s.notes ? ' · ' + s.notes : ''}</div>
+            return `<div class="tutee-session-glow">
+              <div class="tutee-session-glow-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              </div>
+              <div>
+                <div class="tutee-session-day">${isToday ? '🟢 Today' : s.day}</div>
+                <div class="tutee-session-time">${fmt}</div>
+                <div class="tutee-session-meta">${s.assignedTutorName ? 'with ' + s.assignedTutorName : 'No tutor assigned yet'}${s.notes ? ' · ' + s.notes : ''}</div>
               </div>
             </div>`;
           }).join('');
