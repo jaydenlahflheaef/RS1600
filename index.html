@@ -3535,7 +3535,6 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
 
 <!-- ══════════════════════════════════════
      TUTOR LOGIN MODAL
@@ -3708,11 +3707,6 @@
         <input type="text" id="assign-title" placeholder="Assignment title" />
         <input type="text" id="assign-desc" placeholder="Description (optional)" />
         <input type="text" id="assign-due" placeholder="Due date (optional)" style="max-width:160px;" />
-        <label class="assign-file-btn" title="Attach a file">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
-          <input type="file" id="assign-file" style="display:none;" onchange="updateFileLabel(this)" />
-        </label>
-        <span id="assign-file-label" style="font-size:12px;color:rgba(255,255,255,0.35);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
         <button class="dash-post-btn" id="assign-post-btn" onclick="postAssignment()">Post</button>
       </div>
       <div class="dash-panel-list" id="tutor-assignments-list">
@@ -3755,7 +3749,6 @@
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
   const db = firebase.firestore();
-  const storage = firebase.storage();
   auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
   // ── Member Login Modal ──
@@ -4015,10 +4008,6 @@
     document.getElementById('tutor-reply-input').focus();
   }
 
-  function updateFileLabel(input) {
-    document.getElementById('assign-file-label').textContent = input.files[0] ? input.files[0].name : '';
-  }
-
   async function postAssignment() {
     const sel = document.getElementById('assign-tutee-select');
     const tuteeUid = sel.value;
@@ -4026,41 +4015,23 @@
     const title = document.getElementById('assign-title').value.trim();
     const btn = document.getElementById('assign-post-btn');
     if (!tuteeUid || !title) { alert('Please select a student and enter a title.'); return; }
-
     btn.textContent = 'Posting…';
     btn.disabled = true;
-
     try {
-      let fileUrl = null, fileName = null;
-      const fileInput = document.getElementById('assign-file');
-      const file = fileInput.files[0];
-      if (file) {
-        btn.textContent = 'Uploading…';
-        const ref = storage.ref(`assignments/${tuteeUid}/${Date.now()}_${file.name}`);
-        await ref.put(file);
-        fileUrl = await ref.getDownloadURL();
-        fileName = file.name;
-      }
-
       await db.collection('assignments').add({
         tuteeUid, tuteeEmail, title,
         description: document.getElementById('assign-desc').value.trim(),
         dueDate: document.getElementById('assign-due').value.trim(),
-        fileUrl, fileName,
         completed: false,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
-
       document.getElementById('assign-title').value = '';
       document.getElementById('assign-desc').value = '';
       document.getElementById('assign-due').value = '';
-      fileInput.value = '';
-      document.getElementById('assign-file-label').textContent = '';
       btn.textContent = 'Posted ✓';
       setTimeout(() => { btn.textContent = 'Post'; }, 2000);
     } catch (err) {
-      alert('Error posting assignment: ' + err.message);
-      btn.textContent = 'Post';
+      alert('Error: ' + err.message);
     } finally {
       btn.disabled = false;
     }
