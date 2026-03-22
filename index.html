@@ -3964,12 +3964,19 @@
       if (!studentNames.length) return;
       const promises = studentNames.map(name =>
         db.collection('members').where('name', '==', name).limit(1).get().then(mSnap => {
-          if (mSnap.empty) return null;
-          const email = mSnap.docs[0].data().email;
-          if (!email) return null;
-          return db.collection('users').where('email', '==', email).limit(1).get().then(uSnap => {
-            if (uSnap.empty) return null;
-            return { uid: uSnap.docs[0].id, name, email };
+          const lookup = mSnap.empty
+            ? db.collection('members').where('email', '==', name).limit(1).get()
+            : Promise.resolve(mSnap);
+          return lookup.then(snap => {
+            if (snap.empty) return null;
+            const memberData = snap.docs[0].data();
+            const email = memberData.email;
+            const displayName = memberData.name || name;
+            if (!email) return null;
+            return db.collection('users').where('email', '==', email).limit(1).get().then(uSnap => {
+              if (uSnap.empty) return null;
+              return { uid: uSnap.docs[0].id, name: displayName, email };
+            });
           });
         })
       );
@@ -3996,6 +4003,7 @@
         const ta = a.data().createdAt?.toMillis?.() || 0;
         const tb = b.data().createdAt?.toMillis?.() || 0;
         return tb - ta;
+      });
       list.innerHTML = docs.map(doc => {
         const a = doc.data();
         const done = !!a.completed;
@@ -4014,7 +4022,6 @@
     });
 
     // Load student conversations — derived from claimed sessions, no messages collection listing needed
-    const tutorUid = auth.currentUser.uid;
     db.collection('sessions').where('assignedTutorId', '==', tutorUid).get().then(sessSnap => {
       const convoList = document.getElementById('tutor-convo-list');
       const studentNames = [...new Set(sessSnap.docs.map(d => d.data().studentName).filter(Boolean))];
