@@ -3486,6 +3486,7 @@
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
   const db = firebase.firestore();
+  auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
   // ── Tutor Login Modal ──
   function openTutorLogin(e) {
@@ -3596,9 +3597,7 @@
 
   // ── Auth State ──
   auth.onAuthStateChanged(user => {
-    if (user) {
-      openTutorDashboard(user);
-    } else {
+    if (!user) {
       document.getElementById('tutor-dashboard').classList.remove('active');
       document.body.style.overflow = '';
     }
