@@ -503,7 +503,7 @@
   </style>
 </head>
 <body>
-<div id="auth-veil" style="position:fixed;inset:0;z-index:9997;background:#0B1728;transition:opacity 0.2s;pointer-events:none;"></div>
+<div id="auth-veil" style="position:fixed;inset:0;z-index:9997;background:#0B1728;transition:opacity 0.2s;"></div>
 
 <!-- ════════════════════════════════════════
      NAV
@@ -4152,18 +4152,21 @@
   }
 
   // ── Auth State ──
-  auth.onAuthStateChanged(user => {
+  auth.onAuthStateChanged(async user => {
+    const veil = document.getElementById('auth-veil');
     if (!user) {
       document.getElementById('tutor-dashboard').classList.remove('active');
       document.getElementById('tutee-dashboard').classList.remove('active');
       document.body.style.overflow = '';
       if (tuteeMessageListener) { tuteeMessageListener(); tuteeMessageListener = null; }
+      if (veil) { veil.style.opacity = '0'; setTimeout(() => veil.remove(), 200); }
     } else if (new URLSearchParams(window.location.search).get('portal') === '1') {
       history.replaceState(null, '', window.location.pathname);
-      routeUser(user);
+      await routeUser(user);
+      if (veil) { veil.style.opacity = '0'; setTimeout(() => veil.remove(), 200); }
+    } else {
+      if (veil) { veil.style.opacity = '0'; setTimeout(() => veil.remove(), 200); }
     }
-    const veil = document.getElementById('auth-veil');
-    if (veil) { veil.style.opacity = '0'; setTimeout(() => veil.remove(), 200); }
   });
 
   document.getElementById('tutor-login-overlay').addEventListener('click', function(e) {
