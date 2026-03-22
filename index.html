@@ -3953,29 +3953,48 @@
   let activeTuteeEmail = null;
 
   function loadTutorPanels() {
-    // Populate tutee dropdown
-    db.collection('users').where('role', '==', 'tutee').get().then(snap => {
-      const sel = document.getElementById('assign-tutee-select');
-      sel.innerHTML = '<option value="">Select student…</option>';
-      snap.docs.forEach(doc => {
-        const d = doc.data();
-        const opt = document.createElement('option');
-        opt.value = doc.id;
-        opt.textContent = d.email;
-        opt.dataset.email = d.email;
-        sel.appendChild(opt);
+    // Populate tutee dropdown — only students from this tutor's claimed sessions
+    const tutorUid = auth.currentUser.uid;
+    const sel = document.getElementById('assign-tutee-select');
+    sel.innerHTML = '<option value="">Select student…</option>';
+    db.collection('sessions').where('assignedTutorId', '==', tutorUid).get().then(sessSnap => {
+      const studentNames = [...new Set(sessSnap.docs.map(d => d.data().studentName).filter(Boolean))];
+      if (!studentNames.length) return;
+      const promises = studentNames.map(name =>
+        db.collection('members').where('name', '==', name).limit(1).get().then(mSnap => {
+          if (mSnap.empty) return null;
+          const email = mSnap.docs[0].data().email;
+          if (!email) return null;
+          return db.collection('users').where('email', '==', email).limit(1).get().then(uSnap => {
+            if (uSnap.empty) return null;
+            return { uid: uSnap.docs[0].id, name, email };
+          });
+        })
+      );
+      Promise.all(promises).then(results => {
+        results.filter(Boolean).forEach(({ uid, name, email }) => {
+          const opt = document.createElement('option');
+          opt.value = uid;
+          opt.textContent = name;
+          opt.dataset.email = email;
+          sel.appendChild(opt);
+        });
       });
     });
 
-    // Load all assignments in real-time
+    // Load assignments posted by this tutor only
     if (tutorAssignListener) tutorAssignListener();
-    tutorAssignListener = db.collection('assignments').orderBy('createdAt', 'desc').onSnapshot(snap => {
+    tutorAssignListener = db.collection('assignments').where('tutorUid', '==', tutorUid).onSnapshot(snap => {
       const list = document.getElementById('tutor-assignments-list');
       if (snap.empty) {
         list.innerHTML = '<div style="padding:16px 20px; font-size:14px; color:rgba(255,255,255,0.25);">No assignments posted yet.</div>';
         return;
       }
-      list.innerHTML = snap.docs.map(doc => {
+      const docs = snap.docs.slice().sort((a, b) => {
+        const ta = a.data().createdAt?.toMillis?.() || 0;
+        const tb = b.data().createdAt?.toMillis?.() || 0;
+        return tb - ta;
+      list.innerHTML = docs.map(doc => {
         const a = doc.data();
         const done = !!a.completed;
         return `<div class="dash-assign-row">
@@ -4078,6 +4097,7 @@
     try {
       await db.collection('assignments').add({
         tuteeUid, tuteeEmail, title,
+        tutorUid: auth.currentUser.uid,
         description: document.getElementById('assign-desc').value.trim(),
         dueDate: document.getElementById('assign-due').value.trim(),
         completed: false,
