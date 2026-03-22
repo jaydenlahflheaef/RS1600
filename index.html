@@ -4162,16 +4162,12 @@
 
     if (tuteeMessageListener) tuteeMessageListener();
     const box = document.getElementById('tutee-chat-messages');
-
-    if (!tutorName) {
-      box.innerHTML = '<div style="font-size:13px;color:rgba(255,255,255,0.25);text-align:center;margin:auto;">No tutor assigned yet. Check back after your session is claimed.</div>';
-      return;
-    }
+    const displayName = tutorName || 'your tutor';
 
     tuteeMessageListener = db.collection('messages').doc(uid).collection('thread')
       .orderBy('createdAt').onSnapshot(snap => {
         if (snap.empty) {
-          box.innerHTML = `<div style="font-size:13px;color:rgba(255,255,255,0.25);text-align:center;margin:auto;">No messages yet. Say hi to ${tutorName}!</div>`;
+          box.innerHTML = `<div style="font-size:13px;color:rgba(255,255,255,0.25);text-align:center;margin:auto;">No messages yet. Say hi to ${displayName}!</div>`;
           return;
         }
         box.innerHTML = snap.docs.map(doc => {
@@ -4180,10 +4176,12 @@
           const time = m.createdAt ? m.createdAt.toDate().toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' }) : '';
           return `<div style="display:flex;flex-direction:column;align-items:${fromTutee ? 'flex-end' : 'flex-start'};">
             <div class="dash-thread-msg ${fromTutee ? 'from-tutor' : 'from-tutee'}">${m.text}</div>
-            <div class="dash-thread-meta">${fromTutee ? 'You' : tutorName}${time ? ' · ' + time : ''}</div>
+            <div class="dash-thread-meta">${fromTutee ? 'You' : displayName}${time ? ' · ' + time : ''}</div>
           </div>`;
         }).join('');
         box.scrollTop = box.scrollHeight;
+      }, err => {
+        box.innerHTML = `<div style="font-size:13px;color:#F87171;text-align:center;margin:auto;">Could not load messages: ${err.message}</div>`;
       });
   }
 
@@ -4194,9 +4192,18 @@
     const text = input.value.trim();
     if (!text) return;
     input.value = '';
-    const msg = { from: 'tutee', text, createdAt: firebase.firestore.FieldValue.serverTimestamp() };
-    if (tuteeTutorId) msg.tutorId = tuteeTutorId;
-    await db.collection('messages').doc(user.uid).collection('thread').add(msg);
+    input.disabled = true;
+    try {
+      const msg = { from: 'tutee', text, createdAt: firebase.firestore.FieldValue.serverTimestamp() };
+      if (tuteeTutorId) msg.tutorId = tuteeTutorId;
+      await db.collection('messages').doc(user.uid).collection('thread').add(msg);
+    } catch (err) {
+      input.value = text; // restore on failure
+      alert('Could not send message: ' + err.message);
+    } finally {
+      input.disabled = false;
+      input.focus();
+    }
   }
 
   // ── Auth State ──
