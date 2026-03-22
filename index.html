@@ -888,7 +888,7 @@
   /* ── Tutee Dashboard ── */
   #tutee-dashboard {
     display: none; position: fixed; inset: 0; z-index: 9000;
-    background: #0B1728; overflow-y: auto;
+    background: #0B1728; overflow-y: auto; overscroll-behavior: contain;
   }
   #tutee-dashboard.active { display: block; }
   .tutee-sessions-empty, .tutee-assignments-empty {
@@ -974,6 +974,7 @@
     z-index: 9998;
     background: #0B1728;
     overflow-y: auto;
+    overscroll-behavior: contain;
   }
   #tutor-dashboard.active { display: block; }
   #tutor-dashboard .dash-nav, #tutee-dashboard .dash-nav {
