@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Score Tracking — ReadySet1600</title>
+  <link rel="icon" type="image/png" href="favicon.png" id="favicon" />
+  <script>
+    window.addEventListener('load', function() {
+      var img = new Image(); img.crossOrigin = 'anonymous';
+      img.onload = function() {
+        var size = 64, c = document.createElement('canvas'); c.width = size; c.height = size;
+        var ctx = c.getContext('2d'); ctx.beginPath(); ctx.arc(size/2, size/2, size/2, 0, Math.PI*2); ctx.closePath(); ctx.clip();
+        ctx.drawImage(img, 0, 0, size, size);
+        document.getElementById('favicon').href = c.toDataURL('image/png');
+      }; img.src = 'newcirclelog.png';
+    });
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: #0B1728; color: #fff; font-family: 'Outfit', sans-serif; min-height: 100vh; }
+
+    .topbar {
+      background: #162236;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0 32px;
+      height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 16px; }
+    .back-btn {
+      display: flex; align-items: center; gap: 6px;
+      color: rgba(255,255,255,0.4); text-decoration: none; font-size: 13px;
+      padding: 6px 10px; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.04);
+      transition: color 0.2s, background 0.2s;
+    }
+    .back-btn:hover { color: #fff; background: rgba(255,255,255,0.08); }
+    .topbar h1 { font-family: 'DM Sans', sans-serif; font-size: 18px; font-weight: 800; color: #fff; margin: 0; letter-spacing: -0.03em; }
+    .user-label { font-size: 13px; color: rgba(255,255,255,0.35); }
+    .btn-danger { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25); border-radius: 8px; color: #F87171; font-size: 13px; font-family: 'Outfit', sans-serif; padding: 8px 14px; cursor: pointer; transition: background 0.2s; }
+    .btn-danger:hover { background: rgba(239,68,68,0.2); }
+
+    .page-body { padding: 32px; max-width: 760px; margin: 0 auto; }
+
+    .section-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.3);
+      text-transform: uppercase; letter-spacing: 0.1em; margin: 0 0 16px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .log-form {
+      padding: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end;
+    }
+    .log-form select, .log-form input {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      padding: 9px 12px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .log-form select { min-width: 160px; cursor: pointer; }
+    .log-form select option { background: #162236; }
+    .log-form input[type="number"] { width: 110px; }
+    .log-form input[type="date"] { width: 160px; }
+    .log-form select:focus, .log-form input:focus { border-color: rgba(20,184,166,0.5); }
+    .btn-log {
+      background: linear-gradient(135deg, #0F766E, #14B8A6);
+      border: none; border-radius: 8px; color: #fff;
+      font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600;
+      padding: 9px 20px; cursor: pointer; white-space: nowrap;
+      transition: opacity 0.2s;
+    }
+    .btn-log:hover { opacity: 0.88; }
+    .btn-log:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .chart-area { padding: 20px; }
+    .chart-controls {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap;
+    }
+    .chart-controls span {
+      font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.3);
+      letter-spacing: 0.07em; text-transform: uppercase; flex-shrink: 0;
+    }
+    .chart-controls select {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; color: #fff;
+      font-family: 'Outfit', sans-serif; font-size: 13px;
+      padding: 6px 10px; outline: none; cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .chart-controls select:focus { border-color: rgba(20,184,166,0.5); }
+    .chart-controls select option { background: #162236; }
+
+    .chart-wrap { position: relative; }
+    #score-chart-svg { width: 100%; height: auto; display: block; overflow: visible; }
+    #score-tooltip {
+      display: none; position: absolute;
+      background: #162236; border: 1px solid rgba(20,184,166,0.4);
+      border-radius: 8px; padding: 8px 12px;
+      pointer-events: none; font-family: 'Outfit', sans-serif;
+      font-size: 13px; color: #fff; z-index: 10; white-space: nowrap;
+    }
+    #score-tooltip-score { font-weight: 700; color: #14B8A6; }
+    #score-tooltip-date { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+
+    #auth-guard {
+      position: fixed; inset: 0; background: #0B1728;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; color: rgba(255,255,255,0.4); z-index: 999;
+    }
+
+    @media (max-width: 600px) {
+      .topbar { padding: 10px 16px; height: auto; min-height: 56px; flex-wrap: wrap; gap: 8px; }
+      .topbar-left { gap: 8px; }
+      .topbar h1 { font-size: 16px; }
+      .user-label { display: none; }
+      .page-body { padding: 16px; }
+      .log-form { flex-direction: column; }
+      .log-form select, .log-form input[type="number"], .log-form input[type="date"] { width: 100%; }
+      .btn-log { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="auth-guard">Checking authentication…</div>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="index.html?portal=1" class="back-btn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Portal
+    </a>
+    <h1>Score Tracking</h1>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <span class="user-label" id="user-email"></span>
+    <button class="btn-danger" onclick="signOut()">Sign Out</button>
+  </div>
+</div>
+
+<div class="page-body">
+  <p style="font-size:14px;color:rgba(255,255,255,0.45);margin:0 0 28px;line-height:1.65;">
+    Log practice test scores for your students and track their progress over time.
+  </p>
+
+  <div class="section-title">Log a Score</div>
+  <div class="card">
+    <div class="log-form">
+      <select id="score-tutee-select">
+        <option value="">Select student…</option>
+      </select>
+      <select id="score-exam-select">
+        <option value="SAT">SAT</option>
+        <option value="SHSAT">SHSAT</option>
+        <option value="ACT">ACT</option>
+        <option value="AMC">AMC</option>
+      </select>
+      <input type="number" id="score-value" placeholder="Score" />
+      <input type="date" id="score-date" />
+      <button class="btn-log" id="score-post-btn" onclick="logScore()">Log Score</button>
+    </div>
+  </div>
+
+  <div class="section-title">View Progress</div>
+  <div class="card">
+    <div class="chart-area">
+      <div class="chart-controls">
+        <span>Student</span>
+        <select id="chart-student-select" onchange="updateScoreChart()">
+          <option value="">Select student…</option>
+        </select>
+        <select id="chart-exam-select" onchange="updateScoreChart()">
+          <option value="SAT">SAT</option>
+          <option value="SHSAT">SHSAT</option>
+          <option value="ACT">ACT</option>
+          <option value="AMC">AMC</option>
+        </select>
+      </div>
+      <div class="chart-wrap">
+        <svg id="score-chart-svg" viewBox="0 0 600 200" preserveAspectRatio="none">
+          <text x="300" y="100" text-anchor="middle" fill="rgba(255,255,255,0.2)" font-size="13" font-family="Outfit,sans-serif" dy=".3em">Select a student and exam to view progress</text>
+        </svg>
+        <div id="score-tooltip">
+          <div id="score-tooltip-score"></div>
+          <div id="score-tooltip-date"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+  firebase.initializeApp({
+    apiKey: "AIzaSyDy-g_ihlNGF19FVZ_-ChX-LfMIAZFKvYM",
+    authDomain: "rs1600-faccd.firebaseapp.com",
+    projectId: "rs1600-faccd",
+    storageBucket: "rs1600-faccd.firebasestorage.app",
+    messagingSenderId: "669933046930",
+    appId: "1:669933046930:web:3179bd9fd14e3e2694ea4b"
+  });
+
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  let currentUid = null;
+  let scoreListener = null;
+  let allTutorScores = [];
+
+  auth.onAuthStateChanged(async user => {
+    const guard = document.getElementById('auth-guard');
+    if (!user) {
+      guard.textContent = 'Access denied. Please log in from the main portal.';
+      return;
+    }
+    const doc = await db.collection('users').doc(user.uid).get();
+    const role = doc.exists ? doc.data().role : 'tutor';
+    if (role === 'tutee') {
+      guard.textContent = 'This page is for tutors only.';
+      return;
+    }
+    guard.style.display = 'none';
+    currentUid = user.uid;
+    document.getElementById('user-email').textContent = user.email;
+    loadStudents(user.uid);
+    loadScores(user.uid);
+  });
+
+  function loadStudents(tutorUid) {
+    const sel = document.getElementById('score-tutee-select');
+    const chartSel = document.getElementById('chart-student-select');
+    db.collection('bookings').where('tutorUid', '==', tutorUid).get().then(snap => {
+      const seen = new Set();
+      snap.docs.forEach(doc => {
+        const { tuteeUid, tuteeName, tuteeEmail } = doc.data();
+        if (!tuteeUid || seen.has(tuteeUid)) return;
+        seen.add(tuteeUid);
+        [sel, chartSel].forEach(s => {
+          const opt = document.createElement('option');
+          opt.value = tuteeUid;
+          opt.textContent = tuteeName || tuteeEmail || tuteeUid;
+          opt.dataset.name = tuteeName || '';
+          s.appendChild(opt);
+        });
+      });
+    });
+  }
+
+  function loadScores(tutorUid) {
+    if (scoreListener) scoreListener();
+    scoreListener = db.collection('scores').where('tutorUid', '==', tutorUid).onSnapshot(snap => {
+      allTutorScores = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      updateScoreChart();
+    });
+  }
+
+  async function logScore() {
+    const sel = document.getElementById('score-tutee-select');
+    const tuteeUid = sel.value;
+    const tuteeName = sel.options[sel.selectedIndex]?.dataset.name || '';
+    const exam = document.getElementById('score-exam-select').value;
+    const scoreVal = parseInt(document.getElementById('score-value').value, 10);
+    const date = document.getElementById('score-date').value;
+    const btn = document.getElementById('score-post-btn');
+    if (!tuteeUid || !exam || !scoreVal || !date) { alert('Please fill in all fields.'); return; }
+    btn.textContent = 'Logging…';
+    btn.disabled = true;
+    try {
+      await db.collection('scores').add({
+        tutorUid: currentUid,
+        tuteeUid, tuteeName, exam,
+        score: scoreVal, date,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      document.getElementById('score-value').value = '';
+      document.getElementById('score-date').value = '';
+      btn.textContent = 'Logged ✓';
+      setTimeout(() => { btn.textContent = 'Log Score'; }, 2000);
+      document.getElementById('chart-student-select').value = tuteeUid;
+      document.getElementById('chart-exam-select').value = exam;
+      updateScoreChart();
+    } catch (err) {
+      alert('Error: ' + (err.message || err));
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  function updateScoreChart() {
+    const tuteeUid = document.getElementById('chart-student-select').value;
+    const exam = document.getElementById('chart-exam-select').value;
+    if (!tuteeUid || !exam) return;
+    renderScoreChart(allTutorScores.filter(s => s.tuteeUid === tuteeUid && s.exam === exam), exam);
+  }
+
+  function renderScoreChart(scores, exam) {
+    const svg = document.getElementById('score-chart-svg');
+    if (!scores.length) {
+      svg.innerHTML = '<text x="300" y="100" text-anchor="middle" fill="rgba(255,255,255,0.2)" font-size="13" font-family="Outfit,sans-serif" dy=".3em">No scores logged for this student yet</text>';
+      return;
+    }
+    const sorted = [...scores].sort((a, b) => a.date.localeCompare(b.date));
+    const W = 600, H = 200;
+    const padL = 52, padR = 20, padT = 16, padB = 34;
+    const cW = W - padL - padR, cH = H - padT - padB;
+    const maxMap = { SAT: 1600, SHSAT: 800, ACT: 36, AMC: 150 };
+    const examMax = maxMap[exam] || 1600;
+    const rawMin = Math.min(...sorted.map(s => s.score));
+    const yMin = Math.max(0, rawMin - Math.round((examMax - rawMin) * 0.15));
+    const yRange = examMax - yMin;
+    const xOf = i => padL + (sorted.length === 1 ? cW / 2 : i * cW / (sorted.length - 1));
+    const yOf = v => padT + cH - ((v - yMin) / yRange) * cH;
+    const pts = sorted.map((s, i) => ({ x: xOf(i), y: yOf(s.score), score: s.score, date: s.date }));
+
+    const gridLines = [];
+    for (let i = 0; i <= 4; i++) {
+      const v = Math.round(yMin + i * (examMax - yMin) / 4);
+      const y = yOf(v);
+      gridLines.push(`<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>`);
+      gridLines.push(`<text x="${padL - 8}" y="${y}" text-anchor="end" fill="rgba(255,255,255,0.3)" font-size="11" font-family="Outfit,sans-serif" dy=".35em">${v}</text>`);
+    }
+    const xLabels = pts.map(p => {
+      const d = new Date(p.date + 'T00:00:00');
+      return `<text x="${p.x}" y="${padT + cH + 18}" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="11" font-family="Outfit,sans-serif">${d.getMonth() + 1}/${d.getDate()}</text>`;
+    }).join('');
+    const areaD = pts.length === 1
+      ? `M${pts[0].x - 1},${padT + cH} L${pts[0].x},${pts[0].y} L${pts[0].x + 1},${padT + cH} Z`
+      : `M${pts[0].x},${padT + cH} ${pts.map(p => `L${p.x},${p.y}`).join(' ')} L${pts[pts.length - 1].x},${padT + cH} Z`;
+    const polyline = pts.map(p => `${p.x},${p.y}`).join(' ');
+    const dots = pts.map(p =>
+      `<circle cx="${p.x}" cy="${p.y}" r="5" fill="#14B8A6" stroke="#0B1728" stroke-width="2.5" style="cursor:pointer;" onmouseover="showScoreTooltip(this,${p.score},'${p.date}')" onmouseout="hideScoreTooltip()"/>`
+    ).join('');
+
+    svg.innerHTML = `
+      <defs>
+        <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#14B8A6" stop-opacity="0.2"/>
+          <stop offset="100%" stop-color="#14B8A6" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      ${gridLines.join('')}
+      ${xLabels}
+      <path d="${areaD}" fill="url(#sg)"/>
+      <polyline points="${polyline}" fill="none" stroke="#14B8A6" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+      ${dots}
+    `;
+  }
+
+  function showScoreTooltip(el, score, date) {
+    const tooltip = document.getElementById('score-tooltip');
+    document.getElementById('score-tooltip-score').textContent = score;
+    const d = new Date(date + 'T00:00:00');
+    document.getElementById('score-tooltip-date').textContent = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    tooltip.style.display = 'block';
+    const wrap = tooltip.parentElement;
+    const wR = wrap.getBoundingClientRect();
+    const eR = el.getBoundingClientRect();
+    tooltip.style.left = Math.max(0, eR.left - wR.left + eR.width / 2 - tooltip.offsetWidth / 2) + 'px';
+    tooltip.style.top = (eR.top - wR.top - tooltip.offsetHeight - 8) + 'px';
+  }
+
+  function hideScoreTooltip() {
+    document.getElementById('score-tooltip').style.display = 'none';
+  }
+
+  function signOut() {
+    auth.signOut().then(() => { window.location.href = 'index.html'; });
+  }
+</script>
+</body>
+</html>

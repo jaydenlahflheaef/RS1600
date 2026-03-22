@@ -3797,7 +3797,7 @@
         </div>
         <h3>Score Tracking</h3>
         <p>Log practice test scores and monitor student progress over time.</p>
-        <a href="#score-tracking-section" onclick="document.getElementById('score-tracking-section').scrollIntoView({behavior:'smooth'});return false;">Open Tracker →</a>
+        <a href="score-tracking.html">Open Tracker →</a>
       </div>
       <div class="dash-card" id="dash-card-bookings-calendar" style="display:none; border-color:rgba(20,184,166,0.2);">
         <div class="dash-card-icon">
@@ -3829,47 +3829,6 @@
       </div>
       <div class="dash-panel-list" id="tutor-assignments-list">
         <div style="padding:16px 20px; font-size:14px; color:rgba(255,255,255,0.25);">No assignments posted yet.</div>
-      </div>
-    </div>
-
-    <div class="dash-section-title" style="margin-bottom:14px;" id="score-tracking-section">Score Tracking</div>
-    <div class="dash-panel" style="margin-bottom:32px;">
-      <div class="dash-panel-form">
-        <select id="score-tutee-select">
-          <option value="">Select student…</option>
-        </select>
-        <select id="score-exam-select">
-          <option value="SAT">SAT</option>
-          <option value="SHSAT">SHSAT</option>
-          <option value="ACT">ACT</option>
-          <option value="AMC">AMC</option>
-        </select>
-        <input type="number" id="score-value" placeholder="Score" style="max-width:110px;" />
-        <input type="date" id="score-date" style="max-width:160px;" />
-        <button class="dash-post-btn" id="score-post-btn" onclick="logScore()">Log Score</button>
-      </div>
-      <div style="padding:16px 20px 20px;">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
-          <span style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.3);letter-spacing:0.07em;text-transform:uppercase;flex-shrink:0;">View Progress</span>
-          <select id="chart-student-select" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-family:'Outfit',sans-serif;font-size:13px;padding:6px 10px;outline:none;cursor:pointer;" onchange="updateScoreChart()">
-            <option value="">Select student…</option>
-          </select>
-          <select id="chart-exam-select" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-family:'Outfit',sans-serif;font-size:13px;padding:6px 10px;outline:none;cursor:pointer;" onchange="updateScoreChart()">
-            <option value="SAT">SAT</option>
-            <option value="SHSAT">SHSAT</option>
-            <option value="ACT">ACT</option>
-            <option value="AMC">AMC</option>
-          </select>
-        </div>
-        <div style="position:relative;">
-          <svg id="score-chart-svg" viewBox="0 0 600 200" style="width:100%;height:auto;display:block;overflow:visible;" preserveAspectRatio="none">
-            <text x="300" y="100" text-anchor="middle" fill="rgba(255,255,255,0.2)" font-size="13" font-family="Outfit,sans-serif" dy=".3em">Select a student and exam to view progress</text>
-          </svg>
-          <div id="score-tooltip" style="display:none;position:absolute;background:#162236;border:1px solid rgba(20,184,166,0.4);border-radius:8px;padding:8px 12px;pointer-events:none;font-family:'Outfit',sans-serif;font-size:13px;color:#fff;z-index:10;white-space:nowrap;">
-            <div id="score-tooltip-score" style="font-weight:700;color:#14B8A6;"></div>
-            <div id="score-tooltip-date" style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;"></div>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -4072,38 +4031,29 @@
   let tutorAssignListener = null;
   let tutorThreadListener = null;
   let tutorStudentsListener = null;
-  let scoreListener = null;
-  let allTutorScores = [];
   let activeTuteeUid = null;
   let activeTuteeEmail = null;
 
   function loadTutorPanels() {
     const tutorUid = auth.currentUser.uid;
 
-    // Populate tutee dropdowns from bookings
+    // Populate tutee dropdown from bookings
     const sel = document.getElementById('assign-tutee-select');
-    const scoreSel = document.getElementById('score-tutee-select');
-    const chartSel = document.getElementById('chart-student-select');
     sel.innerHTML = '<option value="">Select student…</option>';
-    scoreSel.innerHTML = '<option value="">Select student…</option>';
-    chartSel.innerHTML = '<option value="">Select student…</option>';
     db.collection('bookings').where('tutorUid', '==', tutorUid).get().then(snap => {
       const seen = new Set();
       snap.docs.forEach(doc => {
         const { tuteeUid, tuteeName, tuteeEmail } = doc.data();
         if (!tuteeUid || seen.has(tuteeUid)) return;
         seen.add(tuteeUid);
-        [sel, scoreSel, chartSel].forEach(s => {
-          const opt = document.createElement('option');
-          opt.value = tuteeUid;
-          opt.textContent = tuteeName || tuteeEmail || tuteeUid;
-          opt.dataset.email = tuteeEmail || '';
-          opt.dataset.name = tuteeName || '';
-          s.appendChild(opt);
-        });
+        const opt = document.createElement('option');
+        opt.value = tuteeUid;
+        opt.textContent = tuteeName || tuteeEmail || tuteeUid;
+        opt.dataset.email = tuteeEmail || '';
+        opt.dataset.name = tuteeName || '';
+        sel.appendChild(opt);
       });
     });
-    loadScores(tutorUid);
 
     // Load assignments posted by this tutor only
     if (tutorAssignListener) tutorAssignListener();
@@ -4265,124 +4215,6 @@
     await db.collection('assignments').doc(id).delete();
   }
 
-  async function logScore() {
-    const sel = document.getElementById('score-tutee-select');
-    const tuteeUid = sel.value;
-    const tuteeName = sel.options[sel.selectedIndex]?.dataset.name || '';
-    const exam = document.getElementById('score-exam-select').value;
-    const scoreVal = parseInt(document.getElementById('score-value').value, 10);
-    const date = document.getElementById('score-date').value;
-    const btn = document.getElementById('score-post-btn');
-    if (!tuteeUid || !exam || !scoreVal || !date) { alert('Please fill in all fields.'); return; }
-    btn.textContent = 'Logging…';
-    btn.disabled = true;
-    try {
-      await db.collection('scores').add({
-        tutorUid: auth.currentUser.uid,
-        tuteeUid, tuteeName, exam,
-        score: scoreVal, date,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-      document.getElementById('score-value').value = '';
-      document.getElementById('score-date').value = '';
-      btn.textContent = 'Logged ✓';
-      setTimeout(() => { btn.textContent = 'Log Score'; }, 2000);
-      document.getElementById('chart-student-select').value = tuteeUid;
-      document.getElementById('chart-exam-select').value = exam;
-      updateScoreChart();
-    } catch (err) {
-      alert('Error: ' + (err.message || err));
-    } finally {
-      btn.disabled = false;
-    }
-  }
-
-  function loadScores(tutorUid) {
-    if (scoreListener) scoreListener();
-    scoreListener = db.collection('scores').where('tutorUid', '==', tutorUid).onSnapshot(snap => {
-      allTutorScores = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      updateScoreChart();
-    });
-  }
-
-  function updateScoreChart() {
-    const tuteeUid = document.getElementById('chart-student-select').value;
-    const exam = document.getElementById('chart-exam-select').value;
-    if (!tuteeUid || !exam) return;
-    const filtered = allTutorScores.filter(s => s.tuteeUid === tuteeUid && s.exam === exam);
-    renderScoreChart(filtered, exam);
-  }
-
-  function renderScoreChart(scores, exam) {
-    const svg = document.getElementById('score-chart-svg');
-    if (!scores.length) {
-      svg.innerHTML = '<text x="300" y="100" text-anchor="middle" fill="rgba(255,255,255,0.2)" font-size="13" font-family="Outfit,sans-serif" dy=".3em">No scores logged for this student yet</text>';
-      return;
-    }
-    const sorted = [...scores].sort((a, b) => a.date.localeCompare(b.date));
-    const W = 600, H = 200;
-    const padL = 52, padR = 20, padT = 16, padB = 34;
-    const cW = W - padL - padR, cH = H - padT - padB;
-    const maxMap = { SAT: 1600, SHSAT: 800, ACT: 36, AMC: 150 };
-    const examMax = maxMap[exam] || 1600;
-    const rawMin = Math.min(...sorted.map(s => s.score));
-    const yMin = Math.max(0, rawMin - Math.round((examMax - rawMin) * 0.15));
-    const yRange = examMax - yMin;
-    const xOf = i => padL + (sorted.length === 1 ? cW / 2 : i * cW / (sorted.length - 1));
-    const yOf = v => padT + cH - ((v - yMin) / yRange) * cH;
-    const pts = sorted.map((s, i) => ({ x: xOf(i), y: yOf(s.score), score: s.score, date: s.date }));
-
-    const gridLines = [];
-    for (let i = 0; i <= 4; i++) {
-      const v = Math.round(yMin + i * (examMax - yMin) / 4);
-      const y = yOf(v);
-      gridLines.push(`<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>`);
-      gridLines.push(`<text x="${padL - 8}" y="${y}" text-anchor="end" fill="rgba(255,255,255,0.3)" font-size="11" font-family="Outfit,sans-serif" dy=".35em">${v}</text>`);
-    }
-    const xLabels = pts.map(p => {
-      const d = new Date(p.date + 'T00:00:00');
-      return `<text x="${p.x}" y="${padT + cH + 18}" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="11" font-family="Outfit,sans-serif">${d.getMonth() + 1}/${d.getDate()}</text>`;
-    }).join('');
-    const areaD = pts.length === 1
-      ? `M${pts[0].x - 1},${padT + cH} L${pts[0].x},${pts[0].y} L${pts[0].x + 1},${padT + cH} Z`
-      : `M${pts[0].x},${padT + cH} ${pts.map(p => `L${p.x},${p.y}`).join(' ')} L${pts[pts.length - 1].x},${padT + cH} Z`;
-    const polyline = pts.map(p => `${p.x},${p.y}`).join(' ');
-    const dots = pts.map(p =>
-      `<circle cx="${p.x}" cy="${p.y}" r="5" fill="#14B8A6" stroke="#0B1728" stroke-width="2.5" style="cursor:pointer;" onmouseover="showScoreTooltip(this,${p.score},'${p.date}')" onmouseout="hideScoreTooltip()"/>`
-    ).join('');
-
-    svg.innerHTML = `
-      <defs>
-        <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#14B8A6" stop-opacity="0.2"/>
-          <stop offset="100%" stop-color="#14B8A6" stop-opacity="0"/>
-        </linearGradient>
-      </defs>
-      ${gridLines.join('')}
-      ${xLabels}
-      <path d="${areaD}" fill="url(#sg)"/>
-      <polyline points="${polyline}" fill="none" stroke="#14B8A6" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
-      ${dots}
-    `;
-  }
-
-  function showScoreTooltip(el, score, date) {
-    const tooltip = document.getElementById('score-tooltip');
-    document.getElementById('score-tooltip-score').textContent = score;
-    const d = new Date(date + 'T00:00:00');
-    document.getElementById('score-tooltip-date').textContent = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    tooltip.style.display = 'block';
-    const wrap = tooltip.parentElement;
-    const wR = wrap.getBoundingClientRect();
-    const eR = el.getBoundingClientRect();
-    tooltip.style.left = Math.max(0, eR.left - wR.left + eR.width / 2 - tooltip.offsetWidth / 2) + 'px';
-    tooltip.style.top = (eR.top - wR.top - tooltip.offsetHeight - 8) + 'px';
-  }
-
-  function hideScoreTooltip() {
-    document.getElementById('score-tooltip').style.display = 'none';
-  }
-
   function sendTutorReply() {
     if (!activeTuteeUid) return;
     const input = document.getElementById('tutor-reply-input');
@@ -4406,8 +4238,6 @@
     if (tutorAssignListener) { tutorAssignListener(); tutorAssignListener = null; }
     if (tutorThreadListener) { tutorThreadListener(); tutorThreadListener = null; }
     if (tutorStudentsListener) { tutorStudentsListener(); tutorStudentsListener = null; }
-    if (scoreListener) { scoreListener(); scoreListener = null; }
-    allTutorScores = [];
   }
 
   function closeTuteeDashboard() {
