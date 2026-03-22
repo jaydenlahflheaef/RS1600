@@ -3807,19 +3807,24 @@
     if (pw !== pw2) { errEl.textContent = 'Passwords do not match.'; errEl.style.display = 'block'; return; }
     btn.textContent = 'Creating account…';
     btn.disabled = true;
+    let cred = null;
     try {
+      // Create auth account first (no Firestore permission needed)
+      cred = await auth.createUserWithEmailAndPassword(email, pw);
+      // Now authenticated — check members collection
       const memberSnap = await db.collection('members').where('email', '==', email).limit(1).get();
       if (memberSnap.empty) {
+        // Not in directory — delete the account and reject
+        await cred.user.delete();
         errEl.textContent = 'This email hasn\'t been added to the team directory. Contact a cofounder to get access.';
         errEl.style.display = 'block';
         return;
       }
-      const cred = await auth.createUserWithEmailAndPassword(email, pw);
-      const uid = cred.user.uid;
-      await db.collection('users').doc(uid).set({ role: 'tutee', email });
+      await db.collection('users').doc(cred.user.uid).set({ role: 'tutee', email });
       closeTutorLogin();
       openTuteeDashboard(cred.user);
     } catch (err) {
+      if (cred) { try { await cred.user.delete(); } catch (_) {} }
       errEl.textContent = err.code === 'auth/email-already-in-use' ? 'An account with this email already exists.' : err.message;
       errEl.style.display = 'block';
     } finally {
