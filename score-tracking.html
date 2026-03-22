@@ -228,6 +228,8 @@
   let scoreListener = null;
   let allTutorScores = [];
 
+  let isCofounder = false;
+
   auth.onAuthStateChanged(async user => {
     const guard = document.getElementById('auth-guard');
     if (!user) {
@@ -242,6 +244,7 @@
     }
     guard.style.display = 'none';
     currentUid = user.uid;
+    isCofounder = role === 'cofounder';
     document.getElementById('user-email').textContent = user.email;
     loadStudents(user.uid);
     loadScores(user.uid);
@@ -250,7 +253,11 @@
   function loadStudents(tutorUid) {
     const sel = document.getElementById('score-tutee-select');
     const chartSel = document.getElementById('chart-student-select');
-    db.collection('bookings').where('tutorUid', '==', tutorUid).get().then(snap => {
+    // Cofounders see all students across all tutors
+    const query = isCofounder
+      ? db.collection('bookings')
+      : db.collection('bookings').where('tutorUid', '==', tutorUid);
+    query.get().then(snap => {
       const seen = new Set();
       snap.docs.forEach(doc => {
         const { tuteeUid, tuteeName, tuteeEmail } = doc.data();
@@ -269,7 +276,11 @@
 
   function loadScores(tutorUid) {
     if (scoreListener) scoreListener();
-    scoreListener = db.collection('scores').where('tutorUid', '==', tutorUid).onSnapshot(snap => {
+    // Cofounders see all scores across all tutors
+    const query = isCofounder
+      ? db.collection('scores')
+      : db.collection('scores').where('tutorUid', '==', tutorUid);
+    scoreListener = query.onSnapshot(snap => {
       allTutorScores = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       updateScoreChart();
     });
