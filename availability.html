@@ -110,6 +110,24 @@
 
     .empty-state { font-size: 14px; color: rgba(255,255,255,0.25); padding: 12px 0; }
 
+    @media (max-width: 600px) {
+      .topbar {
+        padding: 10px 16px;
+        height: auto;
+        min-height: 56px;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .topbar-left { gap: 8px; }
+      .topbar h1 { font-size: 16px; }
+      .user-label { display: none; }
+      .page-body { padding: 16px; }
+      .add-row { flex-direction: column; }
+      .add-row select,
+      .add-row input[type="time"] { width: 100%; }
+      .btn-add { width: 100%; justify-content: center; }
+    }
+
     #auth-guard {
       position: fixed; inset: 0; background: #0B1728;
       display: flex; align-items: center; justify-content: center;
