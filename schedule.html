@@ -209,10 +209,23 @@
       .calendar-grid { grid-template-columns: repeat(4, 1fr); }
     }
     @media (max-width: 600px) {
-      .topbar { padding: 0 16px; }
-      .page-body { padding: 16px; }
+      .topbar { padding: 0 12px; height: auto; min-height: 56px; flex-wrap: wrap; gap: 8px; padding-top: 10px; padding-bottom: 10px; }
+      .topbar-left { gap: 8px; }
+      .session-count { display: none; }
+      .page-body { padding: 12px; }
       .calendar-grid { grid-template-columns: repeat(2, 1fr); }
       .form-row { grid-template-columns: 1fr; }
+      .filter-bar { gap: 6px; }
+      .filter-btn { font-size: 12px; padding: 6px 10px; }
+      .session-card { flex-wrap: wrap; gap: 10px; padding: 14px; }
+      .card-actions { width: 100%; justify-content: flex-end; }
+      .legend { gap: 12px; }
+      .legend-item { font-size: 12px; }
+    }
+    @media (max-width: 400px) {
+      .calendar-grid { grid-template-columns: 1fr 1fr 1fr; }
+      .cal-session-chip { padding: 6px 7px; }
+      .chip-student, .chip-tutor { display: none; }
     }
   </style>
 </head>

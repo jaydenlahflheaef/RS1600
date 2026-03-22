@@ -902,6 +902,18 @@
     letter-spacing: -0.03em;
     margin: 0 0 6px;
   }
+  @media (max-width: 768px) {
+    #tutor-dashboard .dash-nav { padding: 0 16px; height: auto; min-height: 56px; flex-wrap: wrap; gap: 8px; padding-top: 10px; padding-bottom: 10px; }
+    #dash-date, #dash-user-email { display: none; }
+    .dash-body { padding: 24px 16px; }
+    .dash-greeting { font-size: 22px; }
+    .dash-subtext { margin-bottom: 24px; }
+    .dash-cards { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .dash-notes textarea { min-height: 80px; }
+  }
+  @media (max-width: 480px) {
+    .dash-cards { grid-template-columns: 1fr; }
+  }
   .dash-subtext {
     font-size: 15px;
     color: rgba(255,255,255,0.4);
