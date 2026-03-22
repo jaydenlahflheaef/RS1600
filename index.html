@@ -4352,13 +4352,12 @@
 
   async function bookTutor(tutorUid, tutorName, day, time) {
     const user = auth.currentUser;
-    if (!user) return;
-    // Use deterministic doc ID to prevent duplicate bookings without needing a composite index
-    const docId = `${user.uid}_${tutorUid}_${day}_${time}`.replace(/[^a-zA-Z0-9_]/g, '_');
-    const ref = db.collection('bookings').doc(docId);
-    const existing = await ref.get();
-    if (existing.exists) { alert('You already have this slot booked.'); return; }
+    if (!user) { alert('You must be logged in to book a session.'); return; }
     try {
+      const docId = `${user.uid}_${tutorUid}_${day}_${time}`.replace(/[^a-zA-Z0-9_]/g, '_');
+      const ref = db.collection('bookings').doc(docId);
+      const existing = await ref.get();
+      if (existing.exists) { alert('You already have this slot booked.'); return; }
       const memberSnap = await db.collection('members').where('email', '==', user.email).limit(1).get();
       const tuteeName = (!memberSnap.empty && memberSnap.docs[0].data().name) ? memberSnap.docs[0].data().name : '';
       await ref.set({
@@ -4366,6 +4365,7 @@
         tuteeName, tuteeEmail: user.email,
         day, time, createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
+      alert(`Session booked with ${tutorName} on ${day}!`);
     } catch (err) {
       alert('Could not book session: ' + err.message);
     }
