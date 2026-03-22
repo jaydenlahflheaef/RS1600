@@ -3687,6 +3687,18 @@
   </div>
 </div>
 
+<!-- ── Booking Confirmation Modal ── -->
+<div class="modal-overlay" id="booking-confirm-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(11,23,40,0.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);align-items:center;justify-content:center;">
+  <div style="background:#162236;border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:36px;width:100%;max-width:420px;box-shadow:0 32px 80px rgba(0,0,0,0.5);position:relative;">
+    <h2 style="font-family:'DM Sans',sans-serif;font-size:20px;font-weight:800;color:#fff;margin:0 0 8px;letter-spacing:-0.03em;">Confirm Booking</h2>
+    <p style="font-size:14px;color:rgba(255,255,255,0.45);margin:0 0 24px;line-height:1.6;" id="booking-confirm-body"></p>
+    <div style="display:flex;justify-content:flex-end;gap:10px;">
+      <button onclick="closeBookingModal()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:rgba(255,255,255,0.7);font-size:13px;font-family:'Outfit',sans-serif;padding:9px 16px;cursor:pointer;transition:color 0.2s,background 0.2s;" onmouseover="this.style.color='#fff';this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.color='rgba(255,255,255,0.7)';this.style.background='rgba(255,255,255,0.06)'">Cancel</button>
+      <button onclick="confirmBooking()" style="background:linear-gradient(135deg,#0F766E,#14B8A6);border:none;border-radius:8px;color:#fff;font-size:13px;font-weight:600;font-family:'Outfit',sans-serif;padding:9px 18px;cursor:pointer;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">Confirm Booking</button>
+    </div>
+  </div>
+</div>
+
 <!-- ══════════════════════════════════════
      TUTOR DASHBOARD
 ════════════════════════════════════════ -->
@@ -3755,6 +3767,13 @@
         <h3>Score Tracking</h3>
         <p>Log practice test scores and monitor student progress over time.</p>
         <a href="https://docs.google.com/spreadsheets" target="_blank" rel="noopener">Open Tracker →</a>
+      </div>
+    </div>
+
+    <div class="dash-section-title" style="margin-bottom:14px;">My Students</div>
+    <div class="dash-panel" style="margin-bottom:32px;">
+      <div class="dash-panel-list" id="tutor-students-list">
+        <div style="padding:16px 20px; font-size:14px; color:rgba(255,255,255,0.25);">No students have booked yet.</div>
       </div>
     </div>
 
@@ -3965,6 +3984,7 @@
   // ── Tutor: load tutees into selector + assignments list ──
   let tutorAssignListener = null;
   let tutorThreadListener = null;
+  let tutorStudentsListener = null;
   let activeTuteeUid = null;
   let activeTuteeEmail = null;
 
@@ -4038,6 +4058,37 @@
         `<button class="dash-convo-btn" onclick="openTutorThread('${c.uid}','${c.name}')">${c.name}</button>`
       ).join('');
     });
+
+    // Load booked students into My Students section (live)
+    if (tutorStudentsListener) tutorStudentsListener();
+    tutorStudentsListener = db.collection('bookings').where('tutorUid', '==', tutorUid)
+      .onSnapshot(snap => {
+        const list = document.getElementById('tutor-students-list');
+        if (snap.empty) {
+          list.innerHTML = '<div style="padding:16px 20px; font-size:14px; color:rgba(255,255,255,0.25);">No students have booked yet.</div>';
+          return;
+        }
+        const bookings = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => {
+          const DO = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+          const di = DO.indexOf(a.day) - DO.indexOf(b.day);
+          return di !== 0 ? di : (a.time || '').localeCompare(b.time || '');
+        });
+        list.innerHTML = bookings.map(b => {
+          const [h, m] = (b.time || '0:0').split(':').map(Number);
+          const ampm = h >= 12 ? 'PM' : 'AM';
+          const fmt = `${h % 12 || 12}:${m.toString().padStart(2,'0')} ${ampm}`;
+          return `<div style="display:flex;align-items:center;gap:14px;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.05);">
+            <div style="width:8px;height:8px;border-radius:50%;background:#14B8A6;flex-shrink:0;margin-top:1px;"></div>
+            <div style="flex:1;">
+              <div style="font-size:14px;font-weight:600;color:#fff;">${b.tuteeName || b.tuteeEmail || '—'}</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-top:2px;">${b.day} at ${fmt}</div>
+            </div>
+          </div>`;
+        }).join('');
+        // Remove border from last item
+        const items = list.querySelectorAll('div[style*="border-bottom"]');
+        if (items.length) items[items.length - 1].style.borderBottom = 'none';
+      });
   }
 
   function closeTutorThread() {
@@ -4138,6 +4189,7 @@
     document.body.style.overflow = '';
     if (tutorAssignListener) { tutorAssignListener(); tutorAssignListener = null; }
     if (tutorThreadListener) { tutorThreadListener(); tutorThreadListener = null; }
+    if (tutorStudentsListener) { tutorStudentsListener(); tutorStudentsListener = null; }
   }
 
   function closeTuteeDashboard() {
@@ -4265,9 +4317,34 @@
     });
   }
 
+  let pendingBooking = null;
+
   function bookTutorFromBtn(btn) {
-    bookTutor(btn.dataset.tuid, btn.dataset.tname, btn.dataset.day, btn.dataset.time);
+    pendingBooking = { tutorUid: btn.dataset.tuid, tutorName: btn.dataset.tname, day: btn.dataset.day, time: btn.dataset.time };
+    const [h, m] = pendingBooking.time.split(':').map(Number);
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const fmt = `${h % 12 || 12}:${(m||0).toString().padStart(2,'0')} ${ampm}`;
+    document.getElementById('booking-confirm-body').textContent =
+      `Book a session with ${pendingBooking.tutorName} on ${pendingBooking.day} at ${fmt}?`;
+    const modal = document.getElementById('booking-confirm-modal');
+    modal.style.display = 'flex';
   }
+
+  function closeBookingModal() {
+    pendingBooking = null;
+    document.getElementById('booking-confirm-modal').style.display = 'none';
+  }
+
+  async function confirmBooking() {
+    if (!pendingBooking) return;
+    const { tutorUid, tutorName, day, time } = pendingBooking;
+    closeBookingModal();
+    await bookTutor(tutorUid, tutorName, day, time);
+  }
+
+  document.getElementById('booking-confirm-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeBookingModal();
+  });
 
   async function bookTutor(tutorUid, tutorName, day, time) {
     const user = auth.currentUser;
