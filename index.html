@@ -4317,27 +4317,31 @@
     });
   }
 
-  let pendingBooking = null;
-
   function bookTutorFromBtn(btn) {
-    pendingBooking = { tutorUid: btn.dataset.tuid, tutorName: btn.dataset.tname, day: btn.dataset.day, time: btn.dataset.time };
-    const [h, m] = pendingBooking.time.split(':').map(Number);
+    const modal = document.getElementById('booking-confirm-modal');
+    modal.dataset.tuid  = btn.dataset.tuid;
+    modal.dataset.tname = btn.dataset.tname;
+    modal.dataset.day   = btn.dataset.day;
+    modal.dataset.time  = btn.dataset.time;
+    const [h, m] = btn.dataset.time.split(':').map(Number);
     const ampm = h >= 12 ? 'PM' : 'AM';
     const fmt = `${h % 12 || 12}:${(m||0).toString().padStart(2,'0')} ${ampm}`;
     document.getElementById('booking-confirm-body').textContent =
-      `Book a session with ${pendingBooking.tutorName} on ${pendingBooking.day} at ${fmt}?`;
-    const modal = document.getElementById('booking-confirm-modal');
+      `Book a session with ${btn.dataset.tname} on ${btn.dataset.day} at ${fmt}?`;
     modal.style.display = 'flex';
   }
 
   function closeBookingModal() {
-    pendingBooking = null;
     document.getElementById('booking-confirm-modal').style.display = 'none';
   }
 
   async function confirmBooking() {
-    if (!pendingBooking) return;
-    const { tutorUid, tutorName, day, time } = pendingBooking;
+    const modal = document.getElementById('booking-confirm-modal');
+    const tutorUid  = modal.dataset.tuid;
+    const tutorName = modal.dataset.tname;
+    const day       = modal.dataset.day;
+    const time      = modal.dataset.time;
+    if (!tutorUid) return;
     closeBookingModal();
     await bookTutor(tutorUid, tutorName, day, time);
   }
