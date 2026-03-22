@@ -3544,13 +3544,19 @@
       document.getElementById('dash-notes-ta').value = (doc.exists && doc.data().notes) ? doc.data().notes : '';
     });
 
+    // Reset upcoming session banner for this account
+    document.getElementById('upcoming-session-banner').style.display = 'none';
+    document.getElementById('upcoming-student').textContent = '—';
+    document.getElementById('upcoming-details').textContent = '—';
+
     // Load upcoming session
     const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
     const todayIdx = new Date().getDay();
-    db.collection('sessions').where('assignedTutorId', '==', user.uid).get().then(snap => {
-      if (snap.empty) return;
-      const mySessions = snap.docs.map(d => d.data());
-      // Sort by day-of-week starting from today
+    db.collection('sessions').get().then(snap => {
+      const mySessions = snap.docs
+        .map(d => d.data())
+        .filter(s => s.assignedTutorId === user.uid);
+      if (!mySessions.length) return;
       mySessions.sort((a, b) => {
         const ai = (days.indexOf(a.day) - todayIdx + 7) % 7;
         const bi = (days.indexOf(b.day) - todayIdx + 7) % 7;
@@ -3558,17 +3564,14 @@
         return (a.time || '').localeCompare(b.time || '');
       });
       const next = mySessions[0];
-      if (!next) return;
-      // Format time
       const [h, m] = (next.time || '0:0').split(':').map(Number);
       const ampm = h >= 12 ? 'PM' : 'AM';
       const fmt = `${h % 12 || 12}:${m.toString().padStart(2,'0')} ${ampm}`;
       const isToday = days[todayIdx] === next.day;
       document.getElementById('upcoming-student').textContent = next.studentName;
       document.getElementById('upcoming-details').textContent = `${isToday ? 'Today' : next.day} at ${fmt}${next.notes ? ' · ' + next.notes : ''}`;
-      const banner = document.getElementById('upcoming-session-banner');
-      banner.style.display = 'flex';
-    });
+      document.getElementById('upcoming-session-banner').style.display = 'flex';
+    }).catch(() => {});
 
     document.getElementById('tutor-dashboard').classList.add('active');
     document.body.style.overflow = 'hidden';
