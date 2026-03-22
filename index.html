@@ -3808,10 +3808,15 @@
     btn.textContent = 'Creating account…';
     btn.disabled = true;
     try {
+      const memberSnap = await db.collection('members').where('email', '==', email).limit(1).get();
+      if (memberSnap.empty) {
+        errEl.textContent = 'This email hasn\'t been added to the team directory. Contact a cofounder to get access.';
+        errEl.style.display = 'block';
+        return;
+      }
       const cred = await auth.createUserWithEmailAndPassword(email, pw);
       const uid = cred.user.uid;
       await db.collection('users').doc(uid).set({ role: 'tutee', email });
-      await db.collection('members').add({ email, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
       closeTutorLogin();
       openTuteeDashboard(cred.user);
     } catch (err) {
@@ -4153,6 +4158,9 @@
       document.getElementById('tutee-dashboard').classList.remove('active');
       document.body.style.overflow = '';
       if (tuteeMessageListener) { tuteeMessageListener(); tuteeMessageListener = null; }
+    } else if (new URLSearchParams(window.location.search).get('portal') === '1') {
+      history.replaceState(null, '', window.location.pathname);
+      routeUser(user);
     }
     const veil = document.getElementById('auth-veil');
     if (veil) { veil.style.opacity = '0'; setTimeout(() => veil.remove(), 200); }
