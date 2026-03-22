@@ -3719,7 +3719,7 @@
         <div style="font-size:15px;font-weight:600;color:#fff;" id="upcoming-student">—</div>
         <div style="font-size:13px;color:rgba(255,255,255,0.45);margin-top:2px;" id="upcoming-details">—</div>
       </div>
-      <a href="#avail-section" onclick="document.getElementById('avail-section').scrollIntoView({behavior:'smooth'});return false;" style="font-size:13px;font-weight:600;color:#14B8A6;text-decoration:none;white-space:nowrap;opacity:0.8;transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">My Schedule →</a>
+      <a href="availability.html" style="font-size:13px;font-weight:600;color:#14B8A6;text-decoration:none;white-space:nowrap;opacity:0.8;transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">My Availability →</a>
     </div>
 
     <div class="dash-section-title" style="margin-bottom:16px;">Quick Links</div>
@@ -3730,7 +3730,7 @@
         </div>
         <h3>My Availability</h3>
         <p>Set the days and times you're available so students can book you.</p>
-        <a href="#avail-section" onclick="document.getElementById('avail-section').scrollIntoView({behavior:'smooth'});return false;">Set Availability →</a>
+        <a href="availability.html">Set Availability →</a>
       </div>
       <div class="dash-card">
         <div class="dash-card-icon">
@@ -3755,22 +3755,6 @@
         <h3>Score Tracking</h3>
         <p>Log practice test scores and monitor student progress over time.</p>
         <a href="https://docs.google.com/spreadsheets" target="_blank" rel="noopener">Open Tracker →</a>
-      </div>
-    </div>
-
-    <div class="dash-section-title" style="margin-bottom:14px;" id="avail-section">My Availability</div>
-    <div class="dash-panel" style="margin-bottom:32px;">
-      <div class="dash-panel-form" style="flex-wrap:wrap;">
-        <select id="avail-day" style="max-width:160px;">
-          <option value="">Day…</option>
-          <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
-          <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
-        </select>
-        <input type="time" id="avail-time" style="max-width:140px;" />
-        <button class="dash-post-btn" onclick="addAvailability()">Add Slot</button>
-      </div>
-      <div id="avail-slots-list" style="padding:8px 16px 4px;">
-        <div style="font-size:13px;color:rgba(255,255,255,0.25);padding:8px 0;">No availability set yet.</div>
       </div>
     </div>
 
@@ -3987,9 +3971,6 @@
   function loadTutorPanels() {
     const tutorUid = auth.currentUser.uid;
 
-    // Load availability slots
-    loadTutorAvailability(tutorUid);
-
     // Populate tutee dropdown from bookings
     const sel = document.getElementById('assign-tutee-select');
     sel.innerHTML = '<option value="">Select student…</option>';
@@ -4181,68 +4162,7 @@
     }, 1000);
   }
 
-  // ── Tutor Availability ──
-  function loadTutorAvailability(tutorUid) {
-    db.collection('tutors').doc(tutorUid).get().then(doc => {
-      const slots = (doc.exists && doc.data().availability) ? doc.data().availability : [];
-      renderAvailabilitySlots(slots);
-    });
-  }
-
   const DAY_ORDER = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
-
-  function renderAvailabilitySlots(slots) {
-    const list = document.getElementById('avail-slots-list');
-    if (!slots.length) {
-      list.innerHTML = '<div style="font-size:13px;color:rgba(255,255,255,0.25);padding:8px 0;">No availability set yet.</div>';
-      return;
-    }
-    const sorted = slots.slice().sort((a, b) => {
-      const di = DAY_ORDER.indexOf(a.day) - DAY_ORDER.indexOf(b.day);
-      return di !== 0 ? di : a.time.localeCompare(b.time);
-    });
-    list.innerHTML = sorted.map((s, i) => {
-      const [h, m] = s.time.split(':').map(Number);
-      const ampm = h >= 12 ? 'PM' : 'AM';
-      const fmt = `${h % 12 || 12}:${(m||0).toString().padStart(2,'0')} ${ampm}`;
-      return `<div class="avail-slot-row">
-        <span style="font-size:14px;color:#fff;flex:1;">${s.day} · ${fmt}</span>
-        <button onclick="removeAvailability(${i})" style="background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.3);padding:2px;display:flex;align-items:center;transition:color 0.2s;" onmouseover="this.style.color='#F87171'" onmouseout="this.style.color='rgba(255,255,255,0.3)'" title="Remove">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-      </div>`;
-    }).join('');
-  }
-
-  async function addAvailability() {
-    const day = document.getElementById('avail-day').value;
-    const time = document.getElementById('avail-time').value;
-    if (!day || !time) { alert('Please select a day and time.'); return; }
-    const user = auth.currentUser;
-    const ref = db.collection('tutors').doc(user.uid);
-    const doc = await ref.get();
-    const current = (doc.exists && doc.data().availability) ? doc.data().availability : [];
-    if (current.some(s => s.day === day && s.time === time)) { alert('That slot is already added.'); return; }
-    const updated = [...current, { day, time }];
-    await ref.set({ availability: updated }, { merge: true });
-    document.getElementById('avail-day').value = '';
-    document.getElementById('avail-time').value = '';
-    renderAvailabilitySlots(updated);
-  }
-
-  async function removeAvailability(index) {
-    const user = auth.currentUser;
-    const ref = db.collection('tutors').doc(user.uid);
-    const doc = await ref.get();
-    const current = (doc.exists && doc.data().availability) ? doc.data().availability : [];
-    const sorted = current.slice().sort((a, b) => {
-      const di = DAY_ORDER.indexOf(a.day) - DAY_ORDER.indexOf(b.day);
-      return di !== 0 ? di : a.time.localeCompare(b.time);
-    });
-    sorted.splice(index, 1);
-    await ref.set({ availability: sorted }, { merge: true });
-    renderAvailabilitySlots(sorted);
-  }
 
   // ── Tutee Dashboard ──
   let tuteeMessageListener = null;
@@ -4305,6 +4225,8 @@
         // Wire messages to tutor from first booking
         const first = docs[0];
         loadTuteeMessages(user.uid, first.tutorName, first.tutorUid);
+      }, err => {
+        list.innerHTML = `<div style="font-size:13px;color:#F87171;padding:8px 0;">Could not load sessions: ${err.message}</div>`;
       });
   }
 
@@ -4323,34 +4245,49 @@
           const di = DAY_ORDER.indexOf(a.day) - DAY_ORDER.indexOf(b.day);
           return di !== 0 ? di : a.time.localeCompare(b.time);
         });
-        const slotsHtml = sorted.map(s => {
+        const slotsHtml = sorted.map((s, si) => {
           const [h, m] = s.time.split(':').map(Number);
           const ampm = h >= 12 ? 'PM' : 'AM';
           const fmt = `${h % 12 || 12}:${(m||0).toString().padStart(2,'0')} ${ampm}`;
-          return `<button class="avail-slot-btn" onclick="bookTutor('${tutor.uid}','${tutor.name.replace(/'/g,"\\'")}','${s.day}','${s.time}')">${s.day} · ${fmt}</button>`;
+          // Use data-attributes to avoid quote-escaping issues in onclick
+          return `<button class="avail-slot-btn"
+            data-tuid="${tutor.uid}" data-tname="${tutor.name.replace(/"/g,'&quot;')}"
+            data-day="${s.day}" data-time="${s.time}"
+            onclick="bookTutorFromBtn(this)">${s.day} · ${fmt}</button>`;
         }).join('');
         return `<div class="tutor-card">
           <div class="tutor-card-name">${tutor.name}</div>
           <div class="tutor-card-slots">${slotsHtml}</div>
         </div>`;
       }).join('');
+    }).catch(err => {
+      container.innerHTML = `<div style="font-size:13px;color:#F87171;padding:8px 0;">Could not load tutors: ${err.message}</div>`;
     });
+  }
+
+  function bookTutorFromBtn(btn) {
+    bookTutor(btn.dataset.tuid, btn.dataset.tname, btn.dataset.day, btn.dataset.time);
   }
 
   async function bookTutor(tutorUid, tutorName, day, time) {
     const user = auth.currentUser;
     if (!user) return;
-    const memberSnap = await db.collection('members').where('email', '==', user.email).limit(1).get();
-    const tuteeName = (!memberSnap.empty && memberSnap.docs[0].data().name) ? memberSnap.docs[0].data().name : '';
-    const existing = await db.collection('bookings')
-      .where('tuteeUid', '==', user.uid).where('tutorUid', '==', tutorUid)
-      .where('day', '==', day).where('time', '==', time).limit(1).get();
-    if (!existing.empty) { alert('You already have this slot booked.'); return; }
-    await db.collection('bookings').add({
-      tuteeUid: user.uid, tutorUid, tutorName,
-      tuteeName, tuteeEmail: user.email,
-      day, time, createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
+    // Use deterministic doc ID to prevent duplicate bookings without needing a composite index
+    const docId = `${user.uid}_${tutorUid}_${day}_${time}`.replace(/[^a-zA-Z0-9_]/g, '_');
+    const ref = db.collection('bookings').doc(docId);
+    const existing = await ref.get();
+    if (existing.exists) { alert('You already have this slot booked.'); return; }
+    try {
+      const memberSnap = await db.collection('members').where('email', '==', user.email).limit(1).get();
+      const tuteeName = (!memberSnap.empty && memberSnap.docs[0].data().name) ? memberSnap.docs[0].data().name : '';
+      await ref.set({
+        tuteeUid: user.uid, tutorUid, tutorName,
+        tuteeName, tuteeEmail: user.email,
+        day, time, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    } catch (err) {
+      alert('Could not book session: ' + err.message);
+    }
   }
 
   async function cancelBooking(id) {

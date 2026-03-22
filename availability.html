@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Availability — ReadySet1600</title>
+  <link rel="icon" type="image/png" href="favicon.png" id="favicon" />
+  <script>
+    window.addEventListener('load', function() {
+      var img = new Image(); img.crossOrigin = 'anonymous';
+      img.onload = function() {
+        var size = 64, c = document.createElement('canvas'); c.width = size; c.height = size;
+        var ctx = c.getContext('2d'); ctx.beginPath(); ctx.arc(size/2, size/2, size/2, 0, Math.PI*2); ctx.closePath(); ctx.clip();
+        ctx.drawImage(img, 0, 0, size, size);
+        document.getElementById('favicon').href = c.toDataURL('image/png');
+      }; img.src = 'newcirclelog.png';
+    });
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: #0B1728; color: #fff; font-family: 'Outfit', sans-serif; min-height: 100vh; }
+
+    .topbar {
+      background: #162236;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0 32px;
+      height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 16px; }
+    .back-btn {
+      display: flex; align-items: center; gap: 6px;
+      color: rgba(255,255,255,0.4); text-decoration: none; font-size: 13px;
+      padding: 6px 10px; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.04);
+      transition: color 0.2s, background 0.2s;
+    }
+    .back-btn:hover { color: #fff; background: rgba(255,255,255,0.08); }
+    .topbar h1 { font-family: 'DM Sans', sans-serif; font-size: 18px; font-weight: 800; color: #fff; margin: 0; letter-spacing: -0.03em; }
+    .user-label { font-size: 13px; color: rgba(255,255,255,0.35); }
+    .btn-danger { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25); border-radius: 8px; color: #F87171; font-size: 13px; font-family: 'Outfit', sans-serif; padding: 8px 14px; cursor: pointer; transition: background 0.2s; }
+    .btn-danger:hover { background: rgba(239,68,68,0.2); }
+
+    .page-body { padding: 32px; max-width: 640px; margin: 0 auto; }
+
+    .section-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.3);
+      text-transform: uppercase; letter-spacing: 0.1em; margin: 0 0 16px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+    }
+
+    .add-row {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    }
+    .add-row select, .add-row input[type="time"] {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      padding: 9px 14px;
+      outline: none;
+      transition: border-color 0.2s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .add-row select:focus, .add-row input[type="time"]:focus {
+      border-color: rgba(20,184,166,0.5);
+    }
+    .add-row select option { background: #162236; }
+
+    .btn-add {
+      background: linear-gradient(135deg, #0F766E, #14B8A6);
+      border: none; border-radius: 10px; color: #fff;
+      font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600;
+      padding: 9px 20px; cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .btn-add:hover { opacity: 0.88; }
+    .btn-add:active { transform: scale(0.97); }
+    .btn-add:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .slots-list { margin-top: 16px; }
+    .slot-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .slot-row:last-child { border-bottom: none; }
+    .slot-day { font-size: 14px; font-weight: 600; color: #fff; min-width: 90px; }
+    .slot-time { font-size: 14px; color: rgba(255,255,255,0.5); flex: 1; }
+    .slot-del {
+      background: none; border: none; cursor: pointer;
+      color: rgba(255,255,255,0.2); padding: 4px; display: flex; align-items: center;
+      transition: color 0.2s; border-radius: 6px;
+    }
+    .slot-del:hover { color: #F87171; background: rgba(239,68,68,0.1); }
+
+    .empty-state { font-size: 14px; color: rgba(255,255,255,0.25); padding: 12px 0; }
+
+    #auth-guard {
+      position: fixed; inset: 0; background: #0B1728;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; color: rgba(255,255,255,0.4);
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+
+<div id="auth-guard">Checking authentication…</div>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="index.html" class="back-btn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Portal
+    </a>
+    <h1>My Availability</h1>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <span class="user-label" id="user-email"></span>
+    <button class="btn-danger" onclick="signOut()">Sign Out</button>
+  </div>
+</div>
+
+<div class="page-body">
+  <p style="font-size:14px;color:rgba(255,255,255,0.45);margin:0 0 28px;line-height:1.65;">
+    Set the days and times you're available for sessions. Students will see these slots and can book directly from their dashboard.
+  </p>
+
+  <div class="section-title">Add a Time Slot</div>
+  <div class="card">
+    <div class="add-row">
+      <select id="avail-day">
+        <option value="">Select day…</option>
+        <option>Monday</option>
+        <option>Tuesday</option>
+        <option>Wednesday</option>
+        <option>Thursday</option>
+        <option>Friday</option>
+        <option>Saturday</option>
+        <option>Sunday</option>
+      </select>
+      <input type="time" id="avail-time" />
+      <button class="btn-add" id="add-btn" onclick="addSlot()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Slot
+      </button>
+    </div>
+  </div>
+
+  <div class="section-title">Your Current Availability</div>
+  <div class="card">
+    <div class="slots-list" id="slots-list">
+      <div class="empty-state">Loading…</div>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+  firebase.initializeApp({
+    apiKey: "AIzaSyDy-g_ihlNGF19FVZ_-ChX-LfMIAZFKvYM",
+    authDomain: "rs1600-faccd.firebaseapp.com",
+    projectId: "rs1600-faccd",
+    storageBucket: "rs1600-faccd.firebasestorage.app",
+    messagingSenderId: "669933046930",
+    appId: "1:669933046930:web:3179bd9fd14e3e2694ea4b"
+  });
+
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  const DAY_ORDER = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+
+  let currentUid = null;
+
+  auth.onAuthStateChanged(async user => {
+    const guard = document.getElementById('auth-guard');
+    if (!user) {
+      guard.textContent = 'Access denied. Please log in from the main portal.';
+      return;
+    }
+    // Verify this user is a tutor
+    const doc = await db.collection('users').doc(user.uid).get();
+    const role = doc.exists ? doc.data().role : 'tutor';
+    if (role === 'tutee') {
+      guard.textContent = 'This page is for tutors only.';
+      return;
+    }
+    guard.style.display = 'none';
+    currentUid = user.uid;
+    document.getElementById('user-email').textContent = user.email;
+    loadSlots();
+  });
+
+  function loadSlots() {
+    db.collection('tutors').doc(currentUid).get().then(doc => {
+      const slots = (doc.exists && doc.data().availability) ? doc.data().availability : [];
+      renderSlots(slots);
+    });
+  }
+
+  function renderSlots(slots) {
+    const list = document.getElementById('slots-list');
+    if (!slots.length) {
+      list.innerHTML = '<div class="empty-state">No availability set yet. Add a slot above.</div>';
+      return;
+    }
+    const sorted = slots.slice().sort((a, b) => {
+      const di = DAY_ORDER.indexOf(a.day) - DAY_ORDER.indexOf(b.day);
+      return di !== 0 ? di : a.time.localeCompare(b.time);
+    });
+    list.innerHTML = sorted.map((s, i) => {
+      const [h, m] = s.time.split(':').map(Number);
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      const fmt = `${h % 12 || 12}:${(m||0).toString().padStart(2,'0')} ${ampm}`;
+      return `<div class="slot-row">
+        <span class="slot-day">${s.day}</span>
+        <span class="slot-time">${fmt}</span>
+        <button class="slot-del" onclick="removeSlot(${i})" title="Remove slot">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>`;
+    }).join('');
+  }
+
+  async function addSlot() {
+    const day = document.getElementById('avail-day').value;
+    const time = document.getElementById('avail-time').value;
+    if (!day || !time) { alert('Please select a day and time.'); return; }
+    const btn = document.getElementById('add-btn');
+    btn.disabled = true;
+    try {
+      const ref = db.collection('tutors').doc(currentUid);
+      const doc = await ref.get();
+      const current = (doc.exists && doc.data().availability) ? doc.data().availability : [];
+      if (current.some(s => s.day === day && s.time === time)) {
+        alert('That slot is already in your availability.');
+        return;
+      }
+      const updated = [...current, { day, time }];
+      await ref.set({ availability: updated }, { merge: true });
+      document.getElementById('avail-day').value = '';
+      document.getElementById('avail-time').value = '';
+      renderSlots(updated);
+    } catch (err) {
+      alert('Error: ' + err.message);
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  async function removeSlot(index) {
+    const ref = db.collection('tutors').doc(currentUid);
+    const doc = await ref.get();
+    const current = (doc.exists && doc.data().availability) ? doc.data().availability : [];
+    const sorted = current.slice().sort((a, b) => {
+      const di = DAY_ORDER.indexOf(a.day) - DAY_ORDER.indexOf(b.day);
+      return di !== 0 ? di : a.time.localeCompare(b.time);
+    });
+    sorted.splice(index, 1);
+    await ref.set({ availability: sorted }, { merge: true });
+    renderSlots(sorted);
+  }
+
+  function signOut() {
+    auth.signOut().then(() => { window.location.href = 'index.html'; });
+  }
+</script>
+</body>
+</html>
