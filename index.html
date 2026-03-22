@@ -905,7 +905,7 @@
     overflow-y: auto;
   }
   #tutor-dashboard.active { display: block; }
-  #tutor-dashboard .dash-nav {
+  #tutor-dashboard .dash-nav, #tutee-dashboard .dash-nav {
     background: #162236;
     border-bottom: 1px solid rgba(255,255,255,0.06);
     padding: 0 32px;
@@ -917,7 +917,7 @@
     top: 0;
     z-index: 10;
   }
-  #tutor-dashboard .dash-nav h1 {
+  #tutor-dashboard .dash-nav h1, #tutee-dashboard .dash-nav h1 {
     font-family: 'Syne', sans-serif;
     font-size: 18px;
     font-weight: 800;
@@ -952,8 +952,8 @@
     margin: 0 0 6px;
   }
   @media (max-width: 768px) {
-    #tutor-dashboard .dash-nav { padding: 0 16px; height: auto; min-height: 56px; flex-wrap: wrap; gap: 8px; padding-top: 10px; padding-bottom: 10px; }
-    #dash-date, #dash-user-email { display: none; }
+    #tutor-dashboard .dash-nav, #tutee-dashboard .dash-nav { padding: 0 16px; height: auto; min-height: 56px; flex-wrap: wrap; gap: 8px; padding-top: 10px; padding-bottom: 10px; }
+    #dash-date, #dash-user-email, #tutee-dash-date, #tutee-dash-email { display: none; }
     .dash-body { padding: 24px 16px; }
     .dash-greeting { font-size: 22px; }
     .dash-subtext { margin-bottom: 24px; }
