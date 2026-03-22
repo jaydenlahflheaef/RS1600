@@ -3490,6 +3490,8 @@
   // ── Tutor Login Modal ──
   function openTutorLogin(e) {
     if (e) e.preventDefault();
+    const currentUser = auth.currentUser;
+    if (currentUser) { openTutorDashboard(currentUser); return; }
     document.getElementById('tutor-email').value = '';
     document.getElementById('tutor-password').value = '';
     document.getElementById('tutor-login-error').style.display = 'none';
