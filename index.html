@@ -3575,8 +3575,9 @@
 ════════════════════════════════════════ -->
 <div id="tutee-dashboard">
   <div class="dash-nav">
-    <h1>My Portal</h1>
+    <h1>Student Portal</h1>
     <div style="display:flex; align-items:center; gap:16px;">
+      <span id="tutee-dash-date" style="font-size:13px; color:rgba(255,255,255,0.3);"></span>
       <span id="tutee-dash-email" style="font-size:13px; color:rgba(255,255,255,0.35);"></span>
       <button class="dash-logout-btn" onclick="closeTuteeDashboard()" style="background:rgba(255,255,255,0.05); border-color:rgba(255,255,255,0.1);">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
@@ -3589,27 +3590,31 @@
     </div>
   </div>
   <div class="dash-body">
-    <div class="dash-greeting">Hi, <span id="tutee-dash-name">—</span>.</div>
-    <div class="dash-subtext">Here's your ReadySet1600 student portal.</div>
+    <div class="dash-greeting">Welcome back, <span id="tutee-dash-name">—</span>.</div>
+    <div class="dash-subtext">Here's your student hub for ReadySet1600.</div>
 
     <div class="dash-section-title" style="margin-bottom:14px;">Upcoming Sessions</div>
-    <div id="tutee-sessions-list" style="margin-bottom:36px;">
-      <div class="tutee-sessions-empty">Loading sessions…</div>
+    <div class="dash-panel" style="margin-bottom:32px;">
+      <div class="dash-panel-list" id="tutee-sessions-list">
+        <div style="padding:16px 20px; font-size:14px; color:rgba(255,255,255,0.25);">Loading sessions…</div>
+      </div>
     </div>
 
     <div class="dash-section-title" style="margin-bottom:14px;">My Assignments</div>
-    <div id="tutee-assignments-list" style="margin-bottom:36px;">
-      <div class="tutee-assignments-empty">Loading assignments…</div>
+    <div class="dash-panel" style="margin-bottom:32px;">
+      <div class="dash-panel-list" id="tutee-assignments-list">
+        <div style="padding:16px 20px; font-size:14px; color:rgba(255,255,255,0.25);">Loading assignments…</div>
+      </div>
     </div>
 
     <div class="dash-section-title" style="margin-bottom:14px;">Messages</div>
-    <div class="tutee-chat-wrap">
-      <div class="tutee-chat-messages" id="tutee-chat-messages">
+    <div class="dash-panel">
+      <div class="dash-thread-messages" id="tutee-chat-messages" style="height:260px; padding:20px;">
         <div style="font-size:13px; color:rgba(255,255,255,0.25); text-align:center; margin:auto;">No messages yet. Say hi to your tutor!</div>
       </div>
-      <div class="tutee-chat-input-row">
-        <textarea id="tutee-msg-input" placeholder="Message your tutor…" rows="1" oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,80)+'px'" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendTuteeMessage();}"></textarea>
-        <button class="tutee-send-btn" onclick="sendTuteeMessage()">Send</button>
+      <div class="dash-reply-row" style="padding:14px 16px; border-top:1px solid rgba(255,255,255,0.07);">
+        <input type="text" id="tutee-msg-input" placeholder="Message your tutor…" onkeydown="if(event.key==='Enter') sendTuteeMessage()" />
+        <button class="dash-post-btn" onclick="sendTuteeMessage()">Send</button>
       </div>
     </div>
   </div>
@@ -4044,10 +4049,18 @@
   let tuteeMessageListener = null;
 
   function openTuteeDashboard(user) {
+    const d = new Date();
+    document.getElementById('tutee-dash-date').textContent = d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
     document.getElementById('tutee-dash-email').textContent = user.email;
-    document.getElementById('tutee-dash-name').textContent = user.email.split('@')[0];
     document.getElementById('tutee-dashboard').classList.add('active');
     document.body.style.overflow = 'hidden';
+    // Look up real name from members collection
+    db.collection('members').where('email', '==', user.email).limit(1).get().then(snap => {
+      const name = (!snap.empty && snap.docs[0].data().name)
+        ? snap.docs[0].data().name.split(' ')[0]
+        : user.email.split('@')[0];
+      document.getElementById('tutee-dash-name').textContent = name;
+    });
     loadTuteeSessions(user);
     loadTuteeAssignments(user.uid);
     loadTuteeMessages(user.uid);
@@ -4058,7 +4071,7 @@
     db.collection('members').where('email', '==', user.email).limit(1).get().then(snap => {
       const name = (!snap.empty && snap.docs[0].data().name) ? snap.docs[0].data().name : null;
       if (!name) {
-        list.innerHTML = '<div class="tutee-sessions-empty">No sessions scheduled yet. Your tutor will add them here.</div>';
+        list.innerHTML = '<div style="padding:16px 20px;font-size:14px;color:rgba(255,255,255,0.25);">No sessions scheduled yet. Your tutor will add them here.</div>';
         return;
       }
       db.collection('sessions').get().then(sessSnap => {
@@ -4071,7 +4084,7 @@
           return ai !== bi ? ai - bi : (a.time || '').localeCompare(b.time || '');
         });
         if (!mine.length) {
-          list.innerHTML = '<div class="tutee-sessions-empty">No upcoming sessions. Check back soon!</div>';
+          list.innerHTML = '<div style="padding:16px 20px;font-size:14px;color:rgba(255,255,255,0.25);">No upcoming sessions. Check back soon!</div>';
           return;
         }
         list.innerHTML = mine.map(s => {
@@ -4079,12 +4092,11 @@
           const ampm = h >= 12 ? 'PM' : 'AM';
           const fmt = `${h % 12 || 12}:${(m||0).toString().padStart(2,'0')} ${ampm}`;
           const isToday = days[todayIdx] === s.day;
-          return `<div class="tutee-session-card">
-            <div class="tutee-session-dot"></div>
-            <div>
-              <div style="font-size:15px;font-weight:600;color:#fff;">${isToday ? 'Today' : s.day} at ${fmt}</div>
-              ${s.assignedTutorName ? `<div style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:2px;">with ${s.assignedTutorName}</div>` : ''}
-              ${s.notes ? `<div style="font-size:13px;color:rgba(255,255,255,0.35);margin-top:2px;">${s.notes}</div>` : ''}
+          return `<div class="dash-assign-row">
+            <div class="dash-assign-dot"></div>
+            <div class="dash-assign-info">
+              <div class="dash-assign-title">${isToday ? 'Today' : s.day} at ${fmt}</div>
+              <div class="dash-assign-meta">${s.assignedTutorName ? 'with ' + s.assignedTutorName : ''}${s.notes ? (s.assignedTutorName ? ' · ' : '') + s.notes : ''}</div>
             </div>
           </div>`;
         }).join('');
@@ -4096,20 +4108,19 @@
     const list = document.getElementById('tutee-assignments-list');
     db.collection('assignments').where('tuteeUid', '==', uid).orderBy('createdAt', 'desc').onSnapshot(snap => {
       if (snap.empty) {
-        list.innerHTML = '<div class="tutee-assignments-empty">No assignments yet. Your tutor will post them here.</div>';
+        list.innerHTML = '<div style="padding:16px 20px;font-size:14px;color:rgba(255,255,255,0.25);">No assignments yet. Your tutor will post them here.</div>';
         return;
       }
       list.innerHTML = snap.docs.map(doc => {
         const a = doc.data();
         const done = !!a.completed;
-        return `<div class="tutee-assignment-card${done ? ' done' : ''}">
+        return `<div class="dash-assign-row" style="${done ? 'opacity:0.5;' : ''}">
           <button class="tutee-check${done ? ' checked' : ''}" onclick="toggleAssignment('${doc.id}',${done})" title="${done ? 'Mark incomplete' : 'Mark complete'}">
             ${done ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>' : ''}
           </button>
-          <div style="flex:1;">
-            <div style="font-size:15px;font-weight:600;color:#fff;">${a.title || 'Assignment'}</div>
-            ${a.description ? `<div style="font-size:13px;color:rgba(255,255,255,0.45);margin-top:3px;">${a.description}</div>` : ''}
-            ${a.dueDate ? `<div style="font-size:12px;color:#14B8A6;margin-top:4px;font-weight:600;">Due ${a.dueDate}</div>` : ''}
+          <div class="dash-assign-info">
+            <div class="dash-assign-title">${a.title || 'Assignment'}</div>
+            <div class="dash-assign-meta">${a.description || ''}${a.dueDate ? (a.description ? ' · ' : '') + 'Due ' + a.dueDate : ''}</div>
           </div>
         </div>`;
       }).join('');
@@ -4134,8 +4145,8 @@
           const fromTutee = m.from === 'tutee';
           const time = m.createdAt ? m.createdAt.toDate().toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' }) : '';
           return `<div style="display:flex;flex-direction:column;align-items:${fromTutee ? 'flex-end' : 'flex-start'};">
-            <div class="tutee-msg ${fromTutee ? 'from-tutee' : 'from-tutor'}">${m.text}</div>
-            <div class="tutee-msg-meta">${fromTutee ? 'You' : 'Tutor'}${time ? ' · ' + time : ''}</div>
+            <div class="dash-thread-msg ${fromTutee ? 'from-tutor' : 'from-tutee'}">${m.text}</div>
+            <div class="dash-thread-meta">${fromTutee ? 'You' : 'Tutor'}${time ? ' · ' + time : ''}</div>
           </div>`;
         }).join('');
         box.scrollTop = box.scrollHeight;
@@ -4149,7 +4160,6 @@
     const text = input.value.trim();
     if (!text) return;
     input.value = '';
-    input.style.height = 'auto';
     await db.collection('messages').doc(user.uid).collection('thread').add({
       from: 'tutee', text,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
