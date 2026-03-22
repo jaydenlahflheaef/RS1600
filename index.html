@@ -3607,7 +3607,7 @@
       </div>
     </div>
 
-    <div class="dash-section-title" style="margin-bottom:14px;">Messages</div>
+    <div class="dash-section-title" style="margin-bottom:14px;" id="tutee-messages-title">Messages</div>
     <div class="dash-panel">
       <div class="dash-thread-messages" id="tutee-chat-messages" style="height:260px; padding:20px;">
         <div style="font-size:13px; color:rgba(255,255,255,0.25); text-align:center; margin:auto;">No messages yet. Say hi to your tutor!</div>
@@ -3934,36 +3934,55 @@
       }).join('');
     });
 
-    // Load student conversations
-    db.collection('messages').get().then(snap => {
-      const convoList = document.getElementById('tutor-convo-list');
-      if (snap.empty) {
-        convoList.innerHTML = '<div style="padding:16px 20px; font-size:14px; color:rgba(255,255,255,0.25);">No student conversations yet.</div>';
-        return;
-      }
-      // Get emails for each tutee uid
-      const promises = snap.docs.map(doc =>
-        db.collection('users').doc(doc.id).get().then(u => ({
-          uid: doc.id,
-          email: u.exists ? u.data().email : doc.id
-        }))
-      );
-      Promise.all(promises).then(convos => {
-        convoList.innerHTML = convos.map(c =>
-          `<button class="dash-convo-btn" onclick="openTutorThread('${c.uid}','${c.email}')">${c.email}</button>`
-        ).join('');
+    // Load student conversations — only show tutees from this tutor's claimed sessions
+    const tutorUid = auth.currentUser.uid;
+    db.collection('sessions').where('assignedTutorId', '==', tutorUid).get().then(sessSnap => {
+      const myStudentNames = new Set(sessSnap.docs.map(d => d.data().studentName));
+      db.collection('messages').get().then(snap => {
+        const convoList = document.getElementById('tutor-convo-list');
+        if (snap.empty) {
+          convoList.innerHTML = '<div style="padding:16px 20px; font-size:14px; color:rgba(255,255,255,0.25);">No student conversations yet.</div>';
+          return;
+        }
+        // Resolve email + name for each tutee uid
+        const promises = snap.docs.map(doc =>
+          db.collection('users').doc(doc.id).get().then(u => {
+            const email = u.exists ? u.data().email : null;
+            if (!email) return null;
+            return db.collection('members').where('email', '==', email).limit(1).get().then(mSnap => ({
+              uid: doc.id,
+              email,
+              name: (!mSnap.empty && mSnap.docs[0].data().name) ? mSnap.docs[0].data().name : email,
+              isMine: !mSnap.empty && myStudentNames.has(mSnap.docs[0].data().name)
+            }));
+          })
+        );
+        Promise.all(promises).then(convos => {
+          const valid = convos.filter(Boolean);
+          if (!valid.length) {
+            convoList.innerHTML = '<div style="padding:16px 20px; font-size:14px; color:rgba(255,255,255,0.25);">No student conversations yet.</div>';
+            return;
+          }
+          // Sort: your students first
+          valid.sort((a, b) => b.isMine - a.isMine);
+          convoList.innerHTML = valid.map(c =>
+            `<button class="dash-convo-btn" onclick="openTutorThread('${c.uid}','${c.name}')">
+              ${c.name}
+              ${c.isMine ? '<span style="font-size:11px;color:#14B8A6;font-weight:600;margin-left:6px;">Your student</span>' : ''}
+            </button>`
+          ).join('');
+        });
       });
     });
   }
 
-  function openTutorThread(uid, email) {
+  function openTutorThread(uid, name) {
     activeTuteeUid = uid;
-    activeTuteeEmail = email;
+    activeTuteeEmail = name;
     document.getElementById('tutor-thread').style.display = '';
-    document.getElementById('tutor-thread-label').textContent = email;
+    document.getElementById('tutor-thread-label').textContent = name;
     document.querySelectorAll('.dash-convo-btn').forEach(b => b.classList.remove('active'));
-    const btns = document.querySelectorAll('.dash-convo-btn');
-    btns.forEach(b => { if (b.textContent === email) b.classList.add('active'); });
+    event.currentTarget.classList.add('active');
 
     if (tutorThreadListener) tutorThreadListener();
     const box = document.getElementById('tutor-thread-messages');
@@ -3975,7 +3994,7 @@
           const time = m.createdAt ? m.createdAt.toDate().toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' }) : '';
           return `<div style="display:flex;flex-direction:column;align-items:${fromTutor ? 'flex-end' : 'flex-start'};">
             <div class="dash-thread-msg ${fromTutor ? 'from-tutor' : 'from-tutee'}">${m.text}</div>
-            <div class="dash-thread-meta">${fromTutor ? 'You' : email}${time ? ' · ' + time : ''}</div>
+            <div class="dash-thread-meta">${fromTutor ? 'You' : activeTuteeEmail}${time ? ' · ' + time : ''}</div>
           </div>`;
         }).join('');
         box.scrollTop = box.scrollHeight;
@@ -4054,54 +4073,57 @@
     document.getElementById('tutee-dash-email').textContent = user.email;
     document.getElementById('tutee-dashboard').classList.add('active');
     document.body.style.overflow = 'hidden';
-    // Look up real name from members collection
-    db.collection('members').where('email', '==', user.email).limit(1).get().then(snap => {
-      const name = (!snap.empty && snap.docs[0].data().name)
-        ? snap.docs[0].data().name.split(' ')[0]
-        : user.email.split('@')[0];
-      document.getElementById('tutee-dash-name').textContent = name;
-    });
-    loadTuteeSessions(user);
-    loadTuteeAssignments(user.uid);
-    loadTuteeMessages(user.uid);
-  }
 
-  function loadTuteeSessions(user) {
-    const list = document.getElementById('tutee-sessions-list');
+    // Single members lookup — feeds name, sessions, and messages
     db.collection('members').where('email', '==', user.email).limit(1).get().then(snap => {
-      const name = (!snap.empty && snap.docs[0].data().name) ? snap.docs[0].data().name : null;
-      if (!name) {
-        list.innerHTML = '<div style="padding:16px 20px;font-size:14px;color:rgba(255,255,255,0.25);">No sessions scheduled yet. Your tutor will add them here.</div>';
+      const fullName = (!snap.empty && snap.docs[0].data().name) ? snap.docs[0].data().name : null;
+      document.getElementById('tutee-dash-name').textContent = fullName ? fullName.split(' ')[0] : user.email.split('@')[0];
+
+      if (!fullName) {
+        document.getElementById('tutee-sessions-list').innerHTML = '<div style="padding:16px 20px;font-size:14px;color:rgba(255,255,255,0.25);">No sessions scheduled yet. Your tutor will add them here.</div>';
+        loadTuteeMessages(user.uid, null);
         return;
       }
+
+      // Fetch sessions → render sessions + wire messages to the assigned tutor
       db.collection('sessions').get().then(sessSnap => {
         const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
         const todayIdx = new Date().getDay();
-        const mine = sessSnap.docs.map(d => d.data()).filter(s => s.studentName === name);
+        const mine = sessSnap.docs.map(d => d.data()).filter(s => s.studentName === fullName);
         mine.sort((a, b) => {
           const ai = (days.indexOf(a.day) - todayIdx + 7) % 7;
           const bi = (days.indexOf(b.day) - todayIdx + 7) % 7;
           return ai !== bi ? ai - bi : (a.time || '').localeCompare(b.time || '');
         });
+
+        const list = document.getElementById('tutee-sessions-list');
         if (!mine.length) {
           list.innerHTML = '<div style="padding:16px 20px;font-size:14px;color:rgba(255,255,255,0.25);">No upcoming sessions. Check back soon!</div>';
-          return;
+        } else {
+          list.innerHTML = mine.map(s => {
+            const [h, m] = (s.time || '0:0').split(':').map(Number);
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            const fmt = `${h % 12 || 12}:${(m||0).toString().padStart(2,'0')} ${ampm}`;
+            const isToday = days[todayIdx] === s.day;
+            return `<div class="dash-assign-row">
+              <div class="dash-assign-dot"></div>
+              <div class="dash-assign-info">
+                <div class="dash-assign-title">${isToday ? 'Today' : s.day} at ${fmt}</div>
+                <div class="dash-assign-meta">${s.assignedTutorName ? 'with ' + s.assignedTutorName : 'No tutor assigned yet'}${s.notes ? ' · ' + s.notes : ''}</div>
+              </div>
+            </div>`;
+          }).join('');
         }
-        list.innerHTML = mine.map(s => {
-          const [h, m] = (s.time || '0:0').split(':').map(Number);
-          const ampm = h >= 12 ? 'PM' : 'AM';
-          const fmt = `${h % 12 || 12}:${(m||0).toString().padStart(2,'0')} ${ampm}`;
-          const isToday = days[todayIdx] === s.day;
-          return `<div class="dash-assign-row">
-            <div class="dash-assign-dot"></div>
-            <div class="dash-assign-info">
-              <div class="dash-assign-title">${isToday ? 'Today' : s.day} at ${fmt}</div>
-              <div class="dash-assign-meta">${s.assignedTutorName ? 'with ' + s.assignedTutorName : ''}${s.notes ? (s.assignedTutorName ? ' · ' : '') + s.notes : ''}</div>
-            </div>
-          </div>`;
-        }).join('');
+
+        // Find assigned tutor from the most recent claimed session
+        const claimed = mine.filter(s => s.assignedTutorName);
+        const tutorName = claimed.length ? claimed[0].assignedTutorName : null;
+        const tutorId   = claimed.length ? claimed[0].assignedTutorId   : null;
+        loadTuteeMessages(user.uid, tutorName, tutorId);
       });
     });
+
+    loadTuteeAssignments(user.uid);
   }
 
   function loadTuteeAssignments(uid) {
@@ -4131,13 +4153,25 @@
     db.collection('assignments').doc(id).update({ completed: !currentDone });
   }
 
-  function loadTuteeMessages(uid) {
+  let tuteeTutorId = null;
+
+  function loadTuteeMessages(uid, tutorName, tutorId) {
+    tuteeTutorId = tutorId || null;
+    const title = document.getElementById('tutee-messages-title');
+    title.textContent = tutorName ? `Messages with ${tutorName}` : 'Messages';
+
     if (tuteeMessageListener) tuteeMessageListener();
     const box = document.getElementById('tutee-chat-messages');
+
+    if (!tutorName) {
+      box.innerHTML = '<div style="font-size:13px;color:rgba(255,255,255,0.25);text-align:center;margin:auto;">No tutor assigned yet. Check back after your session is claimed.</div>';
+      return;
+    }
+
     tuteeMessageListener = db.collection('messages').doc(uid).collection('thread')
       .orderBy('createdAt').onSnapshot(snap => {
         if (snap.empty) {
-          box.innerHTML = '<div style="font-size:13px;color:rgba(255,255,255,0.25);text-align:center;margin:auto;">No messages yet. Say hi to your tutor!</div>';
+          box.innerHTML = `<div style="font-size:13px;color:rgba(255,255,255,0.25);text-align:center;margin:auto;">No messages yet. Say hi to ${tutorName}!</div>`;
           return;
         }
         box.innerHTML = snap.docs.map(doc => {
@@ -4146,7 +4180,7 @@
           const time = m.createdAt ? m.createdAt.toDate().toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' }) : '';
           return `<div style="display:flex;flex-direction:column;align-items:${fromTutee ? 'flex-end' : 'flex-start'};">
             <div class="dash-thread-msg ${fromTutee ? 'from-tutor' : 'from-tutee'}">${m.text}</div>
-            <div class="dash-thread-meta">${fromTutee ? 'You' : 'Tutor'}${time ? ' · ' + time : ''}</div>
+            <div class="dash-thread-meta">${fromTutee ? 'You' : tutorName}${time ? ' · ' + time : ''}</div>
           </div>`;
         }).join('');
         box.scrollTop = box.scrollHeight;
@@ -4160,10 +4194,9 @@
     const text = input.value.trim();
     if (!text) return;
     input.value = '';
-    await db.collection('messages').doc(user.uid).collection('thread').add({
-      from: 'tutee', text,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
+    const msg = { from: 'tutee', text, createdAt: firebase.firestore.FieldValue.serverTimestamp() };
+    if (tuteeTutorId) msg.tutorId = tuteeTutorId;
+    await db.collection('messages').doc(user.uid).collection('thread').add(msg);
   }
 
   // ── Auth State ──
