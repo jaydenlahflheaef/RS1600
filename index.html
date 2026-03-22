@@ -1070,6 +1070,13 @@
   .dash-panel-form input { flex: 1; min-width: 140px; }
   .dash-panel-form select:focus, .dash-panel-form input:focus { border-color: rgba(20,184,166,0.5); }
   .dash-panel-form select option { background: #162236; }
+  .assign-file-btn {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px; color: rgba(255,255,255,0.5); cursor: pointer;
+    padding: 8px 10px; display: flex; align-items: center;
+    transition: color 0.2s, background 0.2s; flex-shrink: 0;
+  }
+  .assign-file-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
   .dash-post-btn {
     background: linear-gradient(135deg, #0F766E, #14B8A6);
     border: none; border-radius: 8px; color: #fff;
@@ -3528,6 +3535,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
 
 <!-- ══════════════════════════════════════
      TUTOR LOGIN MODAL
@@ -3700,7 +3708,12 @@
         <input type="text" id="assign-title" placeholder="Assignment title" />
         <input type="text" id="assign-desc" placeholder="Description (optional)" />
         <input type="text" id="assign-due" placeholder="Due date (optional)" style="max-width:160px;" />
-        <button class="dash-post-btn" onclick="postAssignment()">Post</button>
+        <label class="assign-file-btn" title="Attach a file">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+          <input type="file" id="assign-file" style="display:none;" onchange="updateFileLabel(this)" />
+        </label>
+        <span id="assign-file-label" style="font-size:12px;color:rgba(255,255,255,0.35);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+        <button class="dash-post-btn" id="assign-post-btn" onclick="postAssignment()">Post</button>
       </div>
       <div class="dash-panel-list" id="tutor-assignments-list">
         <div style="padding:16px 20px; font-size:14px; color:rgba(255,255,255,0.25);">No assignments posted yet.</div>
@@ -3742,6 +3755,7 @@
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
   const db = firebase.firestore();
+  const storage = firebase.storage();
   auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
   // ── Member Login Modal ──
@@ -3926,6 +3940,7 @@
           <div class="dash-assign-info">
             <div class="dash-assign-title">${a.title}${done ? ' <span style="font-size:11px;color:#14B8A6;font-weight:600;">✓ Done</span>' : ''}</div>
             <div class="dash-assign-meta">${a.tuteeEmail || ''}${a.description ? ' · ' + a.description : ''}${a.dueDate ? ' · Due ' + a.dueDate : ''}</div>
+            ${a.fileUrl ? `<a href="${a.fileUrl}" target="_blank" rel="noopener" style="font-size:12px;color:#14B8A6;text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-top:4px;">📎 ${a.fileName || 'Attached file'}</a>` : ''}
           </div>
           <button class="dash-assign-del" onclick="deleteAssignment('${doc.id}')" title="Delete">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
@@ -4000,22 +4015,55 @@
     document.getElementById('tutor-reply-input').focus();
   }
 
+  function updateFileLabel(input) {
+    document.getElementById('assign-file-label').textContent = input.files[0] ? input.files[0].name : '';
+  }
+
   async function postAssignment() {
     const sel = document.getElementById('assign-tutee-select');
     const tuteeUid = sel.value;
     const tuteeEmail = sel.options[sel.selectedIndex]?.dataset.email || '';
     const title = document.getElementById('assign-title').value.trim();
+    const btn = document.getElementById('assign-post-btn');
     if (!tuteeUid || !title) { alert('Please select a student and enter a title.'); return; }
-    await db.collection('assignments').add({
-      tuteeUid, tuteeEmail, title,
-      description: document.getElementById('assign-desc').value.trim(),
-      dueDate: document.getElementById('assign-due').value.trim(),
-      completed: false,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-    document.getElementById('assign-title').value = '';
-    document.getElementById('assign-desc').value = '';
-    document.getElementById('assign-due').value = '';
+
+    btn.textContent = 'Posting…';
+    btn.disabled = true;
+
+    try {
+      let fileUrl = null, fileName = null;
+      const fileInput = document.getElementById('assign-file');
+      const file = fileInput.files[0];
+      if (file) {
+        btn.textContent = 'Uploading…';
+        const ref = storage.ref(`assignments/${tuteeUid}/${Date.now()}_${file.name}`);
+        await ref.put(file);
+        fileUrl = await ref.getDownloadURL();
+        fileName = file.name;
+      }
+
+      await db.collection('assignments').add({
+        tuteeUid, tuteeEmail, title,
+        description: document.getElementById('assign-desc').value.trim(),
+        dueDate: document.getElementById('assign-due').value.trim(),
+        fileUrl, fileName,
+        completed: false,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      document.getElementById('assign-title').value = '';
+      document.getElementById('assign-desc').value = '';
+      document.getElementById('assign-due').value = '';
+      fileInput.value = '';
+      document.getElementById('assign-file-label').textContent = '';
+      btn.textContent = 'Posted ✓';
+      setTimeout(() => { btn.textContent = 'Post'; }, 2000);
+    } catch (err) {
+      alert('Error posting assignment: ' + err.message);
+      btn.textContent = 'Post';
+    } finally {
+      btn.disabled = false;
+    }
   }
 
   async function deleteAssignment(id) {
@@ -4130,24 +4178,36 @@
 
   function loadTuteeAssignments(uid) {
     const list = document.getElementById('tutee-assignments-list');
-    db.collection('assignments').where('tuteeUid', '==', uid).orderBy('createdAt', 'desc').onSnapshot(snap => {
+    db.collection('assignments').where('tuteeUid', '==', uid).onSnapshot(snap => {
       if (snap.empty) {
         list.innerHTML = '<div style="padding:16px 20px;font-size:14px;color:rgba(255,255,255,0.25);">No assignments yet. Your tutor will post them here.</div>';
         return;
       }
-      list.innerHTML = snap.docs.map(doc => {
+      const docs = snap.docs.slice().sort((a, b) => {
+        const ta = a.data().createdAt?.toMillis?.() || 0;
+        const tb = b.data().createdAt?.toMillis?.() || 0;
+        return tb - ta;
+      });
+      list.innerHTML = docs.map(doc => {
         const a = doc.data();
         const done = !!a.completed;
+        const meta = [a.description, a.dueDate ? 'Due ' + a.dueDate : ''].filter(Boolean).join(' · ');
         return `<div class="dash-assign-row" style="${done ? 'opacity:0.5;' : ''}">
           <button class="tutee-check${done ? ' checked' : ''}" onclick="toggleAssignment('${doc.id}',${done})" title="${done ? 'Mark incomplete' : 'Mark complete'}">
             ${done ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>' : ''}
           </button>
           <div class="dash-assign-info">
             <div class="dash-assign-title">${a.title || 'Assignment'}</div>
-            <div class="dash-assign-meta">${a.description || ''}${a.dueDate ? (a.description ? ' · ' : '') + 'Due ' + a.dueDate : ''}</div>
+            ${meta ? `<div class="dash-assign-meta">${meta}</div>` : ''}
+            ${a.fileUrl ? `<a href="${a.fileUrl}" target="_blank" rel="noopener" style="font-size:12px;color:#14B8A6;text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-weight:600;">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+              ${a.fileName || 'Attached file'}
+            </a>` : ''}
           </div>
         </div>`;
       }).join('');
+    }, err => {
+      list.innerHTML = `<div style="padding:16px 20px;font-size:13px;color:#F87171;">${err.message}</div>`;
     });
   }
 
