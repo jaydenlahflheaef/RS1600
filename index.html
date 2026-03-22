@@ -942,6 +942,15 @@
   }
   .tutee-send-btn:hover { opacity: 0.88; }
 
+  /* ── Tutor cards (tutee browsing) ── */
+  .tutor-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 18px 20px; margin-bottom: 12px; }
+  .tutor-card-name { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 12px; }
+  .tutor-card-slots { display: flex; flex-wrap: wrap; gap: 8px; }
+  .avail-slot-btn { background: rgba(20,184,166,0.1); border: 1px solid rgba(20,184,166,0.3); color: #14B8A6; font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 100px; cursor: pointer; transition: background 0.2s, border-color 0.2s; font-family: 'Outfit', sans-serif; }
+  .avail-slot-btn:hover { background: rgba(20,184,166,0.22); border-color: rgba(20,184,166,0.5); }
+  .avail-slot-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .avail-slot-row:last-child { border-bottom: none; }
+
   /* ── Tutor Dashboard Overlay ── */
   #tutor-dashboard {
     display: none;
@@ -3648,9 +3657,14 @@
     <div class="dash-greeting">Welcome back, <span id="tutee-dash-name">—</span>.</div>
     <div class="dash-subtext">Here's your student hub for ReadySet1600.</div>
 
-    <div class="dash-section-title" style="margin-bottom:14px;">Upcoming Sessions</div>
+    <div class="dash-section-title" style="margin-bottom:14px;">My Sessions</div>
     <div id="tutee-sessions-list" style="margin-bottom:32px;">
       <div style="font-size:14px; color:rgba(255,255,255,0.25);">Loading sessions…</div>
+    </div>
+
+    <div class="dash-section-title" style="margin-bottom:14px;">Find a Tutor</div>
+    <div id="tutee-tutors-list" style="margin-bottom:32px;">
+      <div style="font-size:14px; color:rgba(255,255,255,0.25);">Loading tutors…</div>
     </div>
 
     <div class="dash-section-title" style="margin-bottom:14px;">My Assignments</div>
@@ -3705,7 +3719,7 @@
         <div style="font-size:15px;font-weight:600;color:#fff;" id="upcoming-student">—</div>
         <div style="font-size:13px;color:rgba(255,255,255,0.45);margin-top:2px;" id="upcoming-details">—</div>
       </div>
-      <a href="schedule.html" style="font-size:13px;font-weight:600;color:#14B8A6;text-decoration:none;white-space:nowrap;opacity:0.8;transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">View Schedule →</a>
+      <a href="#avail-section" onclick="document.getElementById('avail-section').scrollIntoView({behavior:'smooth'});return false;" style="font-size:13px;font-weight:600;color:#14B8A6;text-decoration:none;white-space:nowrap;opacity:0.8;transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">My Schedule →</a>
     </div>
 
     <div class="dash-section-title" style="margin-bottom:16px;">Quick Links</div>
@@ -3714,9 +3728,9 @@
         <div class="dash-card-icon">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         </div>
-        <h3>Session Scheduling</h3>
-        <p>View open sessions and claim the ones you want to tutor.</p>
-        <a href="schedule.html">Open Schedule →</a>
+        <h3>My Availability</h3>
+        <p>Set the days and times you're available so students can book you.</p>
+        <a href="#avail-section" onclick="document.getElementById('avail-section').scrollIntoView({behavior:'smooth'});return false;">Set Availability →</a>
       </div>
       <div class="dash-card">
         <div class="dash-card-icon">
@@ -3741,6 +3755,22 @@
         <h3>Score Tracking</h3>
         <p>Log practice test scores and monitor student progress over time.</p>
         <a href="https://docs.google.com/spreadsheets" target="_blank" rel="noopener">Open Tracker →</a>
+      </div>
+    </div>
+
+    <div class="dash-section-title" style="margin-bottom:14px;" id="avail-section">My Availability</div>
+    <div class="dash-panel" style="margin-bottom:32px;">
+      <div class="dash-panel-form" style="flex-wrap:wrap;">
+        <select id="avail-day" style="max-width:160px;">
+          <option value="">Day…</option>
+          <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+          <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
+        </select>
+        <input type="time" id="avail-time" style="max-width:140px;" />
+        <button class="dash-post-btn" onclick="addAvailability()">Add Slot</button>
+      </div>
+      <div id="avail-slots-list" style="padding:8px 16px 4px;">
+        <div style="font-size:13px;color:rgba(255,255,255,0.25);padding:8px 0;">No availability set yet.</div>
       </div>
     </div>
 
@@ -3903,10 +3933,14 @@
     document.getElementById('dash-date').textContent = d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
     document.getElementById('dash-user-email').textContent = user.email;
 
-    // Set name from members collection by email
+    // Set name from members collection by email, and save full name to tutors doc
     db.collection('members').where('email', '==', user.email).limit(1).get().then(snap => {
-      const name = (!snap.empty && snap.docs[0].data().name) ? snap.docs[0].data().name.split(' ')[0] : user.email.split('@')[0];
-      document.getElementById('dash-name').textContent = name;
+      const fullName = (!snap.empty && snap.docs[0].data().name) ? snap.docs[0].data().name : null;
+      const firstName = fullName ? fullName.split(' ')[0] : user.email.split('@')[0];
+      document.getElementById('dash-name').textContent = firstName;
+      if (fullName) {
+        db.collection('tutors').doc(user.uid).set({ name: fullName, email: user.email }, { merge: true });
+      }
     });
 
     // Load notes
@@ -3914,32 +3948,28 @@
       document.getElementById('dash-notes-ta').value = (doc.exists && doc.data().notes) ? doc.data().notes : '';
     });
 
-    // Reset upcoming session banner for this account
+    // Reset upcoming session banner
     document.getElementById('upcoming-session-banner').style.display = 'none';
     document.getElementById('upcoming-student').textContent = '—';
     document.getElementById('upcoming-details').textContent = '—';
 
-    // Load upcoming session
+    // Load next upcoming session from bookings
     const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
     const todayIdx = new Date().getDay();
-    db.collection('sessions').get().then(snap => {
-      const mySessions = snap.docs
-        .map(d => d.data())
-        .filter(s => s.assignedTutorId === user.uid);
-      if (!mySessions.length) return;
-      mySessions.sort((a, b) => {
+    db.collection('bookings').where('tutorUid', '==', user.uid).get().then(snap => {
+      if (snap.empty) return;
+      const sessions = snap.docs.map(d => d.data()).sort((a, b) => {
         const ai = (days.indexOf(a.day) - todayIdx + 7) % 7;
         const bi = (days.indexOf(b.day) - todayIdx + 7) % 7;
-        if (ai !== bi) return ai - bi;
-        return (a.time || '').localeCompare(b.time || '');
+        return ai !== bi ? ai - bi : (a.time || '').localeCompare(b.time || '');
       });
-      const next = mySessions[0];
+      const next = sessions[0];
       const [h, m] = (next.time || '0:0').split(':').map(Number);
       const ampm = h >= 12 ? 'PM' : 'AM';
       const fmt = `${h % 12 || 12}:${m.toString().padStart(2,'0')} ${ampm}`;
       const isToday = days[todayIdx] === next.day;
-      document.getElementById('upcoming-student').textContent = next.studentName;
-      document.getElementById('upcoming-details').textContent = `${isToday ? 'Today' : next.day} at ${fmt}${next.notes ? ' · ' + next.notes : ''}`;
+      document.getElementById('upcoming-student').textContent = next.tuteeName || next.tuteeEmail || '—';
+      document.getElementById('upcoming-details').textContent = `${isToday ? 'Today' : next.day} at ${fmt}`;
       document.getElementById('upcoming-session-banner').style.display = 'flex';
     }).catch(() => {});
 
@@ -3955,39 +3985,26 @@
   let activeTuteeEmail = null;
 
   function loadTutorPanels() {
-    // Populate tutee dropdown — only students from this tutor's claimed sessions
     const tutorUid = auth.currentUser.uid;
+
+    // Load availability slots
+    loadTutorAvailability(tutorUid);
+
+    // Populate tutee dropdown from bookings
     const sel = document.getElementById('assign-tutee-select');
     sel.innerHTML = '<option value="">Select student…</option>';
-    db.collection('sessions').where('assignedTutorId', '==', tutorUid).get().then(sessSnap => {
-      const studentNames = [...new Set(sessSnap.docs.map(d => d.data().studentName).filter(Boolean))];
-      if (!studentNames.length) return;
-      const promises = studentNames.map(name =>
-        db.collection('members').where('name', '==', name).limit(1).get().then(mSnap => {
-          const lookup = mSnap.empty
-            ? db.collection('members').where('email', '==', name).limit(1).get()
-            : Promise.resolve(mSnap);
-          return lookup.then(snap => {
-            if (snap.empty) return null;
-            const memberData = snap.docs[0].data();
-            const email = memberData.email;
-            const displayName = memberData.name || name;
-            if (!email) return null;
-            return db.collection('users').where('email', '==', email).limit(1).get().then(uSnap => {
-              if (uSnap.empty) return null;
-              return { uid: uSnap.docs[0].id, name: displayName, email };
-            });
-          });
-        })
-      );
-      Promise.all(promises).then(results => {
-        results.filter(Boolean).forEach(({ uid, name, email }) => {
-          const opt = document.createElement('option');
-          opt.value = uid;
-          opt.textContent = name;
-          opt.dataset.email = email;
-          sel.appendChild(opt);
-        });
+    db.collection('bookings').where('tutorUid', '==', tutorUid).get().then(snap => {
+      const seen = new Set();
+      snap.docs.forEach(doc => {
+        const { tuteeUid, tuteeName, tuteeEmail } = doc.data();
+        if (!tuteeUid || seen.has(tuteeUid)) return;
+        seen.add(tuteeUid);
+        const opt = document.createElement('option');
+        opt.value = tuteeUid;
+        opt.textContent = tuteeName || tuteeEmail || tuteeUid;
+        opt.dataset.email = tuteeEmail || '';
+        opt.dataset.name = tuteeName || '';
+        sel.appendChild(opt);
       });
     });
 
@@ -4011,7 +4028,7 @@
           <div class="dash-assign-dot${done ? ' done' : ''}"></div>
           <div class="dash-assign-info">
             <div class="dash-assign-title">${a.title}${done ? ' <span style="font-size:11px;color:#14B8A6;font-weight:600;">✓ Done</span>' : ''}</div>
-            <div class="dash-assign-meta">${a.tuteeEmail || ''}${a.description ? ' · ' + a.description : ''}${a.dueDate ? ' · Due ' + a.dueDate : ''}</div>
+            <div class="dash-assign-meta">${a.tuteeName || a.tuteeEmail || ''}${a.description ? ' · ' + a.description : ''}${a.dueDate ? ' · Due ' + a.dueDate : ''}</div>
             ${a.fileUrl ? `<a href="${a.fileUrl}" target="_blank" rel="noopener" style="font-size:12px;color:#14B8A6;text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-top:4px;">📎 ${a.fileName || 'Attached file'}</a>` : ''}
           </div>
           <button class="dash-assign-del" onclick="deleteAssignment('${doc.id}')" title="Delete">
@@ -4021,36 +4038,24 @@
       }).join('');
     });
 
-    // Load student conversations — derived from claimed sessions, no messages collection listing needed
-    db.collection('sessions').where('assignedTutorId', '==', tutorUid).get().then(sessSnap => {
+    // Load student conversations from bookings
+    db.collection('bookings').where('tutorUid', '==', tutorUid).get().then(snap => {
       const convoList = document.getElementById('tutor-convo-list');
-      const studentNames = [...new Set(sessSnap.docs.map(d => d.data().studentName).filter(Boolean))];
-      if (!studentNames.length) {
-        convoList.innerHTML = '<div style="padding:16px 20px; font-size:14px; color:rgba(255,255,255,0.25);">No students assigned yet. Claim sessions to see conversations.</div>';
+      const seen = new Set();
+      const students = [];
+      snap.docs.forEach(doc => {
+        const { tuteeUid, tuteeName, tuteeEmail } = doc.data();
+        if (!tuteeUid || seen.has(tuteeUid)) return;
+        seen.add(tuteeUid);
+        students.push({ uid: tuteeUid, name: tuteeName || tuteeEmail || tuteeUid });
+      });
+      if (!students.length) {
+        convoList.innerHTML = '<div style="padding:16px 20px; font-size:14px; color:rgba(255,255,255,0.25);">No students have booked with you yet.</div>';
         return;
       }
-      // For each student name, look up their uid via members → users
-      const promises = studentNames.map(name =>
-        db.collection('members').where('name', '==', name).limit(1).get().then(mSnap => {
-          if (mSnap.empty) return null;
-          const email = mSnap.docs[0].data().email;
-          if (!email) return null;
-          return db.collection('users').where('email', '==', email).limit(1).get().then(uSnap => {
-            if (uSnap.empty) return null;
-            return { uid: uSnap.docs[0].id, name, email };
-          });
-        })
-      );
-      Promise.all(promises).then(convos => {
-        const valid = convos.filter(Boolean);
-        if (!valid.length) {
-          convoList.innerHTML = '<div style="padding:16px 20px; font-size:14px; color:rgba(255,255,255,0.25);">Your students haven\'t created accounts yet.</div>';
-          return;
-        }
-        convoList.innerHTML = valid.map(c =>
-          `<button class="dash-convo-btn" onclick="openTutorThread('${c.uid}','${c.name}')">${c.name}</button>`
-        ).join('');
-      });
+      convoList.innerHTML = students.map(c =>
+        `<button class="dash-convo-btn" onclick="openTutorThread('${c.uid}','${c.name}')">${c.name}</button>`
+      ).join('');
     });
   }
 
@@ -4098,6 +4103,7 @@
     const sel = document.getElementById('assign-tutee-select');
     const tuteeUid = sel.value;
     const tuteeEmail = sel.options[sel.selectedIndex]?.dataset.email || '';
+    const tuteeName = sel.options[sel.selectedIndex]?.dataset.name || '';
     const title = document.getElementById('assign-title').value.trim();
     const btn = document.getElementById('assign-post-btn');
     if (!tuteeUid || !title) { alert('Please select a student and enter a title.'); return; }
@@ -4108,6 +4114,7 @@
       await createAssignment({
         tuteeUid,
         tuteeEmail,
+        tuteeName,
         title,
         description: document.getElementById('assign-desc').value.trim(),
         dueDate: document.getElementById('assign-due').value.trim(),
@@ -4153,6 +4160,8 @@
   }
 
   function closeTuteeDashboard() {
+    if (tuteeBookingListener) { tuteeBookingListener(); tuteeBookingListener = null; }
+    if (tuteeMessageListener) { tuteeMessageListener(); tuteeMessageListener = null; }
     document.getElementById('tutee-dashboard').classList.remove('active');
     document.body.style.overflow = '';
   }
@@ -4172,6 +4181,69 @@
     }, 1000);
   }
 
+  // ── Tutor Availability ──
+  function loadTutorAvailability(tutorUid) {
+    db.collection('tutors').doc(tutorUid).get().then(doc => {
+      const slots = (doc.exists && doc.data().availability) ? doc.data().availability : [];
+      renderAvailabilitySlots(slots);
+    });
+  }
+
+  const DAY_ORDER = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+
+  function renderAvailabilitySlots(slots) {
+    const list = document.getElementById('avail-slots-list');
+    if (!slots.length) {
+      list.innerHTML = '<div style="font-size:13px;color:rgba(255,255,255,0.25);padding:8px 0;">No availability set yet.</div>';
+      return;
+    }
+    const sorted = slots.slice().sort((a, b) => {
+      const di = DAY_ORDER.indexOf(a.day) - DAY_ORDER.indexOf(b.day);
+      return di !== 0 ? di : a.time.localeCompare(b.time);
+    });
+    list.innerHTML = sorted.map((s, i) => {
+      const [h, m] = s.time.split(':').map(Number);
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      const fmt = `${h % 12 || 12}:${(m||0).toString().padStart(2,'0')} ${ampm}`;
+      return `<div class="avail-slot-row">
+        <span style="font-size:14px;color:#fff;flex:1;">${s.day} · ${fmt}</span>
+        <button onclick="removeAvailability(${i})" style="background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.3);padding:2px;display:flex;align-items:center;transition:color 0.2s;" onmouseover="this.style.color='#F87171'" onmouseout="this.style.color='rgba(255,255,255,0.3)'" title="Remove">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>`;
+    }).join('');
+  }
+
+  async function addAvailability() {
+    const day = document.getElementById('avail-day').value;
+    const time = document.getElementById('avail-time').value;
+    if (!day || !time) { alert('Please select a day and time.'); return; }
+    const user = auth.currentUser;
+    const ref = db.collection('tutors').doc(user.uid);
+    const doc = await ref.get();
+    const current = (doc.exists && doc.data().availability) ? doc.data().availability : [];
+    if (current.some(s => s.day === day && s.time === time)) { alert('That slot is already added.'); return; }
+    const updated = [...current, { day, time }];
+    await ref.set({ availability: updated }, { merge: true });
+    document.getElementById('avail-day').value = '';
+    document.getElementById('avail-time').value = '';
+    renderAvailabilitySlots(updated);
+  }
+
+  async function removeAvailability(index) {
+    const user = auth.currentUser;
+    const ref = db.collection('tutors').doc(user.uid);
+    const doc = await ref.get();
+    const current = (doc.exists && doc.data().availability) ? doc.data().availability : [];
+    const sorted = current.slice().sort((a, b) => {
+      const di = DAY_ORDER.indexOf(a.day) - DAY_ORDER.indexOf(b.day);
+      return di !== 0 ? di : a.time.localeCompare(b.time);
+    });
+    sorted.splice(index, 1);
+    await ref.set({ availability: sorted }, { merge: true });
+    renderAvailabilitySlots(sorted);
+  }
+
   // ── Tutee Dashboard ──
   let tuteeMessageListener = null;
 
@@ -4182,59 +4254,108 @@
     document.getElementById('tutee-dashboard').classList.add('active');
     document.body.style.overflow = 'hidden';
 
-    // Single members lookup — feeds name, sessions, and messages
     db.collection('members').where('email', '==', user.email).limit(1).get().then(snap => {
       const fullName = (!snap.empty && snap.docs[0].data().name) ? snap.docs[0].data().name : null;
       document.getElementById('tutee-dash-name').textContent = fullName ? fullName.split(' ')[0] : user.email.split('@')[0];
+    });
 
-      if (!fullName) {
-        document.getElementById('tutee-sessions-list').innerHTML = '<div style="padding:16px 20px;font-size:14px;color:rgba(255,255,255,0.25);">No sessions scheduled yet. Your tutor will add them here.</div>';
-        loadTuteeMessages(user.uid, null);
-        return;
-      }
+    loadTuteeBookings(user);
+    loadTuteeTutors(user);
+    loadTuteeAssignments(user.uid);
+  }
 
-      // Fetch sessions → render sessions + wire messages to the assigned tutor
-      db.collection('sessions').get().then(sessSnap => {
+  let tuteeBookingListener = null;
+
+  function loadTuteeBookings(user) {
+    if (tuteeBookingListener) tuteeBookingListener();
+    const list = document.getElementById('tutee-sessions-list');
+    tuteeBookingListener = db.collection('bookings').where('tuteeUid', '==', user.uid)
+      .onSnapshot(snap => {
         const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
         const todayIdx = new Date().getDay();
-        const mine = sessSnap.docs.map(d => d.data()).filter(s => s.studentName === fullName);
-        mine.sort((a, b) => {
+        if (snap.empty) {
+          list.innerHTML = '<div style="font-size:14px;color:rgba(255,255,255,0.25);">No sessions booked yet. Pick a tutor below!</div>';
+          loadTuteeMessages(user.uid, null, null);
+          return;
+        }
+        const docs = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => {
           const ai = (days.indexOf(a.day) - todayIdx + 7) % 7;
           const bi = (days.indexOf(b.day) - todayIdx + 7) % 7;
           return ai !== bi ? ai - bi : (a.time || '').localeCompare(b.time || '');
         });
-
-        const list = document.getElementById('tutee-sessions-list');
-        if (!mine.length) {
-          list.innerHTML = '<div style="font-size:14px;color:rgba(255,255,255,0.25);">No upcoming sessions. Check back soon!</div>';
-        } else {
-          list.innerHTML = mine.map(s => {
-            const [h, m] = (s.time || '0:0').split(':').map(Number);
-            const ampm = h >= 12 ? 'PM' : 'AM';
-            const fmt = `${h % 12 || 12}:${(m||0).toString().padStart(2,'0')} ${ampm}`;
-            const isToday = days[todayIdx] === s.day;
-            return `<div class="tutee-session-glow">
-              <div class="tutee-session-glow-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-              </div>
-              <div>
-                <div class="tutee-session-day">${isToday ? '🟢 Today' : s.day}</div>
-                <div class="tutee-session-time">${fmt}</div>
-                <div class="tutee-session-meta">${s.assignedTutorName ? 'with ' + s.assignedTutorName : 'No tutor assigned yet'}${s.notes ? ' · ' + s.notes : ''}</div>
-              </div>
-            </div>`;
-          }).join('');
-        }
-
-        // Find assigned tutor from the most recent claimed session
-        const claimed = mine.filter(s => s.assignedTutorName);
-        const tutorName = claimed.length ? claimed[0].assignedTutorName : null;
-        const tutorId   = claimed.length ? claimed[0].assignedTutorId   : null;
-        loadTuteeMessages(user.uid, tutorName, tutorId);
+        list.innerHTML = docs.map(s => {
+          const [h, m] = (s.time || '0:0').split(':').map(Number);
+          const ampm = h >= 12 ? 'PM' : 'AM';
+          const fmt = `${h % 12 || 12}:${(m||0).toString().padStart(2,'0')} ${ampm}`;
+          const isToday = days[todayIdx] === s.day;
+          return `<div class="tutee-session-glow" style="align-items:center;">
+            <div class="tutee-session-glow-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <div style="flex:1;">
+              <div class="tutee-session-day">${isToday ? '🟢 Today' : s.day}</div>
+              <div class="tutee-session-time">${fmt}</div>
+              <div class="tutee-session-meta">with ${s.tutorName || 'your tutor'}</div>
+            </div>
+            <button onclick="cancelBooking('${s.id}')" style="background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.2);padding:4px;display:flex;align-items:center;transition:color 0.2s;" onmouseover="this.style.color='#F87171'" onmouseout="this.style.color='rgba(255,255,255,0.2)'" title="Cancel">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>`;
+        }).join('');
+        // Wire messages to tutor from first booking
+        const first = docs[0];
+        loadTuteeMessages(user.uid, first.tutorName, first.tutorUid);
       });
-    });
+  }
 
-    loadTuteeAssignments(user.uid);
+  function loadTuteeTutors(user) {
+    const container = document.getElementById('tutee-tutors-list');
+    db.collection('tutors').get().then(snap => {
+      const tutors = snap.docs
+        .map(d => ({ uid: d.id, ...d.data() }))
+        .filter(t => t.name && t.availability && t.availability.length > 0);
+      if (!tutors.length) {
+        container.innerHTML = '<div style="font-size:14px;color:rgba(255,255,255,0.25);">No tutors have set availability yet.</div>';
+        return;
+      }
+      container.innerHTML = tutors.map(tutor => {
+        const sorted = tutor.availability.slice().sort((a, b) => {
+          const di = DAY_ORDER.indexOf(a.day) - DAY_ORDER.indexOf(b.day);
+          return di !== 0 ? di : a.time.localeCompare(b.time);
+        });
+        const slotsHtml = sorted.map(s => {
+          const [h, m] = s.time.split(':').map(Number);
+          const ampm = h >= 12 ? 'PM' : 'AM';
+          const fmt = `${h % 12 || 12}:${(m||0).toString().padStart(2,'0')} ${ampm}`;
+          return `<button class="avail-slot-btn" onclick="bookTutor('${tutor.uid}','${tutor.name.replace(/'/g,"\\'")}','${s.day}','${s.time}')">${s.day} · ${fmt}</button>`;
+        }).join('');
+        return `<div class="tutor-card">
+          <div class="tutor-card-name">${tutor.name}</div>
+          <div class="tutor-card-slots">${slotsHtml}</div>
+        </div>`;
+      }).join('');
+    });
+  }
+
+  async function bookTutor(tutorUid, tutorName, day, time) {
+    const user = auth.currentUser;
+    if (!user) return;
+    const memberSnap = await db.collection('members').where('email', '==', user.email).limit(1).get();
+    const tuteeName = (!memberSnap.empty && memberSnap.docs[0].data().name) ? memberSnap.docs[0].data().name : '';
+    const existing = await db.collection('bookings')
+      .where('tuteeUid', '==', user.uid).where('tutorUid', '==', tutorUid)
+      .where('day', '==', day).where('time', '==', time).limit(1).get();
+    if (!existing.empty) { alert('You already have this slot booked.'); return; }
+    await db.collection('bookings').add({
+      tuteeUid: user.uid, tutorUid, tutorName,
+      tuteeName, tuteeEmail: user.email,
+      day, time, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+  }
+
+  async function cancelBooking(id) {
+    if (!confirm('Cancel this session?')) return;
+    await db.collection('bookings').doc(id).delete();
   }
 
   function loadTuteeAssignments(uid) {
@@ -4336,6 +4457,7 @@
       document.getElementById('tutor-dashboard').classList.remove('active');
       document.getElementById('tutee-dashboard').classList.remove('active');
       document.body.style.overflow = '';
+      if (tuteeBookingListener) { tuteeBookingListener(); tuteeBookingListener = null; }
       if (tuteeMessageListener) { tuteeMessageListener(); tuteeMessageListener = null; }
       if (veil) { veil.style.opacity = '0'; setTimeout(() => veil.remove(), 200); }
     } else if (new URLSearchParams(window.location.search).get('portal') === '1') {
