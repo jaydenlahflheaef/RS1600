@@ -3582,6 +3582,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-functions-compat.js"></script>
 
 <!-- ══════════════════════════════════════
      TUTOR LOGIN MODAL
@@ -3799,6 +3800,7 @@
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
   const db = firebase.firestore();
+  const functions = firebase.functions();
   auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
   // ── Member Login Modal ──
@@ -4095,13 +4097,13 @@
     btn.textContent = 'Posting…';
     btn.disabled = true;
     try {
-      await db.collection('assignments').add({
-        tuteeUid, tuteeEmail, title,
-        tutorUid: auth.currentUser.uid,
+      const createAssignment = functions.httpsCallable('createAssignment');
+      await createAssignment({
+        tuteeUid,
+        tuteeEmail,
+        title,
         description: document.getElementById('assign-desc').value.trim(),
         dueDate: document.getElementById('assign-due').value.trim(),
-        completed: false,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
       document.getElementById('assign-title').value = '';
       document.getElementById('assign-desc').value = '';
@@ -4109,7 +4111,7 @@
       btn.textContent = 'Posted ✓';
       setTimeout(() => { btn.textContent = 'Post'; }, 2000);
     } catch (err) {
-      alert('Error: ' + err.message);
+      alert('Error: ' + (err.message || err.details));
     } finally {
       btn.disabled = false;
     }
