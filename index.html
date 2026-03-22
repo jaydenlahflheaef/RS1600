@@ -3798,6 +3798,14 @@
         <p>Log practice test scores and monitor student progress over time.</p>
         <a href="https://docs.google.com/spreadsheets" target="_blank" rel="noopener">Open Tracker →</a>
       </div>
+      <div class="dash-card" id="dash-card-bookings-calendar" style="display:none; border-color:rgba(20,184,166,0.2);">
+        <div class="dash-card-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="16" y1="14" x2="16" y2="14"/></svg>
+        </div>
+        <h3>Bookings Calendar</h3>
+        <p>View all student bookings across tutors in a visual weekly calendar.</p>
+        <a href="bookings-calendar.html">Open Calendar →</a>
+      </div>
     </div>
 
     <div class="dash-section-title" style="margin-bottom:14px;">My Students</div>
@@ -3965,6 +3973,13 @@
     const d = new Date();
     document.getElementById('dash-date').textContent = d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
     document.getElementById('dash-user-email').textContent = user.email;
+
+    // Show cofounder-only quick link card
+    db.collection('users').doc(user.uid).get().then(doc => {
+      if (doc.exists && doc.data().role === 'cofounder') {
+        document.getElementById('dash-card-bookings-calendar').style.display = '';
+      }
+    });
 
     // Set name from members collection by email, and save full name to tutors doc
     db.collection('members').where('email', '==', user.email).limit(1).get().then(snap => {
