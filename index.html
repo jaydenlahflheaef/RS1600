@@ -3934,44 +3934,36 @@
       }).join('');
     });
 
-    // Load student conversations — only show tutees from this tutor's claimed sessions
+    // Load student conversations — derived from claimed sessions, no messages collection listing needed
     const tutorUid = auth.currentUser.uid;
     db.collection('sessions').where('assignedTutorId', '==', tutorUid).get().then(sessSnap => {
-      const myStudentNames = new Set(sessSnap.docs.map(d => d.data().studentName));
-      db.collection('messages').get().then(snap => {
-        const convoList = document.getElementById('tutor-convo-list');
-        if (snap.empty) {
-          convoList.innerHTML = '<div style="padding:16px 20px; font-size:14px; color:rgba(255,255,255,0.25);">No student conversations yet.</div>';
+      const convoList = document.getElementById('tutor-convo-list');
+      const studentNames = [...new Set(sessSnap.docs.map(d => d.data().studentName).filter(Boolean))];
+      if (!studentNames.length) {
+        convoList.innerHTML = '<div style="padding:16px 20px; font-size:14px; color:rgba(255,255,255,0.25);">No students assigned yet. Claim sessions to see conversations.</div>';
+        return;
+      }
+      // For each student name, look up their uid via members → users
+      const promises = studentNames.map(name =>
+        db.collection('members').where('name', '==', name).limit(1).get().then(mSnap => {
+          if (mSnap.empty) return null;
+          const email = mSnap.docs[0].data().email;
+          if (!email) return null;
+          return db.collection('users').where('email', '==', email).limit(1).get().then(uSnap => {
+            if (uSnap.empty) return null;
+            return { uid: uSnap.docs[0].id, name, email };
+          });
+        })
+      );
+      Promise.all(promises).then(convos => {
+        const valid = convos.filter(Boolean);
+        if (!valid.length) {
+          convoList.innerHTML = '<div style="padding:16px 20px; font-size:14px; color:rgba(255,255,255,0.25);">Your students haven\'t created accounts yet.</div>';
           return;
         }
-        // Resolve email + name for each tutee uid
-        const promises = snap.docs.map(doc =>
-          db.collection('users').doc(doc.id).get().then(u => {
-            const email = u.exists ? u.data().email : null;
-            if (!email) return null;
-            return db.collection('members').where('email', '==', email).limit(1).get().then(mSnap => ({
-              uid: doc.id,
-              email,
-              name: (!mSnap.empty && mSnap.docs[0].data().name) ? mSnap.docs[0].data().name : email,
-              isMine: !mSnap.empty && myStudentNames.has(mSnap.docs[0].data().name)
-            }));
-          })
-        );
-        Promise.all(promises).then(convos => {
-          const valid = convos.filter(Boolean);
-          if (!valid.length) {
-            convoList.innerHTML = '<div style="padding:16px 20px; font-size:14px; color:rgba(255,255,255,0.25);">No student conversations yet.</div>';
-            return;
-          }
-          // Sort: your students first
-          valid.sort((a, b) => b.isMine - a.isMine);
-          convoList.innerHTML = valid.map(c =>
-            `<button class="dash-convo-btn" onclick="openTutorThread('${c.uid}','${c.name}')">
-              ${c.name}
-              ${c.isMine ? '<span style="font-size:11px;color:#14B8A6;font-weight:600;margin-left:6px;">Your student</span>' : ''}
-            </button>`
-          ).join('');
-        });
+        convoList.innerHTML = valid.map(c =>
+          `<button class="dash-convo-btn" onclick="openTutorThread('${c.uid}','${c.name}')">${c.name}</button>`
+        ).join('');
       });
     });
   }
@@ -3987,7 +3979,11 @@
     if (tutorThreadListener) tutorThreadListener();
     const box = document.getElementById('tutor-thread-messages');
     tutorThreadListener = db.collection('messages').doc(uid).collection('thread')
-      .orderBy('createdAt').onSnapshot(snap => {
+      .orderBy('createdAt', 'asc').onSnapshot(snap => {
+        if (snap.empty) {
+          box.innerHTML = '<div style="font-size:13px;color:rgba(255,255,255,0.25);text-align:center;margin:auto;">No messages yet.</div>';
+          return;
+        }
         box.innerHTML = snap.docs.map(doc => {
           const m = doc.data();
           const fromTutor = m.from === 'tutor';
@@ -3998,6 +3994,8 @@
           </div>`;
         }).join('');
         box.scrollTop = box.scrollHeight;
+      }, err => {
+        box.innerHTML = `<div style="font-size:13px;color:#F87171;text-align:center;margin:auto;">Error: ${err.message}</div>`;
       });
     document.getElementById('tutor-reply-input').focus();
   }
