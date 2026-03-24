@@ -24,8 +24,7 @@
     .topbar {
       background: #162236;
       border-bottom: 1px solid rgba(255,255,255,0.06);
-      padding: 0 32px;
-      height: 64px;
+      padding: 0 32px; height: 64px;
       display: flex; align-items: center; justify-content: space-between;
       position: sticky; top: 0; z-index: 100;
     }
@@ -35,10 +34,11 @@
       color: rgba(255,255,255,0.4); text-decoration: none; font-size: 13px;
       padding: 6px 10px; border-radius: 8px;
       border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.04);
-      transition: color 0.2s, background 0.2s;
+      transition: color 0.2s, background 0.2s; cursor: pointer;
     }
     .back-btn:hover { color: #fff; background: rgba(255,255,255,0.08); }
     .topbar h1 { font-family: 'DM Sans', sans-serif; font-size: 18px; font-weight: 800; color: #fff; margin: 0; letter-spacing: -0.03em; }
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
 
     .btn-primary {
       background: linear-gradient(135deg, #0F766E, #14B8A6);
@@ -59,33 +59,70 @@
     }
     .btn-secondary:hover { color: #fff; background: rgba(255,255,255,0.1); }
 
-    .page-body { padding: 32px; max-width: 900px; margin: 0 auto; }
+    .page-body { padding: 32px; max-width: 860px; margin: 0 auto; }
 
-    .exam-section { margin-bottom: 36px; }
-    .exam-header {
-      display: flex; align-items: center; gap: 12px;
-      margin-bottom: 14px;
+    /* ── Folder grid (home view) ── */
+    #view-home { display: block; }
+    #view-folder { display: none; }
+
+    .folder-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
     }
-    .exam-badge {
+    .folder-card {
+      background: #162236;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 24px 20px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.2s, transform 0.15s;
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .folder-card:hover {
+      background: #1a2d47;
+      border-color: rgba(255,255,255,0.12);
+      transform: translateY(-2px);
+    }
+    .folder-card:active { transform: translateY(0); }
+    .folder-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .folder-icon.sat   { background: rgba(59,130,246,0.15);  color: #60A5FA; }
+    .folder-icon.act   { background: rgba(234,179,8,0.15);   color: #FACC15; }
+    .folder-icon.shsat { background: rgba(168,85,247,0.15);  color: #C084FC; }
+    .folder-icon.amc   { background: rgba(249,115,22,0.15);  color: #FB923C; }
+    .folder-name {
       font-family: 'DM Sans', sans-serif;
-      font-size: 11px; font-weight: 800;
-      letter-spacing: 0.1em; text-transform: uppercase;
-      padding: 4px 10px; border-radius: 6px;
+      font-size: 20px; font-weight: 800;
+      color: #fff; letter-spacing: -0.02em;
     }
-    .exam-badge.sat  { background: rgba(59,130,246,0.15); color: #60A5FA; border: 1px solid rgba(59,130,246,0.2); }
-    .exam-badge.act  { background: rgba(234,179,8,0.15);  color: #FACC15; border: 1px solid rgba(234,179,8,0.2); }
-    .exam-badge.shsat{ background: rgba(168,85,247,0.15); color: #C084FC; border: 1px solid rgba(168,85,247,0.2); }
-    .exam-badge.amc  { background: rgba(249,115,22,0.15); color: #FB923C; border: 1px solid rgba(249,115,22,0.2); }
+    .folder-count {
+      font-size: 12px; color: rgba(255,255,255,0.3);
+    }
 
-    .exam-count {
-      font-size: 12px; color: rgba(255,255,255,0.25);
+    /* ── Folder view (inside a folder) ── */
+    .folder-view-header {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 20px;
     }
+    .folder-view-badge {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px; font-weight: 800;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 5px 12px; border-radius: 8px;
+    }
+    .folder-view-badge.sat   { background: rgba(59,130,246,0.15); color: #60A5FA; border: 1px solid rgba(59,130,246,0.2); }
+    .folder-view-badge.act   { background: rgba(234,179,8,0.15);  color: #FACC15; border: 1px solid rgba(234,179,8,0.2); }
+    .folder-view-badge.shsat { background: rgba(168,85,247,0.15); color: #C084FC; border: 1px solid rgba(168,85,247,0.2); }
+    .folder-view-badge.amc   { background: rgba(249,115,22,0.15); color: #FB923C; border: 1px solid rgba(249,115,22,0.2); }
+    .folder-view-count { font-size: 13px; color: rgba(255,255,255,0.25); }
 
     .links-list {
       background: #162236;
       border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 14px;
-      overflow: hidden;
+      border-radius: 14px; overflow: hidden;
     }
     .link-row {
       display: flex; align-items: center; gap: 12px;
@@ -103,27 +140,16 @@
       color: rgba(255,255,255,0.3);
     }
     .link-info { flex: 1; min-width: 0; }
-    .link-label {
-      font-size: 14px; font-weight: 500; color: #fff;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-    .link-url {
-      font-size: 12px; color: rgba(255,255,255,0.3);
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-      margin-top: 2px;
-    }
-    .link-meta {
-      font-size: 11px; color: rgba(255,255,255,0.2);
-      white-space: nowrap; flex-shrink: 0;
-    }
+    .link-label { font-size: 14px; font-weight: 500; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .link-url   { font-size: 12px; color: rgba(255,255,255,0.3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+    .link-meta  { font-size: 11px; color: rgba(255,255,255,0.2); white-space: nowrap; flex-shrink: 0; }
     .link-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
     .open-btn {
       font-size: 12px; font-family: 'Outfit', sans-serif;
       padding: 5px 12px; border-radius: 6px; cursor: pointer;
       border: 1px solid rgba(20,184,166,0.25);
       background: rgba(20,184,166,0.08); color: #14B8A6;
-      text-decoration: none;
-      transition: background 0.2s, border-color 0.2s;
+      text-decoration: none; transition: background 0.2s, border-color 0.2s;
       display: flex; align-items: center; gap: 5px;
     }
     .open-btn:hover { background: rgba(20,184,166,0.15); border-color: rgba(20,184,166,0.4); }
@@ -135,11 +161,9 @@
       transition: color 0.2s, background 0.2s, border-color 0.2s;
     }
     .delete-btn:hover { color: #F87171; background: rgba(248,113,113,0.1); border-color: rgba(248,113,113,0.3); }
-
-    .empty-section {
-      padding: 28px 20px;
-      text-align: center;
-      font-size: 13px; color: rgba(255,255,255,0.2);
+    .empty-folder {
+      padding: 48px 20px; text-align: center;
+      font-size: 14px; color: rgba(255,255,255,0.2);
     }
 
     /* Modal */
@@ -177,7 +201,6 @@
     .form-input option { background: #162236; color: #fff; }
     .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
 
-    /* Auth gate */
     #auth-gate {
       display: flex; align-items: center; justify-content: center;
       height: 100vh; flex-direction: column; gap: 12px;
@@ -194,6 +217,7 @@
     @media (max-width: 640px) {
       .topbar { padding: 0 12px; }
       .page-body { padding: 16px; }
+      .folder-grid { grid-template-columns: 1fr 1fr; }
       .link-meta { display: none; }
     }
   </style>
@@ -205,23 +229,35 @@
 <div id="app" style="display:none;">
   <div class="topbar">
     <div class="topbar-left">
-      <a href="index.html" class="back-btn">
+      <!-- In home view shows Dashboard; in folder view shows ← Materials -->
+      <button class="back-btn" id="topbar-back" onclick="handleBack()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
-        Dashboard
-      </a>
-      <h1>Curriculum & Materials</h1>
+        <span id="topbar-back-label">Dashboard</span>
+      </button>
+      <h1 id="topbar-title">Curriculum & Materials</h1>
     </div>
-    <button id="add-btn" class="btn-primary" onclick="openModal()" style="display:none;">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      Add Link
-    </button>
+    <div class="topbar-right">
+      <button id="add-btn" class="btn-primary" onclick="openModal()" style="display:none;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Link
+      </button>
+    </div>
   </div>
 
   <div class="page-body">
-    <div id="section-SAT"   class="exam-section"></div>
-    <div id="section-ACT"   class="exam-section"></div>
-    <div id="section-SHSAT" class="exam-section"></div>
-    <div id="section-AMC"   class="exam-section"></div>
+    <!-- Home: folder grid -->
+    <div id="view-home">
+      <div class="folder-grid" id="folder-grid"></div>
+    </div>
+
+    <!-- Folder: link list -->
+    <div id="view-folder">
+      <div class="folder-view-header">
+        <span class="folder-view-badge" id="folder-badge"></span>
+        <span class="folder-view-count" id="folder-count"></span>
+      </div>
+      <div id="folder-links"></div>
+    </div>
   </div>
 </div>
 
@@ -273,14 +309,22 @@
   const db   = firebase.firestore();
 
   const EXAMS = ['SAT','ACT','SHSAT','AMC'];
+  const EXAM_LABELS = {
+    SAT:   'SAT',
+    ACT:   'ACT',
+    SHSAT: 'SHSAT',
+    AMC:   'AMC'
+  };
+
   let canEdit = false;
   let currentUser = null;
+  let allMaterials = {};   // exam → [{id,label,url,addedBy,…}]
+  let openFolder = null;   // currently open exam key, or null
+
+  EXAMS.forEach(e => allMaterials[e] = []);
 
   auth.onAuthStateChanged(async user => {
-    if (!user) {
-      window.location.href = 'index.html';
-      return;
-    }
+    if (!user) { window.location.href = 'index.html'; return; }
     currentUser = user;
     const doc = await db.collection('users').doc(user.uid).get();
     const role = doc.exists ? (doc.data().role || 'tutor') : 'tutor';
@@ -293,86 +337,105 @@
 
   function listenMaterials() {
     db.collection('materials').orderBy('createdAt', 'asc').onSnapshot(snap => {
-      const byExam = {};
-      EXAMS.forEach(e => byExam[e] = []);
+      EXAMS.forEach(e => allMaterials[e] = []);
       snap.docs.forEach(d => {
         const data = { id: d.id, ...d.data() };
-        if (byExam[data.exam]) byExam[data.exam].push(data);
+        if (allMaterials[data.exam]) allMaterials[data.exam].push(data);
       });
-      EXAMS.forEach(exam => renderSection(exam, byExam[exam]));
+      renderHome();
+      if (openFolder) renderFolderLinks(openFolder);
     });
   }
 
-  function renderSection(exam, links) {
-    const container = document.getElementById('section-' + exam);
-    const badgeClass = exam.toLowerCase();
-    const count = links.length;
+  // ── Home view ──
+  function renderHome() {
+    document.getElementById('folder-grid').innerHTML = EXAMS.map(exam => {
+      const count = allMaterials[exam].length;
+      const cls = exam.toLowerCase();
+      return `<div class="folder-card" onclick="openFolderView('${exam}')">
+        <div class="folder-icon ${cls}">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div>
+          <div class="folder-name">${exam}</div>
+          <div class="folder-count">${count} link${count !== 1 ? 's' : ''}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
 
-    let linksHtml;
-    if (!count) {
-      linksHtml = `<div class="links-list"><div class="empty-section">No links yet${canEdit ? ' — add one with the button above' : ''}.</div></div>`;
-    } else {
-      linksHtml = `<div class="links-list">` + links.map(link => {
-        const hostname = (() => { try { return new URL(link.url).hostname.replace('www.',''); } catch { return link.url; } })();
-        const deleteBtn = canEdit
-          ? `<button class="delete-btn" onclick="deleteLink('${link.id}')">Delete</button>`
-          : '';
-        return `<div class="link-row">
-          <div class="link-icon">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-          </div>
-          <div class="link-info">
-            <div class="link-label">${escHtml(link.label)}</div>
-            <div class="link-url">${escHtml(hostname)}</div>
-          </div>
-          <div class="link-meta">${link.addedBy ? escHtml(link.addedBy) : ''}</div>
-          <div class="link-actions">
-            <a class="open-btn" href="${escHtml(link.url)}" target="_blank" rel="noopener">
-              Open
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            </a>
-            ${deleteBtn}
-          </div>
-        </div>`;
-      }).join('') + `</div>`;
+  // ── Folder view ──
+  function openFolderView(exam) {
+    openFolder = exam;
+    const cls = exam.toLowerCase();
+
+    document.getElementById('view-home').style.display = 'none';
+    document.getElementById('view-folder').style.display = 'block';
+
+    document.getElementById('topbar-back-label').textContent = 'Materials';
+    document.getElementById('topbar-title').textContent = exam;
+
+    const badge = document.getElementById('folder-badge');
+    badge.textContent = exam;
+    badge.className = 'folder-view-badge ' + cls;
+
+    // Pre-select this folder in the modal
+    document.getElementById('f-exam').value = exam;
+
+    renderFolderLinks(exam);
+  }
+
+  function renderFolderLinks(exam) {
+    const links = allMaterials[exam] || [];
+    document.getElementById('folder-count').textContent = `${links.length} link${links.length !== 1 ? 's' : ''}`;
+
+    const container = document.getElementById('folder-links');
+    if (!links.length) {
+      container.innerHTML = `<div class="links-list"><div class="empty-folder">This folder is empty${canEdit ? ' — use Add Link to add one' : ''}.</div></div>`;
+      return;
     }
-
-    container.innerHTML = `
-      <div class="exam-header">
-        <span class="exam-badge ${badgeClass}">${exam}</span>
-        <span class="exam-count">${count} link${count !== 1 ? 's' : ''}</span>
-      </div>
-      ${linksHtml}
-    `;
+    container.innerHTML = `<div class="links-list">` + links.map(link => {
+      const hostname = (() => { try { return new URL(link.url).hostname.replace('www.',''); } catch { return link.url; } })();
+      const deleteBtn = canEdit
+        ? `<button class="delete-btn" onclick="deleteLink('${link.id}')">Delete</button>`
+        : '';
+      return `<div class="link-row">
+        <div class="link-icon">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        </div>
+        <div class="link-info">
+          <div class="link-label">${escHtml(link.label)}</div>
+          <div class="link-url">${escHtml(hostname)}</div>
+        </div>
+        <div class="link-meta">${link.addedBy ? escHtml(link.addedBy) : ''}</div>
+        <div class="link-actions">
+          <a class="open-btn" href="${escHtml(link.url)}" target="_blank" rel="noopener">
+            Open
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+          ${deleteBtn}
+        </div>
+      </div>`;
+    }).join('') + `</div>`;
   }
 
-  async function saveLink() {
-    const exam  = document.getElementById('f-exam').value;
-    const label = document.getElementById('f-label').value.trim();
-    const url   = document.getElementById('f-url').value.trim();
-    if (!label) { alert('Label is required.'); return; }
-    if (!url)   { alert('URL is required.'); return; }
-
-    // Get the tutor's display name from members collection
-    const memberSnap = await db.collection('members').where('email', '==', currentUser.email).limit(1).get();
-    const addedBy = (!memberSnap.empty && memberSnap.docs[0].data().name) ? memberSnap.docs[0].data().name : currentUser.email;
-
-    await db.collection('materials').add({
-      exam, label, url, addedBy,
-      addedByUid: currentUser.uid,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-    closeModal();
+  function handleBack() {
+    if (openFolder) {
+      openFolder = null;
+      document.getElementById('view-folder').style.display = 'none';
+      document.getElementById('view-home').style.display = 'block';
+      document.getElementById('topbar-back-label').textContent = 'Dashboard';
+      document.getElementById('topbar-title').textContent = 'Curriculum & Materials';
+    } else {
+      window.location.href = 'index.html';
+    }
   }
 
-  async function deleteLink(id) {
-    if (!confirm('Remove this link?')) return;
-    await db.collection('materials').doc(id).delete();
-  }
-
+  // ── Add / Delete ──
   function openModal() {
     document.getElementById('f-label').value = '';
     document.getElementById('f-url').value = '';
+    if (openFolder) document.getElementById('f-exam').value = openFolder;
     document.getElementById('add-modal').classList.add('active');
     setTimeout(() => document.getElementById('f-label').focus(), 100);
   }
@@ -384,6 +447,32 @@
   document.getElementById('add-modal').addEventListener('click', function(e) {
     if (e.target === this) closeModal();
   });
+
+  async function saveLink() {
+    const exam  = document.getElementById('f-exam').value;
+    const label = document.getElementById('f-label').value.trim();
+    const url   = document.getElementById('f-url').value.trim();
+    if (!label) { alert('Label is required.'); return; }
+    if (!url)   { alert('URL is required.'); return; }
+
+    const memberSnap = await db.collection('members').where('email', '==', currentUser.email).limit(1).get();
+    const addedBy = (!memberSnap.empty && memberSnap.docs[0].data().name) ? memberSnap.docs[0].data().name : currentUser.email;
+
+    await db.collection('materials').add({
+      exam, label, url, addedBy,
+      addedByUid: currentUser.uid,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    // Navigate into the folder we just added to
+    closeModal();
+    if (openFolder !== exam) openFolderView(exam);
+  }
+
+  async function deleteLink(id) {
+    if (!confirm('Remove this link?')) return;
+    await db.collection('materials').doc(id).delete();
+  }
 
   function escHtml(s) {
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
