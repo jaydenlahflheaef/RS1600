@@ -457,6 +457,15 @@
           <option value="Elite">Elite</option>
         </select>
       </div>
+      <div class="form-group" id="tier-group" style="display:none;">
+        <label>Tier</label>
+        <select class="form-input" id="f-tier">
+          <option value="">— Select tier —</option>
+          <option value="Starter">Starter</option>
+          <option value="Core">Core</option>
+          <option value="Elite">Elite</option>
+        </select>
+      </div>
       <div class="form-group">
         <label>Date Accepted</label>
         <input type="date" class="form-input" id="f-dateAccepted" />
@@ -546,6 +555,7 @@
       role,
       dateAccepted: document.getElementById('f-dateAccepted').value || null,
       plan: role.toLowerCase() === 'tutee' ? (document.getElementById('f-plan').value || null) : null,
+      tier: (role.toLowerCase() === 'tutor' || role.toLowerCase() === 'cofounder') ? (document.getElementById('f-tier').value || null) : null,
     };
 
     showLoading();
@@ -620,7 +630,7 @@
 
     tbody.innerHTML = list.map(m => `
       <tr>
-        <td>${fmt(m.role)}</td>
+        <td>${fmt(m.role)}${m.tier ? `<span style="font-size:10px;padding:2px 7px;border-radius:4px;background:rgba(20,184,166,0.15);color:#14B8A6;font-weight:600;margin-left:6px;letter-spacing:0.04em;">${m.tier}</span>` : ''}${m.plan ? `<span style="font-size:10px;padding:2px 7px;border-radius:4px;background:rgba(139,92,246,0.15);color:#A78BFA;font-weight:600;margin-left:6px;letter-spacing:0.04em;">${m.plan}</span>` : ''}</td>
         <td><div class="td-name"><div class="avatar">${getInitials(m.name)}</div>${m.name || '—'}</div></td>
         <td class="td-email">${fmt(m.email)}</td>
         <td>${fmt(m.school)}</td>
@@ -655,6 +665,7 @@
   function togglePlanField() {
     const role = document.getElementById('f-role').value.trim().toLowerCase();
     document.getElementById('plan-group').style.display = role === 'tutee' ? '' : 'none';
+    document.getElementById('tier-group').style.display = (role === 'tutor' || role === 'cofounder') ? '' : 'none';
   }
 
   function openAddModal() {
@@ -665,7 +676,9 @@
       document.getElementById('f-' + id).value = '';
     });
     document.getElementById('f-plan').value = '';
+    document.getElementById('f-tier').value = '';
     document.getElementById('plan-group').style.display = 'none';
+    document.getElementById('tier-group').style.display = 'none';
     document.getElementById('member-modal').classList.add('active');
     setTimeout(() => document.getElementById('f-firstName').focus(), 100);
   }
@@ -685,6 +698,7 @@
     document.getElementById('f-role').value = m.role || '';
     document.getElementById('f-dateAccepted').value = m.dateAccepted || '';
     document.getElementById('f-plan').value = m.plan || '';
+    document.getElementById('f-tier').value = m.tier || '';
     togglePlanField();
     document.getElementById('member-modal').classList.add('active');
   }

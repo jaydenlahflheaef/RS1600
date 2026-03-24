@@ -4026,12 +4026,37 @@
 
   function loadTuteeTutors(user) {
     const container = document.getElementById('tutee-tutors-list');
-    db.collection('tutors').get().then(snap => {
-      const tutors = snap.docs
+    Promise.all([
+      db.collection('members').where('email', '==', user.email).limit(1).get(),
+      db.collection('members').get(),
+      db.collection('tutors').get()
+    ]).then(([tuteeSnap, allMembersSnap, tutorsSnap]) => {
+      // Get tutee's plan
+      const tuteePlan = (!tuteeSnap.empty && tuteeSnap.docs[0].data().plan)
+        ? tuteeSnap.docs[0].data().plan.toLowerCase() : null;
+
+      // Build name → tier map from members with role=tutor
+      const tierMap = {};
+      allMembersSnap.docs.forEach(d => {
+        const data = d.data();
+        const role = (data.role || '').toLowerCase();
+        if ((role === 'tutor' || role === 'cofounder') && data.name && data.tier) {
+          tierMap[data.name.toLowerCase()] = data.tier.toLowerCase();
+        }
+      });
+
+      let tutors = tutorsSnap.docs
         .map(d => ({ uid: d.id, ...d.data() }))
         .filter(t => t.name && t.availability && t.availability.length > 0);
+
+      // If tutee has a plan, only show tutors with matching tier
+      if (tuteePlan) {
+        tutors = tutors.filter(t => tierMap[t.name.toLowerCase()] === tuteePlan);
+      }
+
       if (!tutors.length) {
-        container.innerHTML = '<div style="font-size:14px;color:rgba(255,255,255,0.25);">No tutors have set availability yet.</div>';
+        const tierLabel = tuteePlan ? tuteePlan.charAt(0).toUpperCase() + tuteePlan.slice(1) : null;
+        container.innerHTML = `<div style="font-size:14px;color:rgba(255,255,255,0.25);">${tierLabel ? `No ${tierLabel} tier tutors are available yet.` : 'No tutors have set availability yet.'}</div>`;
         return;
       }
       container.innerHTML = tutors.map(tutor => {
