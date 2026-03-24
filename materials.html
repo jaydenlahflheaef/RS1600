@@ -168,12 +168,14 @@
 
     /* Modal */
     .modal-overlay {
-      display: none; position: fixed; inset: 0; z-index: 9999;
+      display: flex; position: fixed; inset: 0; z-index: 9999;
       background: rgba(11,23,40,0.85); backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       align-items: center; justify-content: center; padding: 16px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.15s;
     }
-    .modal-overlay.active { display: flex; }
+    .modal-overlay.active { opacity: 1; pointer-events: all; }
     .modal-card {
       background: #162236; border: 1px solid rgba(255,255,255,0.08);
       border-radius: 20px; padding: 36px; width: 100%; max-width: 460px;
@@ -317,6 +319,7 @@
   };
 
   let canEdit = false;
+  let isCofounder = false;
   let currentUser = null;
   let allMaterials = {};   // exam → [{id,label,url,addedBy,…}]
   let openFolder = null;   // currently open exam key, or null
@@ -329,9 +332,11 @@
     const doc = await db.collection('users').doc(user.uid).get();
     const role = doc.exists ? (doc.data().role || 'tutor') : 'tutor';
     canEdit = role !== 'tutee';
+    isCofounder = role === 'cofounder';
     if (canEdit) document.getElementById('add-btn').style.display = 'flex';
     document.getElementById('auth-gate').style.display = 'none';
     document.getElementById('app').style.display = 'block';
+    renderHome(); // show empty folders immediately
     listenMaterials();
   });
 
@@ -344,6 +349,10 @@
       });
       renderHome();
       if (openFolder) renderFolderLinks(openFolder);
+    }, err => {
+      // If materials collection doesn't exist yet or has no rules, still show folders
+      console.warn('materials snapshot error:', err.message);
+      renderHome();
     });
   }
 
@@ -396,7 +405,7 @@
     }
     container.innerHTML = `<div class="links-list">` + links.map(link => {
       const hostname = (() => { try { return new URL(link.url).hostname.replace('www.',''); } catch { return link.url; } })();
-      const deleteBtn = canEdit
+      const deleteBtn = isCofounder
         ? `<button class="delete-btn" onclick="deleteLink('${link.id}')">Delete</button>`
         : '';
       return `<div class="link-row">
@@ -427,7 +436,7 @@
       document.getElementById('topbar-back-label').textContent = 'Dashboard';
       document.getElementById('topbar-title').textContent = 'Curriculum & Materials';
     } else {
-      window.location.href = 'index.html';
+      window.location.href = 'index.html?portal=1';
     }
   }
 
@@ -455,18 +464,28 @@
     if (!label) { alert('Label is required.'); return; }
     if (!url)   { alert('URL is required.'); return; }
 
-    const memberSnap = await db.collection('members').where('email', '==', currentUser.email).limit(1).get();
-    const addedBy = (!memberSnap.empty && memberSnap.docs[0].data().name) ? memberSnap.docs[0].data().name : currentUser.email;
+    const saveBtn = document.querySelector('#add-modal .btn-primary');
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Saving…';
 
-    await db.collection('materials').add({
-      exam, label, url, addedBy,
-      addedByUid: currentUser.uid,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
+    try {
+      const memberSnap = await db.collection('members').where('email', '==', currentUser.email).limit(1).get();
+      const addedBy = (!memberSnap.empty && memberSnap.docs[0].data().name) ? memberSnap.docs[0].data().name : currentUser.email;
 
-    // Navigate into the folder we just added to
-    closeModal();
-    if (openFolder !== exam) openFolderView(exam);
+      await db.collection('materials').add({
+        exam, label, url, addedBy,
+        addedByUid: currentUser.uid,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      closeModal();
+      if (openFolder !== exam) openFolderView(exam);
+    } catch (err) {
+      alert('Failed to save: ' + err.message);
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Add Link';
+    }
   }
 
   async function deleteLink(id) {
