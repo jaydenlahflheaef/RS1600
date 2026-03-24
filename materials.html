@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Curriculum & Materials — ReadySet1600</title>
+  <link rel="icon" type="image/png" href="favicon.png" id="favicon" />
+  <script>
+    window.addEventListener('load', function() {
+      var img = new Image(); img.crossOrigin = 'anonymous';
+      img.onload = function() {
+        var size = 64, c = document.createElement('canvas'); c.width = size; c.height = size;
+        var ctx = c.getContext('2d'); ctx.beginPath(); ctx.arc(size/2, size/2, size/2, 0, Math.PI*2); ctx.closePath(); ctx.clip();
+        ctx.drawImage(img, 0, 0, size, size);
+        document.getElementById('favicon').href = c.toDataURL('image/png');
+      }; img.src = 'brand assets/newcirclelog.png';
+    });
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: #0B1728; color: #fff; font-family: 'Outfit', sans-serif; min-height: 100vh; }
+
+    .topbar {
+      background: #162236;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0 32px;
+      height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 16px; }
+    .back-btn {
+      display: flex; align-items: center; gap: 6px;
+      color: rgba(255,255,255,0.4); text-decoration: none; font-size: 13px;
+      padding: 6px 10px; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.04);
+      transition: color 0.2s, background 0.2s;
+    }
+    .back-btn:hover { color: #fff; background: rgba(255,255,255,0.08); }
+    .topbar h1 { font-family: 'DM Sans', sans-serif; font-size: 18px; font-weight: 800; color: #fff; margin: 0; letter-spacing: -0.03em; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0F766E, #14B8A6);
+      border: none; border-radius: 8px; color: #fff;
+      font-size: 13px; font-weight: 600; font-family: 'Outfit', sans-serif;
+      padding: 8px 16px; cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-secondary {
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; color: rgba(255,255,255,0.7);
+      font-size: 13px; font-family: 'Outfit', sans-serif;
+      padding: 8px 14px; cursor: pointer;
+      transition: color 0.2s, background 0.2s;
+    }
+    .btn-secondary:hover { color: #fff; background: rgba(255,255,255,0.1); }
+
+    .page-body { padding: 32px; max-width: 900px; margin: 0 auto; }
+
+    .exam-section { margin-bottom: 36px; }
+    .exam-header {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 14px;
+    }
+    .exam-badge {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px; font-weight: 800;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 4px 10px; border-radius: 6px;
+    }
+    .exam-badge.sat  { background: rgba(59,130,246,0.15); color: #60A5FA; border: 1px solid rgba(59,130,246,0.2); }
+    .exam-badge.act  { background: rgba(234,179,8,0.15);  color: #FACC15; border: 1px solid rgba(234,179,8,0.2); }
+    .exam-badge.shsat{ background: rgba(168,85,247,0.15); color: #C084FC; border: 1px solid rgba(168,85,247,0.2); }
+    .exam-badge.amc  { background: rgba(249,115,22,0.15); color: #FB923C; border: 1px solid rgba(249,115,22,0.2); }
+
+    .exam-count {
+      font-size: 12px; color: rgba(255,255,255,0.25);
+    }
+
+    .links-list {
+      background: #162236;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .link-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      transition: background 0.15s;
+    }
+    .link-row:last-child { border-bottom: none; }
+    .link-row:hover { background: rgba(255,255,255,0.03); }
+    .link-icon {
+      width: 30px; height: 30px; flex-shrink: 0;
+      border-radius: 8px; background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.3);
+    }
+    .link-info { flex: 1; min-width: 0; }
+    .link-label {
+      font-size: 14px; font-weight: 500; color: #fff;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .link-url {
+      font-size: 12px; color: rgba(255,255,255,0.3);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+    .link-meta {
+      font-size: 11px; color: rgba(255,255,255,0.2);
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .link-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .open-btn {
+      font-size: 12px; font-family: 'Outfit', sans-serif;
+      padding: 5px 12px; border-radius: 6px; cursor: pointer;
+      border: 1px solid rgba(20,184,166,0.25);
+      background: rgba(20,184,166,0.08); color: #14B8A6;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .open-btn:hover { background: rgba(20,184,166,0.15); border-color: rgba(20,184,166,0.4); }
+    .delete-btn {
+      font-size: 12px; font-family: 'Outfit', sans-serif;
+      padding: 5px 10px; border-radius: 6px; cursor: pointer;
+      border: 1px solid rgba(248,113,113,0.15);
+      background: rgba(248,113,113,0.05); color: rgba(248,113,113,0.5);
+      transition: color 0.2s, background 0.2s, border-color 0.2s;
+    }
+    .delete-btn:hover { color: #F87171; background: rgba(248,113,113,0.1); border-color: rgba(248,113,113,0.3); }
+
+    .empty-section {
+      padding: 28px 20px;
+      text-align: center;
+      font-size: 13px; color: rgba(255,255,255,0.2);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 9999;
+      background: rgba(11,23,40,0.85); backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      align-items: center; justify-content: center; padding: 16px;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-card {
+      background: #162236; border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px; padding: 36px; width: 100%; max-width: 460px;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.5); position: relative;
+    }
+    .modal-card h2 { font-family: 'DM Sans', sans-serif; font-size: 20px; font-weight: 800; color: #fff; margin: 0 0 20px; letter-spacing: -0.03em; }
+    .modal-close {
+      position: absolute; top: 16px; right: 16px;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; color: rgba(255,255,255,0.5); cursor: pointer;
+      width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+      transition: color 0.2s, background 0.2s;
+    }
+    .modal-close:hover { color: #fff; background: rgba(255,255,255,0.1); }
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+    .form-group label { font-size: 12px; color: rgba(255,255,255,0.4); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+    .form-input {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; padding: 10px 12px; font-size: 14px; color: #fff;
+      font-family: 'Outfit', sans-serif; outline: none;
+      transition: border-color 0.2s; width: 100%;
+    }
+    .form-input:focus { border-color: rgba(20,184,166,0.5); }
+    .form-input::placeholder { color: rgba(255,255,255,0.2); }
+    .form-input option { background: #162236; color: #fff; }
+    .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
+
+    /* Auth gate */
+    #auth-gate {
+      display: flex; align-items: center; justify-content: center;
+      height: 100vh; flex-direction: column; gap: 12px;
+      color: rgba(255,255,255,0.4); font-size: 14px;
+    }
+    .spinner {
+      width: 32px; height: 32px;
+      border: 3px solid rgba(255,255,255,0.1);
+      border-top-color: #14B8A6; border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 640px) {
+      .topbar { padding: 0 12px; }
+      .page-body { padding: 16px; }
+      .link-meta { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="auth-gate"><div class="spinner"></div>Checking authentication…</div>
+
+<div id="app" style="display:none;">
+  <div class="topbar">
+    <div class="topbar-left">
+      <a href="index.html" class="back-btn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Dashboard
+      </a>
+      <h1>Curriculum & Materials</h1>
+    </div>
+    <button id="add-btn" class="btn-primary" onclick="openModal()" style="display:none;">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add Link
+    </button>
+  </div>
+
+  <div class="page-body">
+    <div id="section-SAT"   class="exam-section"></div>
+    <div id="section-ACT"   class="exam-section"></div>
+    <div id="section-SHSAT" class="exam-section"></div>
+    <div id="section-AMC"   class="exam-section"></div>
+  </div>
+</div>
+
+<!-- Add Link Modal -->
+<div class="modal-overlay" id="add-modal">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeModal()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <h2>Add Link</h2>
+    <div class="form-group">
+      <label>Exam</label>
+      <select class="form-input" id="f-exam">
+        <option value="SAT">SAT</option>
+        <option value="ACT">ACT</option>
+        <option value="SHSAT">SHSAT</option>
+        <option value="AMC">AMC</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Label</label>
+      <input type="text" class="form-input" id="f-label" placeholder="e.g. Official SAT Practice Test 1" />
+    </div>
+    <div class="form-group">
+      <label>URL</label>
+      <input type="url" class="form-input" id="f-url" placeholder="https://…" />
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveLink()">Add Link</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+  firebase.initializeApp({
+    apiKey: "AIzaSyDy-g_ihlNGF19FVZ_-ChX-LfMIAZFKvYM",
+    authDomain: "rs1600-faccd.firebaseapp.com",
+    projectId: "rs1600-faccd",
+    storageBucket: "rs1600-faccd.firebasestorage.app",
+    messagingSenderId: "669933046930",
+    appId: "1:669933046930:web:3179bd9fd14e3e2694ea4b"
+  });
+
+  const auth = firebase.auth();
+  const db   = firebase.firestore();
+
+  const EXAMS = ['SAT','ACT','SHSAT','AMC'];
+  let canEdit = false;
+  let currentUser = null;
+
+  auth.onAuthStateChanged(async user => {
+    if (!user) {
+      window.location.href = 'index.html';
+      return;
+    }
+    currentUser = user;
+    const doc = await db.collection('users').doc(user.uid).get();
+    const role = doc.exists ? (doc.data().role || 'tutor') : 'tutor';
+    canEdit = role !== 'tutee';
+    if (canEdit) document.getElementById('add-btn').style.display = 'flex';
+    document.getElementById('auth-gate').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    listenMaterials();
+  });
+
+  function listenMaterials() {
+    db.collection('materials').orderBy('createdAt', 'asc').onSnapshot(snap => {
+      const byExam = {};
+      EXAMS.forEach(e => byExam[e] = []);
+      snap.docs.forEach(d => {
+        const data = { id: d.id, ...d.data() };
+        if (byExam[data.exam]) byExam[data.exam].push(data);
+      });
+      EXAMS.forEach(exam => renderSection(exam, byExam[exam]));
+    });
+  }
+
+  function renderSection(exam, links) {
+    const container = document.getElementById('section-' + exam);
+    const badgeClass = exam.toLowerCase();
+    const count = links.length;
+
+    let linksHtml;
+    if (!count) {
+      linksHtml = `<div class="links-list"><div class="empty-section">No links yet${canEdit ? ' — add one with the button above' : ''}.</div></div>`;
+    } else {
+      linksHtml = `<div class="links-list">` + links.map(link => {
+        const hostname = (() => { try { return new URL(link.url).hostname.replace('www.',''); } catch { return link.url; } })();
+        const deleteBtn = canEdit
+          ? `<button class="delete-btn" onclick="deleteLink('${link.id}')">Delete</button>`
+          : '';
+        return `<div class="link-row">
+          <div class="link-icon">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          </div>
+          <div class="link-info">
+            <div class="link-label">${escHtml(link.label)}</div>
+            <div class="link-url">${escHtml(hostname)}</div>
+          </div>
+          <div class="link-meta">${link.addedBy ? escHtml(link.addedBy) : ''}</div>
+          <div class="link-actions">
+            <a class="open-btn" href="${escHtml(link.url)}" target="_blank" rel="noopener">
+              Open
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
+            ${deleteBtn}
+          </div>
+        </div>`;
+      }).join('') + `</div>`;
+    }
+
+    container.innerHTML = `
+      <div class="exam-header">
+        <span class="exam-badge ${badgeClass}">${exam}</span>
+        <span class="exam-count">${count} link${count !== 1 ? 's' : ''}</span>
+      </div>
+      ${linksHtml}
+    `;
+  }
+
+  async function saveLink() {
+    const exam  = document.getElementById('f-exam').value;
+    const label = document.getElementById('f-label').value.trim();
+    const url   = document.getElementById('f-url').value.trim();
+    if (!label) { alert('Label is required.'); return; }
+    if (!url)   { alert('URL is required.'); return; }
+
+    // Get the tutor's display name from members collection
+    const memberSnap = await db.collection('members').where('email', '==', currentUser.email).limit(1).get();
+    const addedBy = (!memberSnap.empty && memberSnap.docs[0].data().name) ? memberSnap.docs[0].data().name : currentUser.email;
+
+    await db.collection('materials').add({
+      exam, label, url, addedBy,
+      addedByUid: currentUser.uid,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    closeModal();
+  }
+
+  async function deleteLink(id) {
+    if (!confirm('Remove this link?')) return;
+    await db.collection('materials').doc(id).delete();
+  }
+
+  function openModal() {
+    document.getElementById('f-label').value = '';
+    document.getElementById('f-url').value = '';
+    document.getElementById('add-modal').classList.add('active');
+    setTimeout(() => document.getElementById('f-label').focus(), 100);
+  }
+
+  function closeModal() {
+    document.getElementById('add-modal').classList.remove('active');
+  }
+
+  document.getElementById('add-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+</script>
+</body>
+</html>
