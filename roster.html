@@ -13,7 +13,7 @@
         var ctx = c.getContext('2d'); ctx.beginPath(); ctx.arc(size/2, size/2, size/2, 0, Math.PI*2); ctx.closePath(); ctx.clip();
         ctx.drawImage(img, 0, 0, size, size);
         document.getElementById('favicon').href = c.toDataURL('image/png');
-      }; img.src = 'newcirclelog.png';
+      }; img.src = 'brand assets/newcirclelog.png';
     });
   </script>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -299,6 +299,7 @@
     }
     .form-input:focus { border-color: rgba(20,184,166,0.5); }
     .form-input::placeholder { color: rgba(255,255,255,0.2); }
+    .form-input option { background: #162236; color: #fff; }
     .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
     .loading-overlay {
       display: none;
@@ -445,7 +446,16 @@
       </div>
       <div class="form-group">
         <label>Role</label>
-        <input type="text" class="form-input" id="f-role" placeholder="Tutor" />
+        <input type="text" class="form-input" id="f-role" placeholder="Tutor" oninput="togglePlanField()" />
+      </div>
+      <div class="form-group" id="plan-group" style="display:none;">
+        <label>Plan</label>
+        <select class="form-input" id="f-plan">
+          <option value="">— Select plan —</option>
+          <option value="Starter">Starter</option>
+          <option value="Core">Core</option>
+          <option value="Elite">Elite</option>
+        </select>
       </div>
       <div class="form-group">
         <label>Date Accepted</label>
@@ -527,13 +537,15 @@
     const lastName = document.getElementById('f-lastName').value.trim();
     if (!firstName || !lastName) { alert('Name is required.'); return; }
 
+    const role = document.getElementById('f-role').value.trim();
     const data = {
       name: `${firstName} ${lastName}`,
       email: document.getElementById('f-email').value.trim(),
       school: document.getElementById('f-school').value.trim(),
       grade: document.getElementById('f-grade').value.trim(),
-      role: document.getElementById('f-role').value.trim(),
+      role,
       dateAccepted: document.getElementById('f-dateAccepted').value || null,
+      plan: role.toLowerCase() === 'tutee' ? (document.getElementById('f-plan').value || null) : null,
     };
 
     showLoading();
@@ -640,6 +652,11 @@
   }
 
   // ── Modal ──
+  function togglePlanField() {
+    const role = document.getElementById('f-role').value.trim().toLowerCase();
+    document.getElementById('plan-group').style.display = role === 'tutee' ? '' : 'none';
+  }
+
   function openAddModal() {
     editingId = null;
     document.getElementById('modal-title').textContent = 'Add Member';
@@ -647,6 +664,8 @@
     ['firstName','lastName','email','school','grade','role','dateAccepted'].forEach(id => {
       document.getElementById('f-' + id).value = '';
     });
+    document.getElementById('f-plan').value = '';
+    document.getElementById('plan-group').style.display = 'none';
     document.getElementById('member-modal').classList.add('active');
     setTimeout(() => document.getElementById('f-firstName').focus(), 100);
   }
@@ -665,6 +684,8 @@
     document.getElementById('f-grade').value = m.grade || '';
     document.getElementById('f-role').value = m.role || '';
     document.getElementById('f-dateAccepted').value = m.dateAccepted || '';
+    document.getElementById('f-plan').value = m.plan || '';
+    togglePlanField();
     document.getElementById('member-modal').classList.add('active');
   }
 

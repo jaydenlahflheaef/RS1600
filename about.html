@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us — ReadySet1600</title>
+  <link rel="icon" type="image/png" href="favicon.png" id="favicon" />
+  <script>
+    window.addEventListener('load', function() {
+      var img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = function() {
+        var size = 64;
+        var c = document.createElement('canvas');
+        c.width = size; c.height = size;
+        var ctx = c.getContext('2d');
+        ctx.beginPath();
+        ctx.arc(size/2, size/2, size/2, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.clip();
+        ctx.drawImage(img, 0, 0, size, size);
+        document.getElementById('favicon').href = c.toDataURL('image/png');
+      };
+      img.src = 'brand assets/newcirclelog.png';
+    });
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; overflow-x: hidden; max-width: 100%; }
+    html, body { overflow-x: hidden; max-width: 100%; }
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: #0B1728;
+      color: #1E293B;
+      line-height: 1.7;
+      margin: 0;
+      overflow-x: hidden;
+    }
+    .font-display { font-family: 'DM Sans', sans-serif; }
+    :root {
+      --navy:       #0B1728;
+      --navy-mid:   #162236;
+      --blue:       #0F766E;
+      --blue-light: #14B8A6;
+      --green:      #10B981;
+    }
+
+    /* Nav */
+    #nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(11, 23, 40, 0.96);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 32px;
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .nav-logo { flex-shrink: 0; }
+    .nav-logo img { height: 56px; width: auto; display: block; }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      list-style: none;
+      margin: 0; padding: 0;
+      flex: 1;
+      justify-content: space-evenly;
+    }
+    .nav-links a {
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.72);
+      text-decoration: none;
+      padding: 7px 14px;
+      border-radius: 100px;
+      transition: color 0.2s, background 0.2s;
+    }
+    .nav-links a:hover { color: #fff; background: rgba(255,255,255,0.08); }
+    .nav-links a.active-page { color: #14B8A6; }
+    .tutor-portal-link {
+      display: flex !important;
+      align-items: center;
+      gap: 5px;
+      font-size: 13px !important;
+      color: rgba(255,255,255,0.4) !important;
+      border: 1px solid rgba(255,255,255,0.12) !important;
+      border-radius: 6px !important;
+      padding: 4px 10px !important;
+      transition: color 0.2s, border-color 0.2s, background 0.2s !important;
+    }
+    .tutor-portal-link:hover { color: rgba(255,255,255,0.8) !important; border-color: rgba(255,255,255,0.25) !important; background: rgba(255,255,255,0.06) !important; }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown > a { display: flex; align-items: center; gap: 5px; }
+    .nav-dropdown > a svg { transition: transform 0.2s; }
+    .nav-dropdown:hover > a svg { transform: rotate(180deg); }
+    .nav-dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%) translateY(-4px);
+      background: rgba(11,23,40,0.98);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 14px 6px 6px;
+      min-width: 170px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      z-index: 200;
+    }
+    .nav-dropdown:hover .nav-dropdown-menu {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+    .nav-dropdown-menu a {
+      display: block;
+      padding: 9px 14px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      white-space: nowrap;
+    }
+
+    /* Buttons */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      color: #fff;
+      background: #0F766E;
+      padding: 13px 26px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
+      box-shadow: 0 2px 12px rgba(15,118,110,0.35);
+      white-space: nowrap;
+    }
+    .btn-primary:hover { background: #0a5c56; transform: translateY(-2px); box-shadow: 0 6px 24px rgba(15,118,110,0.45); }
+    .btn-primary:active { transform: translateY(0); }
+
+    /* Section tag */
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #0F766E;
+      background: #F0FDFA;
+      padding: 5px 12px;
+      border-radius: 100px;
+      margin-bottom: 16px;
+    }
+    .section-tag-dark {
+      color: rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* Misc */
+    .section-max { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+    .heading-xl { font-family: 'DM Sans', sans-serif; font-size: clamp(38px, 5.5vw, 68px); font-weight: 800; line-height: 1.08; letter-spacing: -0.03em; }
+    .heading-lg { font-family: 'DM Sans', sans-serif; font-size: clamp(30px, 4vw, 46px); font-weight: 700; line-height: 1.12; letter-spacing: -0.025em; }
+
+    /* About grids */
+    .about-founders-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:24px; }
+    .about-tutors-grid   { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+    .ach-pill {
+      display:inline-block;
+      font-family:'Outfit',sans-serif;
+      font-size:11px;
+      font-weight:600;
+      color:rgba(255,255,255,0.65);
+      background:rgba(15,118,110,0.12);
+      border:1px solid rgba(15,118,110,0.2);
+      border-radius:6px;
+      padding:3px 8px;
+      line-height:1.4;
+    }
+    .ach-pill-green {
+      color:rgba(52,211,153,0.9);
+      background:rgba(16,185,129,0.1);
+      border-color:rgba(16,185,129,0.2);
+    }
+    @media (max-width: 1024px) { .about-founders-grid { grid-template-columns: repeat(2,1fr) !important; } }
+    @media (max-width: 900px)  { .about-tutors-grid   { grid-template-columns: repeat(2,1fr) !important; } }
+    @media (max-width: 560px)  {
+      .about-founders-grid, .about-tutors-grid { grid-template-columns: 1fr !important; }
+    }
+
+    /* Lang switcher */
+    .nav-controls { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+    .lang-switcher { display:flex; align-items:center; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.1); border-radius:100px; padding:3px; }
+    .lang-btn { font-family:'Outfit',sans-serif; font-size:11px; font-weight:700; color:rgba(255,255,255,0.45); background:none; border:none; padding:4px 10px; border-radius:100px; cursor:pointer; transition:color 0.2s,background 0.2s; letter-spacing:0.04em; }
+    .lang-btn.active { color:#fff; background:rgba(255,255,255,0.15); }
+    .lang-btn:hover:not(.active) { color:rgba(255,255,255,0.75); }
+    @media (max-width:768px) { .nav-controls { display:none; } }
+
+    /* Mobile nav */
+    @media (max-width: 768px) {
+      .nav-links, .nav-cta { display: none; }
+      .nav-mobile-btn { display: flex; }
+      .nav-inner { padding: 0 16px; gap: 10px; }
+      .nav-logo img { height: 36px; }
+    }
+    @media (min-width: 769px) {
+      .nav-mobile-btn { display: none; }
+      #mobile-menu { display: none !important; }
+    }
+    .nav-mobile-btn {
+      background: none; border: none; cursor: pointer;
+      color: rgba(255,255,255,0.8); padding: 8px; flex-shrink: 0;
+    }
+    #mobile-menu {
+      display: none;
+      position: fixed;
+      top: 76px; left: 0; right: 0;
+      background: rgba(11,23,40,0.98);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      z-index: 99;
+      padding: 16px 20px 24px;
+      flex-direction: column;
+      gap: 4px;
+      animation: mobileMenuIn 0.2s cubic-bezier(0.16,1,0.3,1);
+    }
+    #mobile-menu.open { display: flex; }
+    @keyframes mobileMenuIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    #mobile-menu a.mob-link {
+      font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 500;
+      color: rgba(255,255,255,0.75); text-decoration: none;
+      padding: 12px 16px; border-radius: 12px;
+      transition: background 0.15s, color 0.15s; display: block;
+    }
+    #mobile-menu a.mob-link:hover { background: rgba(255,255,255,0.07); color: #fff; }
+    #mobile-menu .mob-cta {
+      margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 8px;
+      font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 600;
+      color: #fff; background: #0F766E; padding: 14px 24px; border-radius: 12px;
+      text-decoration: none; transition: background 0.2s;
+    }
+    #mobile-menu .mob-cta:hover { background: #0A5C56; }
+
+    /* Auth modal */
+    #tutor-login-overlay {
+      display: none; position: fixed; inset: 0; z-index: 9999;
+      background: rgba(11,23,40,0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      align-items: center; justify-content: center;
+    }
+    #tutor-login-overlay.active { display: flex; }
+    #tutor-login-card {
+      background: #162236; border: 1px solid rgba(255,255,255,0.08); border-radius: 20px;
+      padding: 48px 40px; width: 100%; max-width: 400px;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04); position: relative;
+    }
+    #tutor-login-card h2 { font-family: 'DM Sans', sans-serif; font-size: 22px; font-weight: 800; color: #fff; margin: 0 0 4px; letter-spacing: -0.03em; }
+    #tutor-login-card p { font-size: 14px; color: rgba(255,255,255,0.4); margin: 0 0 28px; }
+    .tutor-input {
+      width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px; padding: 12px 16px; font-size: 15px; color: #fff;
+      font-family: 'Outfit', sans-serif; outline: none; transition: border-color 0.2s;
+      margin-bottom: 12px; display: block;
+    }
+    .tutor-input:focus { border-color: rgba(20,184,166,0.6); }
+    .tutor-input::placeholder { color: rgba(255,255,255,0.25); }
+    #tutor-login-error { display: none; font-size: 13px; color: #F87171; margin-bottom: 12px; }
+    .tutor-login-btn {
+      width: 100%; background: linear-gradient(135deg, #0F766E, #14B8A6); color: #fff;
+      border: none; border-radius: 10px; padding: 13px; font-size: 15px; font-weight: 600;
+      font-family: 'Outfit', sans-serif; cursor: pointer; transition: opacity 0.2s, transform 0.15s;
+    }
+    .tutor-login-btn:hover { opacity: 0.9; }
+    .tutor-login-btn:active { transform: scale(0.98); }
+    .tutor-close-btn {
+      position: absolute; top: 16px; right: 16px;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; color: rgba(255,255,255,0.5); cursor: pointer;
+      width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+      transition: color 0.2s, background 0.2s;
+    }
+    .tutor-close-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+    .member-tabs { display: flex; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 24px; }
+    .member-tab {
+      flex: 1; background: none; border: none; border-bottom: 2px solid transparent;
+      color: rgba(255,255,255,0.4); font-family: 'Outfit', sans-serif; font-size: 14px;
+      font-weight: 600; padding: 10px 0; cursor: pointer; transition: color 0.2s, border-color 0.2s; margin-bottom: -1px;
+    }
+    .member-tab.active { color: #14B8A6; border-bottom-color: #14B8A6; }
+    #signup-error { display: none; font-size: 13px; color: #F87171; margin-bottom: 12px; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0B1728; }
+    ::-webkit-scrollbar-thumb { background: #2D3F55; border-radius: 3px; }
+  </style>
+</head>
+<body>
+<div id="auth-veil" style="position:fixed;inset:0;z-index:9997;background:#0B1728;transition:opacity 0.2s;"></div>
+
+<!-- NAV -->
+<nav id="nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo" aria-label="ReadySet1600 Home">
+      <img src="brand assets/newcirclelog.png" alt="ReadySet1600" style="height:56px; width:56px; display:block; border-radius:50%; object-fit:cover; filter: drop-shadow(0 0 10px rgba(100,220,180,0.3));" />
+    </a>
+    <ul class="nav-links" role="list">
+      <li class="nav-dropdown">
+        <a href="index.html" data-i18n="nav.home">Home
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </a>
+        <div class="nav-dropdown-menu">
+          <a href="index.html#services" data-i18n="nav.services">Services</a>
+          <a href="index.html#how-it-works" data-i18n="nav.howItWorks">How It Works</a>
+          <a href="index.html#results" data-i18n="nav.results">Results</a>
+          <a href="index.html#faq" data-i18n="nav.faq">FAQ</a>
+        </div>
+      </li>
+      <li><a href="pricing.html" data-i18n="nav.pricing">Pricing</a></li>
+      <li><a href="about.html" class="active-page" data-i18n="nav.about">About</a></li>
+      <li><a href="#" class="tutor-portal-link" onclick="openTutorLogin(event)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Member Login
+      </a></li>
+    </ul>
+    <a href="index.html#contact" class="btn-primary nav-cta" style="font-size:14px; padding:10px 20px; border-radius:10px;">
+      <span data-i18n="nav.cta">Book Free Consult</span>
+    </a>
+    <div class="nav-controls">
+      <div class="lang-switcher">
+        <button class="lang-btn active" onclick="setLang('en')" data-lang="en">EN</button>
+        <button class="lang-btn" onclick="setLang('zh')" data-lang="zh">中文</button>
+        <button class="lang-btn" onclick="setLang('ko')" data-lang="ko">한국어</button>
+      </div>
+    </div>
+    <button class="nav-mobile-btn" id="nav-mobile-btn" aria-label="Open menu" onclick="toggleMobileMenu()">
+      <svg id="mob-icon-open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+      <svg id="mob-icon-close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none;">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<div id="mobile-menu" role="dialog" aria-label="Navigation menu">
+  <a href="index.html#services"     class="mob-link" data-i18n="nav.services"    onclick="closeMobileMenu()">Services</a>
+  <a href="index.html#how-it-works" class="mob-link" data-i18n="nav.howItWorks" onclick="closeMobileMenu()">How It Works</a>
+  <a href="index.html#results"      class="mob-link" data-i18n="nav.results"    onclick="closeMobileMenu()">Results</a>
+  <a href="index.html#faq"          class="mob-link" data-i18n="nav.faq"        onclick="closeMobileMenu()">FAQ</a>
+  <a href="pricing.html"            class="mob-link" data-i18n="nav.pricing"    onclick="closeMobileMenu()">Pricing</a>
+  <a href="about.html"              class="mob-link active-page" data-i18n="nav.about" onclick="closeMobileMenu()">About</a>
+  <a href="#" class="mob-link" onclick="closeMobileMenu(); openTutorLogin(event);" style="color:rgba(255,255,255,0.4); font-size:14px;">Member Login</a>
+  <a href="index.html#contact" class="mob-cta" onclick="closeMobileMenu()">
+    <span data-i18n="nav.cta">Book Free Consult</span>
+  </a>
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-top:16px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.07);">
+    <div class="lang-switcher">
+      <button class="lang-btn active" onclick="setLang('en')" data-lang="en">EN</button>
+      <button class="lang-btn" onclick="setLang('zh')" data-lang="zh">中文</button>
+      <button class="lang-btn" onclick="setLang('ko')" data-lang="ko">한국어</button>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT SECTION -->
+<section style="background:#0B1728; position:relative; overflow:hidden; padding-top:120px; padding-bottom:96px;">
+
+  <div style="position:absolute; inset:0; pointer-events:none; z-index:0;">
+    <div style="position:absolute; top:-30%; right:-5%; width:700px; height:700px; background:radial-gradient(circle, rgba(15,118,110,0.12) 0%, transparent 65%); border-radius:50%;"></div>
+    <div style="position:absolute; bottom:-20%; left:-5%; width:600px; height:600px; background:radial-gradient(circle, rgba(16,185,129,0.07) 0%, transparent 65%); border-radius:50%;"></div>
+  </div>
+
+  <div class="section-max" style="position:relative; z-index:2;">
+
+    <div style="text-align:center; margin-bottom:56px;">
+      <div class="section-tag section-tag-dark" style="margin:0 auto 20px;" data-i18n="about.tag">Our Team</div>
+      <h1 class="heading-xl" style="color:#fff; margin:0 0 16px;">
+        <span data-i18n="about.heading">The people behind the scores.</span>
+      </h1>
+      <p style="font-size:17px; color:rgba(255,255,255,0.5); max-width:480px; margin:0 auto; line-height:1.75;">
+        <span data-i18n="about.subtitle">Expert tutors, former top scorers, and educators who genuinely care about your student's success.</span>
+      </p>
+    </div>
+
+    <!-- CO-FOUNDERS -->
+    <div style="margin-bottom:52px;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:32px;">
+        <div style="height:1.5px; flex:1; background:linear-gradient(to right, transparent, rgba(15,118,110,0.45));"></div>
+        <span style="font-family:'DM Sans',sans-serif; font-size:12px; font-weight:700; color:#0F766E; text-transform:uppercase; letter-spacing:0.14em; white-space:nowrap;" data-i18n="about.founders.label">Co-Founders</span>
+        <div style="height:1.5px; flex:1; background:linear-gradient(to left, transparent, rgba(15,118,110,0.45));"></div>
+      </div>
+      <div class="about-founders-grid">
+
+        <!-- Jayden Kim -->
+        <div style="background:rgba(255,255,255,0.04); border:1.5px solid rgba(255,255,255,0.08); border-radius:24px; padding:28px 24px; text-align:center; transition:background 0.25s, border-color 0.25s, transform 0.22s cubic-bezier(0.34,1.56,0.64,1);" onmouseover="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(15,118,110,0.3)';this.style.transform='translateY(-4px)'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='translateY(0)'">
+          <div style="width:88px; height:88px; border-radius:50%; overflow:hidden; margin:0 auto 16px; border:2.5px solid rgba(15,118,110,0.5); box-shadow:0 0 0 4px rgba(15,118,110,0.1);">
+            <img src="headshots/jayden.png" alt="Jayden Kim" style="width:100%; height:100%; object-fit:cover; display:block;" />
+          </div>
+          <p style="font-family:'DM Sans',sans-serif; font-size:17px; font-weight:700; color:#fff; margin:0 0 4px; letter-spacing:-0.01em;">Jayden Kim</p>
+          <p style="font-family:'Outfit',sans-serif; font-size:11px; font-weight:600; color:#0F766E; margin:0 0 12px; text-transform:uppercase; letter-spacing:0.1em;" data-i18n="about.role.founder.exec">Co-Founder · Executive</p>
+          <p style="font-family:'Outfit',sans-serif; font-size:13px; color:rgba(255,255,255,0.5); line-height:1.7; margin:0 0 16px;" data-i18n="about.jayden.bio">Hi I'm Jayden Kim, class of 2027 at Stuyvesant. I love math and physics. As the Physics Event Leader of Stuyvesant Science Olympiad, I have taught groups of students and prepared them for competitions. As a member of ARISTA, I have experience with 1-on-1 tutoring for exams such as the ones we're providing. I supported women in the women's day run.</p>
+          <div style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center;">
+            <span class="ach-pill">1550 SAT</span>
+            <span class="ach-pill">36 ACT</span>
+            <span class="ach-pill">646 SHSAT</span>
+            <span class="ach-pill">2× AIME</span>
+            <span class="ach-pill">Stanford MT Dist. HM</span>
+            <span class="ach-pill">Multiple Science Olympiad Medals</span>
+            <span class="ach-pill">AP Scholar</span>
+            <span class="ach-pill">Gold Pres. Vol.</span>
+          </div>
+        </div>
+
+        <!-- Daniel Li -->
+        <div style="background:rgba(255,255,255,0.04); border:1.5px solid rgba(255,255,255,0.08); border-radius:24px; padding:28px 24px; text-align:center; transition:background 0.25s, border-color 0.25s, transform 0.22s cubic-bezier(0.34,1.56,0.64,1);" onmouseover="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(15,118,110,0.3)';this.style.transform='translateY(-4px)'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='translateY(0)'">
+          <div style="width:88px; height:88px; border-radius:50%; overflow:hidden; margin:0 auto 16px; border:2.5px solid rgba(15,118,110,0.5); box-shadow:0 0 0 4px rgba(15,118,110,0.1);">
+            <img src="headshots/daniel.png" alt="Daniel Li" style="width:100%; height:100%; object-fit:cover; display:block;" />
+          </div>
+          <p style="font-family:'DM Sans',sans-serif; font-size:17px; font-weight:700; color:#fff; margin:0 0 4px; letter-spacing:-0.01em;">Daniel Li</p>
+          <p style="font-family:'Outfit',sans-serif; font-size:11px; font-weight:600; color:#0F766E; margin:0 0 12px; text-transform:uppercase; letter-spacing:0.1em;" data-i18n="about.role.founder.exec">Co-Founder · Executive</p>
+          <p style="font-family:'Outfit',sans-serif; font-size:13px; color:rgba(255,255,255,0.5); line-height:1.7; margin:0 0 16px;" data-i18n="about.daniel.bio">Hi I'm Daniel Li, class of 2027 in Stuyvesant HS. I love biology and math. I am a varsity fencer and I play the violin. If you don't find me sleeping u can catch me eating.</p>
+          <div style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center;">
+            <span class="ach-pill">1570 SAT</span>
+            <span class="ach-pill">620 SHSAT</span>
+            <span class="ach-pill">AIME Qual.</span>
+            <span class="ach-pill">USACO Gold</span>
+            <span class="ach-pill">AP Scholar</span>
+            <span class="ach-pill">IMMC Qualifier</span>
+            <span class="ach-pill">$2K Research Grant</span>
+          </div>
+        </div>
+
+        <!-- Ethan Zhang -->
+        <div style="background:rgba(255,255,255,0.04); border:1.5px solid rgba(255,255,255,0.08); border-radius:24px; padding:28px 24px; text-align:center; transition:background 0.25s, border-color 0.25s, transform 0.22s cubic-bezier(0.34,1.56,0.64,1);" onmouseover="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(15,118,110,0.3)';this.style.transform='translateY(-4px)'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='translateY(0)'">
+          <div style="width:88px; height:88px; border-radius:50%; overflow:hidden; margin:0 auto 16px; border:2.5px solid rgba(15,118,110,0.5); box-shadow:0 0 0 4px rgba(15,118,110,0.1);">
+            <img src="headshots/ethan.png" alt="Ethan Zhang" style="width:100%; height:100%; object-fit:cover; display:block;" />
+          </div>
+          <p style="font-family:'DM Sans',sans-serif; font-size:17px; font-weight:700; color:#fff; margin:0 0 4px; letter-spacing:-0.01em;">Ethan Zhang</p>
+          <p style="font-family:'Outfit',sans-serif; font-size:11px; font-weight:600; color:#0F766E; margin:0 0 12px; text-transform:uppercase; letter-spacing:0.1em;" data-i18n="about.role.founder">Co-Founder</p>
+          <p style="font-family:'Outfit',sans-serif; font-size:13px; color:rgba(255,255,255,0.5); line-height:1.7; margin:0 0 16px;" data-i18n="about.ethan.bio">Hi I'm Ethan Zhang, class of 2027 at Stuyvesant. I like math, finance, and CS. As the Vice President of the Stuyvesant Study Society, I helped coordinate a team of 90+ tutors for 150+ students and provided 100+ hours of 1-on-1 tutoring myself. I'm also on the rowing team and play classical piano. I like Jayden Kim.</p>
+          <div style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center;">
+            <span class="ach-pill">1600 SAT</span>
+            <span class="ach-pill">USACO Gold</span>
+            <span class="ach-pill">2× AIME</span>
+            <span class="ach-pill">AP Scholar</span>
+            <span class="ach-pill">Wharton Investment Comp Top 10 / 6,300+</span>
+          </div>
+        </div>
+
+        <!-- Tae Kim -->
+        <div style="background:rgba(255,255,255,0.04); border:1.5px solid rgba(255,255,255,0.08); border-radius:24px; padding:28px 24px; text-align:center; transition:background 0.25s, border-color 0.25s, transform 0.22s cubic-bezier(0.34,1.56,0.64,1);" onmouseover="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(15,118,110,0.3)';this.style.transform='translateY(-4px)'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='translateY(0)'">
+          <div style="width:88px; height:88px; border-radius:50%; overflow:hidden; margin:0 auto 16px; border:2.5px solid rgba(15,118,110,0.5); box-shadow:0 0 0 4px rgba(15,118,110,0.1);">
+            <img src="headshots/tae.png" alt="Tae Kim" style="width:100%; height:100%; object-fit:cover; display:block;" />
+          </div>
+          <p style="font-family:'DM Sans',sans-serif; font-size:17px; font-weight:700; color:#fff; margin:0 0 4px; letter-spacing:-0.01em;">Tae Kim</p>
+          <p style="font-family:'Outfit',sans-serif; font-size:11px; font-weight:600; color:#0F766E; margin:0 0 12px; text-transform:uppercase; letter-spacing:0.1em;" data-i18n="about.role.founder">Co-Founder</p>
+          <p style="font-family:'Outfit',sans-serif; font-size:13px; color:rgba(255,255,255,0.5); line-height:1.7; margin:0 0 16px;" data-i18n="about.tae.bio">Hi I'm Tae Kim, class of 2028 at Stuyvesant High School in New York City. I study classical guitar with Gohar Vardanyan and I play at the national level. I enjoy mathematics and I am good at competition math. I am cute and also highly ranked in Roblox Volleyball Legends.</p>
+          <div style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center;">
+            <span class="ach-pill">1580 SAT</span>
+            <span class="ach-pill">4× AIME</span>
+            <span class="ach-pill">2× USAJMO</span>
+            <span class="ach-pill">AP Scholar</span>
+            <span class="ach-pill">Guitar Foundations for America</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TUTORS -->
+    <div>
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:32px;">
+        <div style="height:1.5px; flex:1; background:linear-gradient(to right, transparent, rgba(16,185,129,0.45));"></div>
+        <span style="font-family:'DM Sans',sans-serif; font-size:12px; font-weight:700; color:#10B981; text-transform:uppercase; letter-spacing:0.14em; white-space:nowrap;" data-i18n="about.tutors.label">Tutors</span>
+        <div style="height:1.5px; flex:1; background:linear-gradient(to left, transparent, rgba(16,185,129,0.45));"></div>
+      </div>
+      <div class="about-tutors-grid">
+
+        <!-- Henry Li -->
+        <div style="background:rgba(255,255,255,0.04); border:1.5px solid rgba(255,255,255,0.08); border-radius:24px; padding:28px 24px; text-align:center; transition:background 0.25s, border-color 0.25s, transform 0.22s cubic-bezier(0.34,1.56,0.64,1);" onmouseover="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(16,185,129,0.3)';this.style.transform='translateY(-4px)'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='translateY(0)'">
+          <div style="width:88px; height:88px; border-radius:50%; overflow:hidden; margin:0 auto 16px; border:2.5px solid rgba(16,185,129,0.45); box-shadow:0 0 0 4px rgba(16,185,129,0.08);">
+            <img src="headshots/henry.png" alt="Henry Li" style="width:100%; height:100%; object-fit:cover; display:block;" />
+          </div>
+          <p style="font-family:'DM Sans',sans-serif; font-size:17px; font-weight:700; color:#fff; margin:0 0 4px; letter-spacing:-0.01em;">Henry Li</p>
+          <p style="font-family:'Outfit',sans-serif; font-size:11px; font-weight:600; color:#10B981; margin:0 0 12px; text-transform:uppercase; letter-spacing:0.1em;" data-i18n="about.role.tutor">Tutor</p>
+          <p style="font-family:'Outfit',sans-serif; font-size:13px; color:rgba(255,255,255,0.5); line-height:1.7; margin:0 0 16px;" data-i18n="about.henry.bio">Hi, I'm Henry Li, Stuyvesant High School class of 2027. I'm a varsity fencer, play the euphonium, and compete in science olympiad. My favorite drink? 110% sugar boba.</p>
+          <div style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center;">
+            <span class="ach-pill ach-pill-green">1560 SAT</span>
+            <span class="ach-pill ach-pill-green">621 SHSAT</span>
+            <span class="ach-pill ach-pill-green">Multiple Science Olympiad Medals</span>
+            <span class="ach-pill ach-pill-green">AP Scholar</span>
+            <span class="ach-pill ach-pill-green">100+ vol. hrs</span>
+          </div>
+        </div>
+
+        <!-- Alwin Ng -->
+        <div style="background:rgba(255,255,255,0.04); border:1.5px solid rgba(255,255,255,0.08); border-radius:24px; padding:28px 24px; text-align:center; transition:background 0.25s, border-color 0.25s, transform 0.22s cubic-bezier(0.34,1.56,0.64,1);" onmouseover="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(16,185,129,0.3)';this.style.transform='translateY(-4px)'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='translateY(0)'">
+          <div style="width:88px; height:88px; border-radius:50%; overflow:hidden; margin:0 auto 16px; border:2.5px solid rgba(16,185,129,0.45); box-shadow:0 0 0 4px rgba(16,185,129,0.08);">
+            <img src="headshots/alwin.png" alt="Alwin Ng" style="width:100%; height:100%; object-fit:cover; display:block;" />
+          </div>
+          <p style="font-family:'DM Sans',sans-serif; font-size:17px; font-weight:700; color:#fff; margin:0 0 4px; letter-spacing:-0.01em;">Alwin Ng</p>
+          <p style="font-family:'Outfit',sans-serif; font-size:11px; font-weight:600; color:#10B981; margin:0 0 12px; text-transform:uppercase; letter-spacing:0.1em;" data-i18n="about.role.tutor">Tutor</p>
+          <p style="font-family:'Outfit',sans-serif; font-size:13px; color:rgba(255,255,255,0.5); line-height:1.7; margin:0 0 16px;" data-i18n="about.alwin.bio">Hi, my name is Alwin Ng, part of Stuyvesant's class of 2027! I'm a software engineer on our school's award-winning robotics team, as well as an experienced tutor! In my free time, I like to play volleyball and code personal projects!</p>
+          <div style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center;">
+            <span class="ach-pill ach-pill-green">1550 SAT</span>
+            <span class="ach-pill ach-pill-green">618 SHSAT</span>
+            <span class="ach-pill ach-pill-green">AP Scholar</span>
+            <span class="ach-pill ach-pill-green">$9K UPenn Scholar.</span>
+          </div>
+        </div>
+
+        <!-- Cyrus Yau -->
+        <div style="background:rgba(255,255,255,0.04); border:1.5px solid rgba(255,255,255,0.08); border-radius:24px; padding:28px 24px; text-align:center; transition:background 0.25s, border-color 0.25s, transform 0.22s cubic-bezier(0.34,1.56,0.64,1);" onmouseover="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(16,185,129,0.3)';this.style.transform='translateY(-4px)'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='translateY(0)'">
+          <div style="width:88px; height:88px; border-radius:50%; overflow:hidden; margin:0 auto 16px; border:2.5px solid rgba(16,185,129,0.45); box-shadow:0 0 0 4px rgba(16,185,129,0.08);">
+            <img src="headshots/cyrus.png" alt="Cyrus Yau" style="width:100%; height:100%; object-fit:cover; display:block;" />
+          </div>
+          <p style="font-family:'DM Sans',sans-serif; font-size:17px; font-weight:700; color:#fff; margin:0 0 4px; letter-spacing:-0.01em;">Cyrus Yau</p>
+          <p style="font-family:'Outfit',sans-serif; font-size:11px; font-weight:600; color:#10B981; margin:0 0 12px; text-transform:uppercase; letter-spacing:0.1em;" data-i18n="about.role.tutor">Tutor</p>
+          <p style="font-family:'Outfit',sans-serif; font-size:13px; color:rgba(255,255,255,0.5); line-height:1.7; margin:0 0 16px;" data-i18n="about.cyrus.bio">Hi, I'm Cyrus Yau, a Junior at Stuyvesant High School. I'm captain of the gymnastics team and a starter for the badminton team. I also compete in science olympiad and math team. In my free time I like to play fortnite.</p>
+          <div style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center;">
+            <span class="ach-pill ach-pill-green">1510 SAT</span>
+            <span class="ach-pill ach-pill-green">633 SHSAT</span>
+            <span class="ach-pill ach-pill-green">3× AIME</span>
+            <span class="ach-pill ach-pill-green">Multiple Science Olympiad Medals</span>
+            <span class="ach-pill ach-pill-green">AP Scholar</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- GRAPHIC DESIGN -->
+    <div style="margin-top:48px;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:32px;">
+        <div style="height:1.5px; flex:1; background:linear-gradient(to right, transparent, rgba(15,118,110,0.45));"></div>
+        <span style="font-family:'DM Sans',sans-serif; font-size:12px; font-weight:700; color:#14B8A6; text-transform:uppercase; letter-spacing:0.14em; white-space:nowrap;" data-i18n="about.design.label">Graphic Design</span>
+        <div style="height:1.5px; flex:1; background:linear-gradient(to left, transparent, rgba(15,118,110,0.45));"></div>
+      </div>
+      <div style="display:flex; justify-content:center;">
+        <div style="background:rgba(255,255,255,0.04); border:1.5px solid rgba(255,255,255,0.08); border-radius:24px; padding:28px 24px; text-align:center; transition:background 0.25s, border-color 0.25s, transform 0.22s cubic-bezier(0.34,1.56,0.64,1); max-width:220px;" onmouseover="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(15,118,110,0.3)';this.style.transform='translateY(-4px)'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='translateY(0)'">
+          <div style="width:88px; height:88px; border-radius:50%; overflow:hidden; margin:0 auto 16px; border:2.5px solid rgba(15,118,110,0.45); box-shadow:0 0 0 4px rgba(15,118,110,0.08); background:rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:center;">
+            <img src="headshots/allen.jpg" alt="Allen Lin" style="width:100%; height:100%; object-fit:cover; display:block;" />
+          </div>
+          <p style="font-family:'DM Sans',sans-serif; font-size:17px; font-weight:700; color:#fff; margin:0 0 4px; letter-spacing:-0.01em;">Allen Lin</p>
+          <p style="font-family:'Outfit',sans-serif; font-size:11px; font-weight:600; color:#14B8A6; margin:0; text-transform:uppercase; letter-spacing:0.1em;" data-i18n="about.role.designer">Graphic Designer</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div style="text-align:center; margin-top:72px; padding:56px 32px; background:rgba(255,255,255,0.03); border:1.5px solid rgba(15,118,110,0.2); border-radius:28px; position:relative; overflow:hidden;">
+      <div style="position:absolute; inset:0; pointer-events:none;">
+        <div style="position:absolute; top:-30%; right:-5%; width:400px; height:400px; background:radial-gradient(circle, rgba(15,118,110,0.15) 0%, transparent 65%); border-radius:50%;"></div>
+      </div>
+      <div style="position:relative; z-index:2;">
+        <h2 style="font-family:'DM Sans',sans-serif; font-size:clamp(24px,3.5vw,36px); font-weight:800; color:#fff; margin:0 0 12px; letter-spacing:-0.025em;" data-i18n="cta.heading">Ready to work with our team?</h2>
+        <p style="font-size:16px; color:rgba(255,255,255,0.5); margin:0 0 28px;" data-i18n="cta.sub">Book a free 30-minute call and we'll match you with the right tutor.</p>
+        <a href="index.html#contact" class="btn-primary" style="font-size:16px; padding:15px 32px; border-radius:12px;" data-i18n="cta.btn">Book Free Consult</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer style="background:#0a1422; border-top:1px solid rgba(255,255,255,0.05);">
+  <div class="section-max" style="padding-top:56px; padding-bottom:40px;">
+    <div style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:40px; flex-wrap:wrap;">
+      <div>
+        <img src="brand assets/newlogoo.png" alt="ReadySet1600" style="height:64px; margin-bottom:20px; border-radius:8px;" />
+        <p style="font-size:14px; color:rgba(255,255,255,0.4); margin:0 0 20px; line-height:1.7; max-width:280px;" data-i18n="footer.tagline">Expert SAT, SHSAT, ACT, and AMC tutoring for students who are serious about their scores and their futures.</p>
+        <div style="display:flex; gap:12px;">
+          <a href="https://www.instagram.com/readyset1600/" target="_blank" rel="noopener" aria-label="Instagram" style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.75" stroke-linecap="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <p style="margin:0 0 16px; font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:rgba(255,255,255,0.3);" data-i18n="footer.programs">Programs</p>
+        <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px;">
+          <li><a href="index.html#services" style="font-size:14px; color:rgba(255,255,255,0.5); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'" data-i18n="footer.sat">SAT Prep</a></li>
+          <li><a href="index.html#services" style="font-size:14px; color:rgba(255,255,255,0.5); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'" data-i18n="footer.shsat">SHSAT Prep</a></li>
+          <li><a href="index.html#services" style="font-size:14px; color:rgba(255,255,255,0.5); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'" data-i18n="footer.act">ACT Prep</a></li>
+          <li><a href="index.html#services" style="font-size:14px; color:rgba(255,255,255,0.5); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'" data-i18n="footer.amc">AMC Coaching</a></li>
+        </ul>
+      </div>
+      <div>
+        <p style="margin:0 0 16px; font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:rgba(255,255,255,0.3);" data-i18n="footer.company">Company</p>
+        <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px;">
+          <li><a href="index.html#results" style="font-size:14px; color:rgba(255,255,255,0.5); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'" data-i18n="footer.results">Results</a></li>
+          <li><a href="pricing.html" style="font-size:14px; color:rgba(255,255,255,0.5); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'" data-i18n="footer.pricing">Pricing</a></li>
+          <li><a href="index.html#faq" style="font-size:14px; color:rgba(255,255,255,0.5); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'" data-i18n="footer.faq">FAQ</a></li>
+          <li><a href="index.html#contact" style="font-size:14px; color:rgba(255,255,255,0.5); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'" data-i18n="footer.contactlink">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <p style="margin:0 0 16px; font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:rgba(255,255,255,0.3);" data-i18n="footer.contact">Contact</p>
+        <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px;">
+          <li><a href="mailto:readyset1600@gmail.com" style="font-size:14px; color:rgba(255,255,255,0.5); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">readyset1600@gmail.com</a></li>
+          <li><a href="tel:+19144823605" style="font-size:14px; color:rgba(255,255,255,0.5); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">(914) 482-3605</a></li>
+          <li><span style="font-size:14px; color:rgba(255,255,255,0.5);" data-i18n="footer.location">New York City, NY</span></li>
+        </ul>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,0.06); margin-top:40px; padding-top:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+      <p style="margin:0; font-size:13px; color:rgba(255,255,255,0.25);" data-i18n="footer.copyright">© 2026 ReadySet1600. All rights reserved.</p>
+      <p style="margin:0; font-size:13px; color:rgba(255,255,255,0.25);" data-i18n="footer.tagline2">SAT · SHSAT · ACT · AMC</p>
+    </div>
+  </div>
+</footer>
+
+<!-- AUTH MODAL -->
+<div id="tutor-login-overlay" role="dialog" aria-modal="true" aria-label="Member Login">
+  <div id="tutor-login-card">
+    <button class="tutor-close-btn" onclick="closeTutorLogin()" aria-label="Close">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+      <div style="width:36px; height:36px; background:rgba(20,184,166,0.12); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#14B8A6;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <span style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.35); letter-spacing:0.08em; text-transform:uppercase; font-family:'DM Sans',sans-serif;">ReadySet1600</span>
+    </div>
+    <h2>Member Login</h2>
+    <div class="member-tabs">
+      <button class="member-tab active" id="tab-signin" onclick="switchMemberTab('signin')">Sign In</button>
+      <button class="member-tab" id="tab-signup" onclick="switchMemberTab('signup')">Sign Up</button>
+    </div>
+    <div id="form-signin">
+      <p>Sign in to your ReadySet1600 account.</p>
+      <input type="email" id="tutor-email" class="tutor-input" placeholder="Email" autocomplete="email" onkeydown="if(event.key==='Enter') document.getElementById('tutor-password').focus()" />
+      <input type="password" id="tutor-password" class="tutor-input" placeholder="Password" onkeydown="if(event.key==='Enter') tutorLogin()" autocomplete="current-password" />
+      <div id="tutor-login-error">Incorrect email or password.</div>
+      <button class="tutor-login-btn" id="tutor-login-btn" onclick="tutorLogin()">Sign In</button>
+    </div>
+    <div id="form-signup" style="display:none;">
+      <p>Create your student account.</p>
+      <input type="email" id="signup-email" class="tutor-input" placeholder="Email" autocomplete="email" />
+      <input type="password" id="signup-password" class="tutor-input" placeholder="Password" autocomplete="new-password" />
+      <input type="password" id="signup-confirm" class="tutor-input" placeholder="Confirm Password" autocomplete="new-password" />
+      <div id="signup-error"></div>
+      <button class="tutor-login-btn" id="signup-btn" onclick="tuteeSignUp()">Create Account</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+  // Nav scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.style.borderBottomColor = window.scrollY > 20 ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.07)';
+  }, { passive: true });
+
+  // Mobile menu
+  function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const open = document.getElementById('mob-icon-open');
+    const close = document.getElementById('mob-icon-close');
+    const isOpen = menu.classList.toggle('open');
+    open.style.display  = isOpen ? 'none' : '';
+    close.style.display = isOpen ? '' : 'none';
+  }
+  function closeMobileMenu() {
+    document.getElementById('mobile-menu').classList.remove('open');
+    document.getElementById('mob-icon-open').style.display  = '';
+    document.getElementById('mob-icon-close').style.display = 'none';
+  }
+
+  // Translations
+  const T = {
+    en: {
+      'nav.home':'Home','nav.services':'Services','nav.howItWorks':'How It Works','nav.results':'Results',
+      'nav.pricing':'Pricing','nav.faq':'FAQ','nav.about':'About','nav.cta':'Book Free Consult',
+      'about.tag':'Our Team','about.heading':'The people behind the scores.',
+      'about.subtitle':"Expert tutors, former top scorers, and educators who genuinely care about your student's success.",
+      'about.founders.label':'Co-Founders','about.tutors.label':'Tutors','about.design.label':'Graphic Design',
+      'about.role.founder':'Co-Founder','about.role.founder.exec':'Co-Founder · Executive','about.role.tutor':'Tutor','about.role.designer':'Graphic Designer',
+      'about.jayden.bio':"Hi I'm Jayden Kim, class of 2027 at Stuyvesant. I love math and physics. As the Physics Event Leader of Stuyvesant Science Olympiad, I have taught groups of students and prepared them for competitions. As a member of ARISTA, I have experience with 1-on-1 tutoring for exams such as the ones we're providing. I supported women in the women's day run.",
+      'about.daniel.bio':"Hi I'm Daniel Li, class of 2027 in Stuyvesant HS. I love biology and math. I am a varsity fencer and I play the violin. If you don't find me sleeping u can catch me eating.",
+      'about.ethan.bio':"Hi I'm Ethan Zhang, class of 2027 at Stuyvesant. I like math, finance, and CS. As the Vice President of the Stuyvesant Study Society, I helped coordinate a team of 90+ tutors for 150+ students and provided 100+ hours of 1-on-1 tutoring myself. I'm also on the rowing team and play classical piano. I like Jayden Kim.",
+      'about.tae.bio':"Hi I'm Tae Kim, class of 2028 at Stuyvesant High School in New York City. I study classical guitar with Gohar Vardanyan and I play at the national level. I enjoy mathematics and I am good at competition math. I am cute and also highly ranked in Roblox Volleyball Legends.",
+      'about.henry.bio':"Hi, I'm Henry Li, Stuyvesant High School class of 2027. I'm a varsity fencer, play the euphonium, and compete in science olympiad. My favorite drink? 110% sugar boba.",
+      'about.alwin.bio':"Hi, my name is Alwin Ng, part of Stuyvesant's class of 2027! I'm a software engineer on our school's award-winning robotics team, as well as an experienced tutor! In my free time, I like to play volleyball and code personal projects!",
+      'about.cyrus.bio':"Hi, I'm Cyrus Yau, a Junior at Stuyvesant High School. I'm captain of the gymnastics team and a starter for the badminton team. I also compete in science olympiad and math team. In my free time I like to play fortnite.",
+      'cta.heading':'Ready to work with our team?',
+      'cta.sub':"Book a free 30-minute call and we'll match you with the right tutor.",
+      'cta.btn':'Book Free Consult',
+      'footer.tagline':"Expert SAT, SHSAT, ACT, and AMC tutoring for students who are serious about their scores and their futures.",
+      'footer.programs':'Programs','footer.sat':'SAT Prep','footer.shsat':'SHSAT Prep','footer.act':'ACT Prep','footer.amc':'AMC Coaching',
+      'footer.company':'Company','footer.results':'Results','footer.pricing':'Pricing','footer.faq':'FAQ','footer.contactlink':'Contact',
+      'footer.contact':'Contact','footer.location':'New York City, NY','footer.copyright':'© 2026 ReadySet1600. All rights reserved.','footer.tagline2':'SAT · SHSAT · ACT · AMC',
+    },
+    zh: {
+      'nav.home':'首页','nav.services':'服务','nav.howItWorks':'课程流程','nav.results':'成绩案例',
+      'nav.pricing':'价格','nav.faq':'常见问题','nav.about':'关于我们','nav.cta':'预约免费咨询',
+      'about.tag':'我们的团队','about.heading':'成绩背后的人。',
+      'about.subtitle':'顶尖导师、高分学生出身的教育者，真心关注每位学生的成功。',
+      'about.founders.label':'联合创始人','about.tutors.label':'辅导老师','about.design.label':'平面设计',
+      'about.role.founder':'联合创始人','about.role.founder.exec':'联合创始人 · 执行','about.role.tutor':'辅导老师','about.role.designer':'平面设计师',
+      'about.jayden.bio':'大家好，我是Jayden Kim，Stuyvesant高中2027届学生。我热爱数学和物理。作为Stuyvesant科学奥林匹克物理赛项负责人，我曾带领学生备战竞赛。同时，作为ARISTA荣誉学会成员，我积累了一对一辅导的丰富经验。我支持了女性节长跑活动。',
+      'about.daniel.bio':'大家好，我是Daniel Li，Stuyvesant高中2027届学生。我热爱生物和数学。我是校击剑队成员，也会拉小提琴。找不到我的时候，你大概能在吃饭的地方发现我。',
+      'about.ethan.bio':'大家好，我是Ethan Zhang，Stuyvesant高中2027届学生。我喜欢数学、金融和计算机。作为Stuyvesant学习社副主席，我协助统筹90余名导师为150余名学生服务，并亲自完成了100多小时的一对一辅导。我也是赛艇队成员，会弹古典钢琴。我喜欢Jayden Kim。',
+      'about.tae.bio':'大家好，我是Tae Kim，纽约市Stuyvesant高中2028届学生。我师从Gohar Vardanyan学习古典吉他，并在全国级别的比赛中演奏。我热爱数学，擅长竞赛数学。我很可爱，同时在Roblox排球传奇中排名很高。',
+      'about.henry.bio':'大家好，我是Henry Li，Stuyvesant高中2027届学生。我是校击剑队成员，会演奏次中音号，并参加科学奥林匹克竞赛。我最爱的饮料？加量满糖珍珠奶茶。',
+      'about.alwin.bio':'大家好，我叫Alwin Ng，Stuyvesant高中2027届学生！我是学校屡获殊荣的机器人队软件工程师，同时也是一名经验丰富的导师！课余时间，我喜欢打排球和做个人编程项目！',
+      'about.cyrus.bio':'大家好，我是Cyrus Yau，Stuyvesant高中大三学生。我是体操队队长，也是羽毛球队主力队员。同时参加科学奥林匹克和数学队竞赛。课余时间我喜欢玩堡垒之夜。',
+      'cta.heading':'准备好与我们的团队合作了吗？',
+      'cta.sub':'预约免费30分钟通话，我们将为您匹配合适的导师。',
+      'cta.btn':'预约免费咨询',
+      'footer.tagline':'为认真对待成绩与未来的学生提供专业SAT、SHSAT、ACT和AMC辅导。',
+      'footer.programs':'课程','footer.sat':'SAT 备考','footer.shsat':'SHSAT 备考','footer.act':'ACT 备考','footer.amc':'AMC 辅导',
+      'footer.company':'关于我们','footer.results':'成绩案例','footer.pricing':'价格','footer.faq':'常见问题','footer.contactlink':'联系我们',
+      'footer.contact':'联系方式','footer.location':'纽约市，纽约州','footer.copyright':'© 2026 ReadySet1600. 保留所有权利。','footer.tagline2':'SAT · SHSAT · ACT · AMC',
+    },
+    ko: {
+      'nav.home':'홈','nav.services':'서비스','nav.howItWorks':'진행 방식','nav.results':'성과',
+      'nav.pricing':'가격','nav.faq':'FAQ','nav.about':'소개','nav.cta':'무료 상담 예약',
+      'about.tag':'우리 팀','about.heading':'점수 뒤의 사람들.',
+      'about.subtitle':'최고의 튜터, 전 상위 득점자, 학생의 성공을 진심으로 신경 쓰는 교육자들.',
+      'about.founders.label':'공동 창업자','about.tutors.label':'튜터','about.design.label':'그래픽 디자인',
+      'about.role.founder':'공동 창업자','about.role.founder.exec':'공동 창업자 · 임원','about.role.tutor':'튜터','about.role.designer':'그래픽 디자이너',
+      'about.jayden.bio':'안녕하세요, 저는 Stuyvesant 고등학교 2027년 졸업 예정인 Jayden Kim입니다. 저는 수학과 물리학을 좋아합니다. Stuyvesant 과학 올림피아드 물리 종목 리더로서 학생들을 가르치고 대회를 준비시켰습니다. 또한 ARISTA 회원으로서 1:1 개인 지도 경험도 쌓았습니다. 저는 여성의 날 달리기 행사를 응원했습니다.',
+      'about.daniel.bio':'안녕하세요, 저는 Stuyvesant 고등학교 2027년 졸업 예정인 Daniel Li입니다. 저는 생물학과 수학을 좋아합니다. 대표팀 펜싱 선수이며 바이올린을 연주합니다. 저를 찾을 수 없다면 아마 밥 먹는 데서 찾을 수 있을 거예요.',
+      'about.ethan.bio':'안녕하세요, 저는 Stuyvesant 고등학교 2027년 졸업 예정인 Ethan Zhang입니다. 수학, 금융, CS를 좋아합니다. Stuyvesant Study Society 부회장으로서 90명 이상의 튜터를 조율해 150명 이상의 학생을 도왔고, 직접 100시간 이상의 1:1 지도를 제공했습니다. 조정 팀 소속이며 클래식 피아노도 연주합니다. Jayden Kim을 좋아합니다.',
+      'about.tae.bio':'안녕하세요, 저는 뉴욕시 Stuyvesant 고등학교 2028년 졸업 예정인 Tae Kim입니다. Gohar Vardanyan 선생님께 클래식 기타를 배우고 있으며 전국 수준으로 연주합니다. 수학을 즐기며 경시 수학을 잘합니다. 저는 귀엽고 Roblox Volleyball Legends에서 높은 랭킹을 유지하고 있습니다.',
+      'about.henry.bio':'안녕하세요, 저는 Stuyvesant 고등학교 2027년 졸업 예정인 Henry Li입니다. 대표팀 펜싱 선수이며, 유포늄을 연주하고 과학 올림피아드에 참가합니다. 제가 가장 좋아하는 음료? 설탕 110% 버블티입니다.',
+      'about.alwin.bio':'안녕하세요, 저는 Stuyvesant 2027년 졸업 예정인 Alwin Ng입니다! 학교의 수상 경력 있는 로보틱스 팀에서 소프트웨어 엔지니어로 활동하며 경험 많은 튜터이기도 합니다! 여가 시간에는 배구를 즐기고 개인 프로젝트를 코딩합니다!',
+      'about.cyrus.bio':'안녕하세요, 저는 Stuyvesant 고등학교 3학년 Cyrus Yau입니다. 체조 팀 주장이자 배드민턴 팀 주전 선수입니다. 과학 올림피아드와 수학 팀 대회에도 참가합니다. 여가 시간에는 포트나이트를 즐깁니다.',
+      'cta.heading':'저희 팀과 함께 시작할 준비가 되셨나요?',
+      'cta.sub':'무료 30분 통화를 예약하시면 적합한 튜터를 연결해 드립니다.',
+      'cta.btn':'무료 상담 예약',
+      'footer.tagline':'점수와 미래에 진지한 학생들을 위한 전문 SAT, SHSAT, ACT, AMC 튜터링',
+      'footer.programs':'프로그램','footer.sat':'SAT 준비','footer.shsat':'SHSAT 준비','footer.act':'ACT 준비','footer.amc':'AMC 코칭',
+      'footer.company':'회사 소개','footer.results':'성과','footer.pricing':'가격','footer.faq':'FAQ','footer.contactlink':'문의하기',
+      'footer.contact':'연락처','footer.location':'뉴욕시, 뉴욕','footer.copyright':'© 2026 ReadySet1600. 모든 권리 보유.','footer.tagline2':'SAT · SHSAT · ACT · AMC',
+    }
+  };
+
+  let currentLang = localStorage.getItem('rs1600-lang') || 'en';
+
+  function setLang(lang) {
+    currentLang = lang;
+    localStorage.setItem('rs1600-lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      if (T[lang] && T[lang][key]) el.textContent = T[lang][key];
+    });
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : lang === 'ko' ? 'ko' : 'en';
+  }
+
+  // Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyDy-g_ihlNGF19FVZ_-ChX-LfMIAZFKvYM",
+    authDomain: "rs1600-faccd.firebaseapp.com",
+    projectId: "rs1600-faccd",
+    storageBucket: "rs1600-faccd.firebasestorage.app",
+    messagingSenderId: "669933046930",
+    appId: "1:669933046930:web:3179bd9fd14e3e2694ea4b"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+  auth.onAuthStateChanged(() => {
+    document.getElementById('auth-veil').style.opacity = '0';
+    setTimeout(() => document.getElementById('auth-veil').style.display = 'none', 200);
+  });
+
+  function switchMemberTab(tab) {
+    document.getElementById('form-signin').style.display = tab === 'signin' ? '' : 'none';
+    document.getElementById('form-signup').style.display = tab === 'signup' ? '' : 'none';
+    document.getElementById('tab-signin').classList.toggle('active', tab === 'signin');
+    document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+  }
+
+  function openTutorLogin(e) {
+    if (e) e.preventDefault();
+    document.getElementById('tutor-email').value = '';
+    document.getElementById('tutor-password').value = '';
+    document.getElementById('tutor-login-error').style.display = 'none';
+    switchMemberTab('signin');
+    document.getElementById('tutor-login-overlay').classList.add('active');
+    setTimeout(() => document.getElementById('tutor-email').focus(), 100);
+  }
+
+  function closeTutorLogin() {
+    document.getElementById('tutor-login-overlay').classList.remove('active');
+  }
+
+  async function tutorLogin() {
+    const email = document.getElementById('tutor-email').value.trim();
+    const password = document.getElementById('tutor-password').value;
+    const btn = document.getElementById('tutor-login-btn');
+    const errDiv = document.getElementById('tutor-login-error');
+    if (!email || !password) {
+      errDiv.style.display = 'block';
+      errDiv.textContent = 'Please enter email and password.';
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = 'Signing in…';
+    errDiv.style.display = 'none';
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+      window.location.href = 'index.html';
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'Sign In';
+      errDiv.style.display = 'block';
+      errDiv.textContent = 'Incorrect email or password.';
+    }
+  }
+
+  async function tuteeSignUp() {
+    window.location.href = 'index.html';
+  }
+
+  // Init
+  setLang(currentLang);
+</script>
+</body>
+</html>

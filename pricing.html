@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pricing — ReadySet1600</title>
+  <link rel="icon" type="image/png" href="favicon.png" id="favicon" />
+  <script>
+    window.addEventListener('load', function() {
+      var img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = function() {
+        var size = 64;
+        var c = document.createElement('canvas');
+        c.width = size; c.height = size;
+        var ctx = c.getContext('2d');
+        ctx.beginPath();
+        ctx.arc(size/2, size/2, size/2, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.clip();
+        ctx.drawImage(img, 0, 0, size, size);
+        document.getElementById('favicon').href = c.toDataURL('image/png');
+      };
+      img.src = 'brand assets/newcirclelog.png';
+    });
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; overflow-x: hidden; max-width: 100%; }
+    html, body { overflow-x: hidden; max-width: 100%; }
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: #F8FAFC;
+      color: #1E293B;
+      line-height: 1.7;
+      margin: 0;
+      overflow-x: hidden;
+    }
+    .font-display { font-family: 'DM Sans', sans-serif; }
+    :root {
+      --navy:       #0B1728;
+      --navy-mid:   #162236;
+      --navy-light: #1E3250;
+      --blue:       #0F766E;
+      --blue-light: #14B8A6;
+      --blue-pale:  #F0FDFA;
+      --green:      #10B981;
+      --green-pale: #ECFDF5;
+      --amber:      #F59E0B;
+      --slate-800:  #1E293B;
+      --slate-600:  #475569;
+      --slate-400:  #94A3B8;
+      --slate-200:  #E2E8F0;
+      --slate-100:  #F1F5F9;
+      --off-white:  #F8FAFC;
+      --white:      #FFFFFF;
+    }
+    .noise::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Nav */
+    #nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(11, 23, 40, 0.96);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 32px;
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .nav-logo { flex-shrink: 0; }
+    .nav-logo img { height: 56px; width: auto; display: block; }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      list-style: none;
+      margin: 0; padding: 0;
+      flex: 1;
+      justify-content: space-evenly;
+    }
+    .nav-links a {
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.72);
+      text-decoration: none;
+      padding: 7px 14px;
+      border-radius: 100px;
+      transition: color 0.2s, background 0.2s;
+    }
+    .nav-links a:hover { color: #fff; background: rgba(255,255,255,0.08); }
+    .nav-links a.active-page { color: #14B8A6; }
+    .tutor-portal-link {
+      display: flex !important;
+      align-items: center;
+      gap: 5px;
+      font-size: 13px !important;
+      color: rgba(255,255,255,0.4) !important;
+      border: 1px solid rgba(255,255,255,0.12) !important;
+      border-radius: 6px !important;
+      padding: 4px 10px !important;
+      transition: color 0.2s, border-color 0.2s, background 0.2s !important;
+    }
+    .tutor-portal-link:hover { color: rgba(255,255,255,0.8) !important; border-color: rgba(255,255,255,0.25) !important; background: rgba(255,255,255,0.06) !important; }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown > a { display: flex; align-items: center; gap: 5px; }
+    .nav-dropdown > a svg { transition: transform 0.2s; }
+    .nav-dropdown:hover > a svg { transform: rotate(180deg); }
+    .nav-dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%) translateY(-4px);
+      background: rgba(11,23,40,0.98);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 14px 6px 6px;
+      min-width: 170px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      z-index: 200;
+    }
+    .nav-dropdown:hover .nav-dropdown-menu {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+    .nav-dropdown-menu a {
+      display: block;
+      padding: 9px 14px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      white-space: nowrap;
+    }
+
+    /* Buttons */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      color: #fff;
+      background: #0F766E;
+      padding: 13px 26px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
+      box-shadow: 0 2px 12px rgba(15,118,110,0.35);
+      white-space: nowrap;
+    }
+    .btn-primary:hover { background: #0a5c56; transform: translateY(-2px); box-shadow: 0 6px 24px rgba(15,118,110,0.45); }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      color: #1E293B;
+      background: #fff;
+      padding: 13px 26px;
+      border-radius: 12px;
+      border: 1.5px solid #E2E8F0;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.2s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
+    }
+    .btn-secondary:hover { border-color: #0F766E; color: #0F766E; transform: translateY(-2px); box-shadow: 0 4px 16px rgba(15,118,110,0.12); }
+    .btn-secondary:active { transform: translateY(0); }
+
+    /* Section tag */
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #0F766E;
+      background: #F0FDFA;
+      padding: 5px 12px;
+      border-radius: 100px;
+      margin-bottom: 16px;
+    }
+    .section-tag-dark {
+      color: rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* Misc */
+    .section-max { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+    .section-pad { padding-top: 96px; padding-bottom: 96px; }
+    .heading-xl { font-family: 'DM Sans', sans-serif; font-size: clamp(38px, 5.5vw, 68px); font-weight: 800; line-height: 1.08; letter-spacing: -0.03em; }
+    .heading-lg { font-family: 'DM Sans', sans-serif; font-size: clamp(30px, 4vw, 46px); font-weight: 700; line-height: 1.12; letter-spacing: -0.025em; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    @media (max-width: 640px) {
+      .grid-3 { grid-template-columns: 1fr; }
+      .section-max { padding: 0 20px; }
+      .section-pad { padding-top: 64px; padding-bottom: 64px; }
+    }
+
+    /* Lang switcher */
+    .nav-controls { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+    .lang-switcher { display:flex; align-items:center; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.1); border-radius:100px; padding:3px; }
+    .lang-btn { font-family:'Outfit',sans-serif; font-size:11px; font-weight:700; color:rgba(255,255,255,0.45); background:none; border:none; padding:4px 10px; border-radius:100px; cursor:pointer; transition:color 0.2s,background 0.2s; letter-spacing:0.04em; }
+    .lang-btn.active { color:#fff; background:rgba(255,255,255,0.15); }
+    .lang-btn:hover:not(.active) { color:rgba(255,255,255,0.75); }
+    @media (max-width:768px) { .nav-controls { display:none; } }
+
+    /* Mobile nav */
+    @media (max-width: 768px) {
+      .nav-links, .nav-cta { display: none; }
+      .nav-mobile-btn { display: flex; }
+      .nav-inner { padding: 0 16px; gap: 10px; }
+      .nav-logo img { height: 36px; }
+    }
+    @media (min-width: 769px) {
+      .nav-mobile-btn { display: none; }
+      #mobile-menu { display: none !important; }
+    }
+    .nav-mobile-btn {
+      background: none; border: none; cursor: pointer;
+      color: rgba(255,255,255,0.8); padding: 8px; flex-shrink: 0;
+    }
+    #mobile-menu {
+      display: none;
+      position: fixed;
+      top: 76px;
+      left: 0; right: 0;
+      background: rgba(11,23,40,0.98);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      z-index: 99;
+      padding: 16px 20px 24px;
+      flex-direction: column;
+      gap: 4px;
+      animation: mobileMenuIn 0.2s cubic-bezier(0.16,1,0.3,1);
+    }
+    #mobile-menu.open { display: flex; }
+    @keyframes mobileMenuIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    #mobile-menu a.mob-link {
+      font-family: 'Outfit', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      padding: 12px 16px;
+      border-radius: 12px;
+      transition: background 0.15s, color 0.15s;
+      display: block;
+    }
+    #mobile-menu a.mob-link:hover { background: rgba(255,255,255,0.07); color: #fff; }
+    #mobile-menu .mob-cta {
+      margin-top: 12px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 600;
+      color: #fff; background: #0F766E;
+      padding: 14px 24px; border-radius: 12px;
+      text-decoration: none; transition: background 0.2s;
+    }
+    #mobile-menu .mob-cta:hover { background: #0A5C56; }
+
+    /* Dark mode */
+    html.dark body { background:#0A0F1A; color:#CBD5E1; }
+    html.dark #referral-card { background:rgba(15,118,110,0.1) !important; border-color:rgba(15,118,110,0.25) !important; }
+    html.dark #referral-card .referral-icon-bg { background:rgba(15,118,110,0.2) !important; }
+    html.dark #referral-card .referral-heading { color:#F1F5F9 !important; }
+    html.dark #referral-card .referral-desc { color:rgba(255,255,255,0.5) !important; }
+    html.dark #referral-card .referral-item { color:rgba(255,255,255,0.7) !important; }
+    html.dark .section-tag:not(.section-tag-dark) { background:rgba(15,118,110,0.15) !important; color:#60A5FA !important; }
+    html.dark [style*="background:#fff; border:1.5px solid #E2E8F0"], html.dark [style*="background:#fff; border-radius:28px"] { background:#111827 !important; border-color:rgba(255,255,255,0.08) !important; }
+    html.dark h2[style*="color:#0B1728"] { color:#F1F5F9 !important; }
+    html.dark p[style*="color:#475569"] { color:#94A3B8 !important; }
+    html.dark p[style*="color:#0B1728"] { color:#F1F5F9 !important; }
+    html.dark [style*="background:#F8FAFC"] { background:#0A0F1A !important; }
+
+    /* Auth modal */
+    #tutor-login-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(11,23,40,0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      align-items: center;
+      justify-content: center;
+    }
+    #tutor-login-overlay.active { display: flex; }
+    #tutor-login-card {
+      background: #162236;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
+      position: relative;
+    }
+    #tutor-login-card h2 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+      margin: 0 0 4px;
+      letter-spacing: -0.03em;
+    }
+    #tutor-login-card p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.4);
+      margin: 0 0 28px;
+    }
+    .tutor-input {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 15px;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 12px;
+      display: block;
+    }
+    .tutor-input:focus { border-color: rgba(20,184,166,0.6); }
+    .tutor-input::placeholder { color: rgba(255,255,255,0.25); }
+    #tutor-login-error { display: none; font-size: 13px; color: #F87171; margin-bottom: 12px; }
+    .tutor-login-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #0F766E, #14B8A6);
+      color: #fff; border: none; border-radius: 10px;
+      padding: 13px; font-size: 15px; font-weight: 600;
+      font-family: 'Outfit', sans-serif; cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .tutor-login-btn:hover { opacity: 0.9; }
+    .tutor-login-btn:active { transform: scale(0.98); }
+    .tutor-close-btn {
+      position: absolute; top: 16px; right: 16px;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; color: rgba(255,255,255,0.5); cursor: pointer;
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      transition: color 0.2s, background 0.2s;
+    }
+    .tutor-close-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+    .member-tabs { display: flex; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 24px; }
+    .member-tab {
+      flex: 1; background: none; border: none; border-bottom: 2px solid transparent;
+      color: rgba(255,255,255,0.4); font-family: 'Outfit', sans-serif; font-size: 14px;
+      font-weight: 600; padding: 10px 0; cursor: pointer; transition: color 0.2s, border-color 0.2s;
+      margin-bottom: -1px;
+    }
+    .member-tab.active { color: #14B8A6; border-bottom-color: #14B8A6; }
+    #signup-error { display: none; font-size: 13px; color: #F87171; margin-bottom: 12px; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #F1F5F9; }
+    ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+  </style>
+</head>
+<body>
+<div id="auth-veil" style="position:fixed;inset:0;z-index:9997;background:#0B1728;transition:opacity 0.2s;"></div>
+
+<!-- NAV -->
+<nav id="nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo" aria-label="ReadySet1600 Home">
+      <img src="brand assets/newcirclelog.png" alt="ReadySet1600" style="height:56px; width:56px; display:block; border-radius:50%; object-fit:cover; filter: drop-shadow(0 0 10px rgba(100,220,180,0.3));" />
+    </a>
+    <ul class="nav-links" role="list">
+      <li class="nav-dropdown">
+        <a href="index.html" data-i18n="nav.home">Home
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </a>
+        <div class="nav-dropdown-menu">
+          <a href="index.html#services" data-i18n="nav.services">Services</a>
+          <a href="index.html#how-it-works" data-i18n="nav.howItWorks">How It Works</a>
+          <a href="index.html#results" data-i18n="nav.results">Results</a>
+          <a href="index.html#faq" data-i18n="nav.faq">FAQ</a>
+        </div>
+      </li>
+      <li><a href="pricing.html" class="active-page" data-i18n="nav.pricing">Pricing</a></li>
+      <li><a href="about.html" data-i18n="nav.about">About</a></li>
+      <li><a href="#" class="tutor-portal-link" onclick="openTutorLogin(event)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Member Login
+      </a></li>
+    </ul>
+    <a href="index.html#contact" class="btn-primary nav-cta" style="font-size:14px; padding:10px 20px; border-radius:10px;">
+      <span data-i18n="nav.cta">Book Free Consult</span>
+    </a>
+    <div class="nav-controls">
+      <div class="lang-switcher">
+        <button class="lang-btn active" onclick="setLang('en')" data-lang="en">EN</button>
+        <button class="lang-btn" onclick="setLang('zh')" data-lang="zh">中文</button>
+        <button class="lang-btn" onclick="setLang('ko')" data-lang="ko">한국어</button>
+      </div>
+    </div>
+    <button class="nav-mobile-btn" id="nav-mobile-btn" aria-label="Open menu" onclick="toggleMobileMenu()">
+      <svg id="mob-icon-open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+      <svg id="mob-icon-close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none;">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<div id="mobile-menu" role="dialog" aria-label="Navigation menu">
+  <a href="index.html#services"     class="mob-link" data-i18n="nav.services"    onclick="closeMobileMenu()">Services</a>
+  <a href="index.html#how-it-works" class="mob-link" data-i18n="nav.howItWorks" onclick="closeMobileMenu()">How It Works</a>
+  <a href="index.html#results"      class="mob-link" data-i18n="nav.results"    onclick="closeMobileMenu()">Results</a>
+  <a href="index.html#faq"          class="mob-link" data-i18n="nav.faq"        onclick="closeMobileMenu()">FAQ</a>
+  <a href="pricing.html"            class="mob-link" data-i18n="nav.pricing"    onclick="closeMobileMenu()">Pricing</a>
+  <a href="about.html"              class="mob-link" data-i18n="nav.about"      onclick="closeMobileMenu()">About</a>
+  <a href="#" class="mob-link" onclick="closeMobileMenu(); openTutorLogin(event);" style="color:rgba(255,255,255,0.4); font-size:14px;">Member Login</a>
+  <a href="index.html#contact" class="mob-cta" onclick="closeMobileMenu()">
+    <span data-i18n="nav.cta">Book Free Consult</span>
+  </a>
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-top:16px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.07);">
+    <div class="lang-switcher">
+      <button class="lang-btn active" onclick="setLang('en')" data-lang="en">EN</button>
+      <button class="lang-btn" onclick="setLang('zh')" data-lang="zh">中文</button>
+      <button class="lang-btn" onclick="setLang('ko')" data-lang="ko">한국어</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE HEADER -->
+<div style="background:#0B1728; padding-top:120px; padding-bottom:72px; position:relative; overflow:hidden;">
+  <div style="position:absolute; inset:0; pointer-events:none;">
+    <div style="position:absolute; top:-20%; right:-5%; width:600px; height:600px; background:radial-gradient(circle, rgba(15,118,110,0.15) 0%, transparent 65%); border-radius:50%;"></div>
+    <div style="position:absolute; bottom:-20%; left:-5%; width:500px; height:500px; background:radial-gradient(circle, rgba(16,185,129,0.08) 0%, transparent 65%); border-radius:50%;"></div>
+  </div>
+  <div class="section-max" style="text-align:center; position:relative; z-index:2;">
+    <div class="section-tag section-tag-dark" style="margin:0 auto 20px;" data-i18n="pricing.tag">Pricing</div>
+    <h1 class="heading-xl" style="color:#fff; margin:0 0 20px;" data-i18n="pricing.heading">Transparent. Flexible. Results-Focused.</h1>
+    <p style="font-size:18px; color:rgba(255,255,255,0.55); max-width:480px; margin:0 auto;" data-i18n="pricing.subtitle">Every session is 1-on-1. The only choice is your tutor's experience level.</p>
+  </div>
+</div>
+
+<!-- PRICING CARDS -->
+<section style="background:#F8FAFC; padding-top:72px; padding-bottom:96px;">
+  <div class="section-max">
+
+    <div class="grid-3">
+
+      <!-- Starter -->
+      <div style="background:#fff; border:1.5px solid #E2E8F0; border-radius:28px; padding:36px; transition:box-shadow 0.25s, transform 0.22s;">
+        <div class="section-tag" style="margin-bottom:8px;" data-i18n="starter.name">Starter</div>
+        <p style="font-size:13px; color:#94A3B8; margin:0 0 24px;" data-i18n="starter.subtitle">Pay per session</p>
+        <div style="margin-bottom:24px;">
+          <span style="font-family:'DM Sans',sans-serif; font-size:42px; font-weight:800; color:#0B1728; letter-spacing:-0.03em;">$25</span>
+          <span style="font-size:15px; color:#94A3B8;" data-i18n="per.session">/session</span>
+        </div>
+        <p style="font-size:15px; color:#475569; margin:0 0 28px; line-height:1.7;" data-i18n="starter.desc">Entry-level 1-on-1 sessions. Great for students just beginning their prep.</p>
+        <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:32px;">
+          <div style="display:flex; align-items:center; gap:10px; font-size:14px; color:#475569;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span data-i18n="starter.li1">1-on-1 private sessions</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; font-size:14px; color:#475569;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span data-i18n="starter.li2">Custom session plan</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; font-size:14px; color:#94A3B8;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <span data-i18n="starter.li3">24/7 tutor messaging</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; font-size:14px; color:#94A3B8;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <span data-i18n="starter.li4">Score guarantee</span>
+          </div>
+        </div>
+        <a href="index.html#contact" class="btn-secondary" style="width:100%; justify-content:center;" data-i18n="starter.cta">Get Started</a>
+      </div>
+
+      <!-- Core -->
+      <div style="background:#fff; border:1.5px solid #E2E8F0; border-radius:28px; padding:36px; transition:box-shadow 0.25s, transform 0.22s;">
+        <div class="section-tag" style="margin-bottom:8px;" data-i18n="core.name">Core</div>
+        <p style="font-size:13px; color:#94A3B8; margin:0 0 24px;" data-i18n="core.subtitle">Pay per session</p>
+        <div style="margin-bottom:24px;">
+          <span style="font-family:'DM Sans',sans-serif; font-size:42px; font-weight:800; color:#0B1728; letter-spacing:-0.03em;">$35</span>
+          <span style="font-size:15px; color:#94A3B8;" data-i18n="per.session">/session</span>
+        </div>
+        <p style="font-size:15px; color:#475569; margin:0 0 28px; line-height:1.7;" data-i18n="core.desc">Flexible 1-on-1 sessions with our Core tutors. No commitment required.</p>
+        <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:32px;">
+          <div style="display:flex; align-items:center; gap:10px; font-size:14px; color:#475569;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span data-i18n="core.li1">1-on-1 private sessions</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; font-size:14px; color:#475569;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span data-i18n="core.li2">24/7 tutor messaging</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; font-size:14px; color:#475569;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span data-i18n="core.li3">Custom session plan</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; font-size:14px; color:#94A3B8;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <span data-i18n="core.li4">Score guarantee</span>
+          </div>
+        </div>
+        <a href="index.html#contact" class="btn-secondary" style="width:100%; justify-content:center;" data-i18n="core.cta">Get Started</a>
+      </div>
+
+      <!-- Elite -->
+      <div style="background:linear-gradient(145deg,#0B1728,#0F2744); border:1.5px solid rgba(15,118,110,0.35); border-radius:28px; padding:36px; box-shadow:0 8px 40px rgba(15,118,110,0.18); transition:box-shadow 0.25s, transform 0.22s;">
+        <div class="section-tag section-tag-dark" style="margin-bottom:8px;" data-i18n="elite.name">Elite</div>
+        <p style="font-size:13px; color:rgba(255,255,255,0.4); margin:0 0 24px;" data-i18n="elite.subtitle">Pay per session</p>
+        <div style="margin-bottom:24px;">
+          <span style="font-family:'DM Sans',sans-serif; font-size:42px; font-weight:800; color:#fff; letter-spacing:-0.03em;">$50</span>
+          <span style="font-size:15px; color:rgba(255,255,255,0.4);" data-i18n="per.session">/session</span>
+        </div>
+        <p style="font-size:15px; color:rgba(255,255,255,0.5); margin:0 0 28px; line-height:1.7;" data-i18n="elite.desc">Our most experienced tutors. Ideal for students targeting top scores.</p>
+        <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:32px;">
+          <div style="display:flex; align-items:center; gap:10px; font-size:14px; color:rgba(255,255,255,0.75);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span data-i18n="elite.li1">1-on-1 private sessions</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; font-size:14px; color:rgba(255,255,255,0.75);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span data-i18n="elite.li2">24/7 tutor messaging</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; font-size:14px; color:rgba(255,255,255,0.75);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span data-i18n="elite.li3">Custom session plan</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; font-size:14px; color:rgba(255,255,255,0.75);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span data-i18n="elite.li4">Score guarantee</span>
+          </div>
+        </div>
+        <a href="index.html#contact" class="btn-primary" style="width:100%; justify-content:center;" data-i18n="elite.cta">Get Started</a>
+      </div>
+
+    </div>
+
+    <!-- Packages -->
+    <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:24px; margin-top:24px;">
+
+      <!-- Core Package -->
+      <div style="background:#fff; border:1.5px solid rgba(15,118,110,0.25); border-radius:28px; padding:36px; box-shadow:0 4px 24px rgba(15,118,110,0.08); transition:box-shadow 0.25s, transform 0.22s;">
+        <div class="section-tag" style="margin-bottom:8px; background:#ECFDF5; color:#059669;" data-i18n="corepkg.name">Core Package</div>
+        <p style="font-size:13px; color:#94A3B8; margin:0 0 24px;" data-i18n="corepkg.subtitle">8 sessions · Core tutors</p>
+        <div style="margin-bottom:24px;">
+          <div style="display:flex; align-items:baseline; gap:10px; flex-wrap:wrap;">
+            <span style="font-family:'DM Sans',sans-serif; font-size:20px; font-weight:600; color:#CBD5E1; text-decoration:line-through; letter-spacing:-0.01em;">$280</span>
+            <span style="background:#ECFDF5; color:#059669; font-size:11px; font-weight:700; padding:3px 8px; border-radius:6px; letter-spacing:0.05em; text-transform:uppercase;" data-i18n="corepkg.save">Save $30</span>
+          </div>
+          <span style="font-family:'DM Sans',sans-serif; font-size:42px; font-weight:800; color:#0B1728; letter-spacing:-0.03em;">$250</span>
+          <span style="font-size:15px; color:#94A3B8;" data-i18n="per.8sessions">/8 sessions</span>
+        </div>
+        <p style="font-size:15px; color:#475569; margin:0 0 28px; line-height:1.7;" data-i18n="corepkg.desc">8 focused sessions with a Core tutor, built around your target score.</p>
+        <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:32px;">
+          <div style="display:flex; align-items:center; gap:10px; font-size:14px; color:#475569;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span data-i18n="corepkg.li1">8 x 60-min 1-on-1 sessions</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; font-size:14px; color:#475569;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span data-i18n="corepkg.li2">Full diagnostic + custom plan</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; font-size:14px; color:#475569;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span data-i18n="corepkg.li3">Weekly progress reports</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; font-size:14px; color:#475569;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span data-i18n="corepkg.li4">Score increase guarantee</span>
+          </div>
+        </div>
+        <a href="index.html#contact" class="btn-secondary" style="width:100%; justify-content:center; border-color:rgba(15,118,110,0.3); color:#0F766E;" data-i18n="corepkg.cta">Book This Package</a>
+        <p style="margin:12px 0 0; text-align:center; font-size:12px; color:#94A3B8;" data-i18n="corepkg.note">Avg. improvement: +100 points</p>
+      </div>
+
+      <!-- Elite Package -->
+      <div style="position:relative; background:linear-gradient(145deg,#0B1728,#0F2744); border:1.5px solid rgba(15,118,110,0.35); border-radius:28px; padding:36px; box-shadow:0 8px 40px rgba(15,118,110,0.18); transition:box-shadow 0.25s, transform 0.22s;">
+        <div style="position:absolute; top:-16px; left:50%; transform:translateX(-50%); white-space:nowrap;">
+          <span style="background:linear-gradient(135deg,#0F766E,#14B8A6); color:#fff; font-size:11px; font-weight:700; padding:6px 16px; border-radius:100px; letter-spacing:0.06em; text-transform:uppercase; box-shadow:0 4px 12px rgba(15,118,110,0.4);" data-i18n="elitepkg.badge">Most Popular</span>
+        </div>
+        <div class="section-tag section-tag-dark" style="margin-bottom:8px;" data-i18n="elitepkg.name">Elite Package</div>
+        <p style="font-size:13px; color:rgba(255,255,255,0.4); margin:0 0 24px;" data-i18n="elitepkg.subtitle">8 sessions · best value</p>
+        <div style="margin-bottom:24px;">
+          <div style="display:flex; align-items:baseline; gap:10px; flex-wrap:wrap;">
+            <span style="font-family:'DM Sans',sans-serif; font-size:20px; font-weight:600; color:rgba(255,255,255,0.35); text-decoration:line-through; letter-spacing:-0.01em;">$400</span>
+            <span style="background:rgba(16,185,129,0.18); color:#10B981; font-size:11px; font-weight:700; padding:3px 8px; border-radius:6px; letter-spacing:0.05em; text-transform:uppercase;" data-i18n="elitepkg.save">Save $50</span>
+          </div>
+          <span style="font-family:'DM Sans',sans-serif; font-size:42px; font-weight:800; color:#fff; letter-spacing:-0.03em;">$350</span>
+          <span style="font-size:15px; color:rgba(255,255,255,0.4);" data-i18n="per.8sessions">/8 sessions</span>
+        </div>
+        <p style="font-size:15px; color:rgba(255,255,255,0.5); margin:0 0 28px; line-height:1.7;" data-i18n="elitepkg.desc">Our best tutors, a full program, and a guarantee — for students who are serious about their score.</p>
+        <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:32px;">
+          <div style="display:flex; align-items:center; gap:10px; font-size:14px; color:rgba(255,255,255,0.75);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span data-i18n="elitepkg.li1">8 x 60-min 1-on-1 sessions</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; font-size:14px; color:rgba(255,255,255,0.75);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span data-i18n="elitepkg.li2">Full diagnostic + custom plan</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; font-size:14px; color:rgba(255,255,255,0.75);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span data-i18n="elitepkg.li3">Weekly progress reports</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; font-size:14px; color:rgba(255,255,255,0.75);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span data-i18n="elitepkg.li4">Score increase guarantee</span>
+          </div>
+        </div>
+        <a href="index.html#contact" class="btn-primary" style="width:100%; justify-content:center;" data-i18n="elitepkg.cta">Book This Package</a>
+        <p style="margin:12px 0 0; text-align:center; font-size:12px; color:rgba(255,255,255,0.3);" data-i18n="elitepkg.note">Avg. improvement: +130 points</p>
+      </div>
+
+    </div>
+
+    <p style="text-align:center; margin-top:8px; font-size:13px; color:#94A3B8;" data-i18n="pricing.footer">All programs begin with a free 30-minute diagnostic consultation. · Custom packages available for AMC &amp; SHSAT.</p>
+
+    <!-- Referral info card -->
+    <div style="max-width:680px; margin:40px auto 0;">
+      <div id="referral-card" style="background:#F0FDFA; border:1.5px solid rgba(15,118,110,0.2); border-radius:18px; padding:24px 28px; display:flex; flex-wrap:wrap; gap:28px; align-items:flex-start;">
+        <div style="flex:0 0 auto;">
+          <div class="referral-icon-bg" style="width:44px; height:44px; border-radius:12px; background:#DBEAFE; display:flex; align-items:center; justify-content:center;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F766E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+        </div>
+        <div style="flex:1; min-width:220px;">
+          <p class="referral-heading" style="font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700; color:#0B1728; margin:0 0 4px;" data-i18n="referral.heading">Refer a Friend</p>
+          <p class="referral-desc" style="font-family:'Outfit',sans-serif; font-size:13.5px; color:#475569; margin:0 0 4px; line-height:1.6;" data-i18n="referral.desc">Know a student who could use a score boost? Share ReadySet1600 and both of you benefit.</p>
+          <p style="font-family:'Outfit',sans-serif; font-size:12.5px; color:#0F766E; margin:0 0 16px; font-weight:500;" data-i18n="referral.code">Every enrolled student gets a personal referral code to share.</p>
+          <div style="display:flex; flex-wrap:wrap; gap:24px;">
+            <div>
+              <p style="font-family:'Outfit',sans-serif; font-size:11px; font-weight:600; color:#94A3B8; text-transform:uppercase; letter-spacing:0.08em; margin:0 0 6px;" data-i18n="referral.session.label">Book a session</p>
+              <div style="display:flex; flex-direction:column; gap:5px;">
+                <div style="display:flex; align-items:center; gap:7px; font-family:'Outfit',sans-serif; font-size:13.5px; color:#1E293B;" class="referral-item">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span data-i18n="referral.session.them">They get 50% off a session</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:7px; font-family:'Outfit',sans-serif; font-size:13.5px; color:#1E293B;" class="referral-item">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span data-i18n="referral.session.you">You get 50% off a session</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <p style="font-family:'Outfit',sans-serif; font-size:11px; font-weight:600; color:#94A3B8; text-transform:uppercase; letter-spacing:0.08em; margin:0 0 6px;" data-i18n="referral.package.label">Buy a package</p>
+              <div style="display:flex; flex-direction:column; gap:5px;">
+                <div style="display:flex; align-items:center; gap:7px; font-family:'Outfit',sans-serif; font-size:13.5px; color:#1E293B;" class="referral-item">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span data-i18n="referral.package.them">They get $25 off</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:7px; font-family:'Outfit',sans-serif; font-size:13.5px; color:#1E293B;" class="referral-item">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span data-i18n="referral.package.you">You get $50 credit</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div style="text-align:center; margin-top:64px; padding:56px 32px; background:#0B1728; border-radius:28px; position:relative; overflow:hidden;">
+      <div style="position:absolute; inset:0; pointer-events:none;">
+        <div style="position:absolute; top:-30%; right:-5%; width:400px; height:400px; background:radial-gradient(circle, rgba(15,118,110,0.18) 0%, transparent 65%); border-radius:50%;"></div>
+      </div>
+      <div style="position:relative; z-index:2;">
+        <h2 style="font-family:'DM Sans',sans-serif; font-size:clamp(24px,3.5vw,36px); font-weight:800; color:#fff; margin:0 0 12px; letter-spacing:-0.025em;" data-i18n="cta.heading">Not sure which plan is right?</h2>
+        <p style="font-size:16px; color:rgba(255,255,255,0.55); margin:0 0 28px;" data-i18n="cta.sub">Book a free 30-minute call. We'll tell you exactly what makes sense for your student.</p>
+        <a href="index.html#contact" class="btn-primary" style="font-size:16px; padding:15px 32px; border-radius:12px;" data-i18n="cta.btn">Book Free Consult</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer style="background:#0a1422; border-top:1px solid rgba(255,255,255,0.05);">
+  <div class="section-max" style="padding-top:56px; padding-bottom:40px;">
+    <div style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:40px; flex-wrap:wrap;">
+      <div>
+        <img src="brand assets/newlogoo.png" alt="ReadySet1600" style="height:64px; margin-bottom:20px; border-radius:8px;" />
+        <p style="font-size:14px; color:rgba(255,255,255,0.4); margin:0 0 20px; line-height:1.7; max-width:280px;" data-i18n="footer.tagline">Expert SAT, SHSAT, ACT, and AMC tutoring for students who are serious about their scores and their futures.</p>
+        <div style="display:flex; gap:12px;">
+          <a href="https://www.instagram.com/readyset1600/" target="_blank" rel="noopener" aria-label="Instagram" style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.75" stroke-linecap="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <p style="margin:0 0 16px; font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:rgba(255,255,255,0.3);" data-i18n="footer.programs">Programs</p>
+        <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px;">
+          <li><a href="index.html#services" style="font-size:14px; color:rgba(255,255,255,0.5); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'" data-i18n="footer.sat">SAT Prep</a></li>
+          <li><a href="index.html#services" style="font-size:14px; color:rgba(255,255,255,0.5); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'" data-i18n="footer.shsat">SHSAT Prep</a></li>
+          <li><a href="index.html#services" style="font-size:14px; color:rgba(255,255,255,0.5); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'" data-i18n="footer.act">ACT Prep</a></li>
+          <li><a href="index.html#services" style="font-size:14px; color:rgba(255,255,255,0.5); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'" data-i18n="footer.amc">AMC Coaching</a></li>
+        </ul>
+      </div>
+      <div>
+        <p style="margin:0 0 16px; font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:rgba(255,255,255,0.3);" data-i18n="footer.company">Company</p>
+        <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px;">
+          <li><a href="index.html#results" style="font-size:14px; color:rgba(255,255,255,0.5); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'" data-i18n="footer.results">Results</a></li>
+          <li><a href="pricing.html" style="font-size:14px; color:#14B8A6; text-decoration:none;" data-i18n="footer.pricing">Pricing</a></li>
+          <li><a href="index.html#faq" style="font-size:14px; color:rgba(255,255,255,0.5); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'" data-i18n="footer.faq">FAQ</a></li>
+          <li><a href="index.html#contact" style="font-size:14px; color:rgba(255,255,255,0.5); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'" data-i18n="footer.contactlink">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <p style="margin:0 0 16px; font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:rgba(255,255,255,0.3);" data-i18n="footer.contact">Contact</p>
+        <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px;">
+          <li><a href="mailto:readyset1600@gmail.com" style="font-size:14px; color:rgba(255,255,255,0.5); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">readyset1600@gmail.com</a></li>
+          <li><a href="tel:+19144823605" style="font-size:14px; color:rgba(255,255,255,0.5); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">(914) 482-3605</a></li>
+          <li><span style="font-size:14px; color:rgba(255,255,255,0.5);" data-i18n="footer.location">New York City, NY</span></li>
+        </ul>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,0.06); margin-top:40px; padding-top:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+      <p style="margin:0; font-size:13px; color:rgba(255,255,255,0.25);" data-i18n="footer.copyright">© 2026 ReadySet1600. All rights reserved.</p>
+      <p style="margin:0; font-size:13px; color:rgba(255,255,255,0.25);" data-i18n="footer.tagline2">SAT · SHSAT · ACT · AMC</p>
+    </div>
+  </div>
+</footer>
+
+<!-- AUTH MODAL -->
+<div id="tutor-login-overlay" role="dialog" aria-modal="true" aria-label="Member Login">
+  <div id="tutor-login-card">
+    <button class="tutor-close-btn" onclick="closeTutorLogin()" aria-label="Close">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+      <div style="width:36px; height:36px; background:rgba(20,184,166,0.12); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#14B8A6;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <span style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.35); letter-spacing:0.08em; text-transform:uppercase; font-family:'DM Sans',sans-serif;">ReadySet1600</span>
+    </div>
+    <h2>Member Login</h2>
+    <div class="member-tabs">
+      <button class="member-tab active" id="tab-signin" onclick="switchMemberTab('signin')">Sign In</button>
+      <button class="member-tab" id="tab-signup" onclick="switchMemberTab('signup')">Sign Up</button>
+    </div>
+    <div id="form-signin">
+      <p>Sign in to your ReadySet1600 account.</p>
+      <input type="email" id="tutor-email" class="tutor-input" placeholder="Email" autocomplete="email" onkeydown="if(event.key==='Enter') document.getElementById('tutor-password').focus()" />
+      <input type="password" id="tutor-password" class="tutor-input" placeholder="Password" onkeydown="if(event.key==='Enter') tutorLogin()" autocomplete="current-password" />
+      <div id="tutor-login-error">Incorrect email or password.</div>
+      <button class="tutor-login-btn" id="tutor-login-btn" onclick="tutorLogin()">Sign In</button>
+    </div>
+    <div id="form-signup" style="display:none;">
+      <p>Create your student account.</p>
+      <input type="email" id="signup-email" class="tutor-input" placeholder="Email" autocomplete="email" />
+      <input type="password" id="signup-password" class="tutor-input" placeholder="Password" autocomplete="new-password" />
+      <input type="password" id="signup-confirm" class="tutor-input" placeholder="Confirm Password" autocomplete="new-password" />
+      <div id="signup-error"></div>
+      <button class="tutor-login-btn" id="signup-btn" onclick="tuteeSignUp()">Create Account</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+  // Nav scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.style.borderBottomColor = window.scrollY > 20 ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.07)';
+  }, { passive: true });
+
+  // Mobile menu
+  function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const open = document.getElementById('mob-icon-open');
+    const close = document.getElementById('mob-icon-close');
+    const isOpen = menu.classList.toggle('open');
+    open.style.display  = isOpen ? 'none' : '';
+    close.style.display = isOpen ? '' : 'none';
+  }
+  function closeMobileMenu() {
+    document.getElementById('mobile-menu').classList.remove('open');
+    document.getElementById('mob-icon-open').style.display  = '';
+    document.getElementById('mob-icon-close').style.display = 'none';
+  }
+
+  // Translations
+  const T = {
+    en: {
+      'nav.home':'Home','nav.services':'Services','nav.howItWorks':'How It Works','nav.results':'Results',
+      'nav.pricing':'Pricing','nav.faq':'FAQ','nav.about':'About','nav.cta':'Book Free Consult',
+      'pricing.tag':'Pricing','pricing.heading':'Transparent. Flexible. Results-Focused.',
+      'pricing.subtitle':'Every session is 1-on-1. The only choice is your tutor\'s experience level.',
+      'pricing.footer':'All programs begin with a free 30-minute diagnostic consultation. · Custom packages available for AMC & SHSAT.',
+      'starter.name':'Starter','starter.subtitle':'Pay per session',
+      'starter.desc':'Entry-level 1-on-1 sessions. Great for students just beginning their prep.',
+      'starter.li1':'1-on-1 private sessions','starter.li2':'Custom session plan',
+      'starter.li3':'24/7 tutor messaging','starter.li4':'Score guarantee','starter.cta':'Get Started',
+      'core.name':'Core','core.subtitle':'Pay per session',
+      'core.desc':'Flexible 1-on-1 sessions with our Core tutors. No commitment required.',
+      'core.li1':'1-on-1 private sessions','core.li2':'24/7 tutor messaging',
+      'core.li3':'Custom session plan','core.li4':'Score guarantee','core.cta':'Get Started',
+      'elite.name':'Elite','elite.subtitle':'Pay per session',
+      'elite.desc':'Our most experienced tutors. Ideal for students targeting top scores.',
+      'elite.li1':'1-on-1 private sessions','elite.li2':'24/7 tutor messaging',
+      'elite.li3':'Custom session plan','elite.li4':'Score guarantee','elite.cta':'Get Started',
+      'corepkg.name':'Core Package','corepkg.subtitle':'8 sessions · Core tutors',
+      'corepkg.desc':'8 focused sessions with a Core tutor, built around your target score.',
+      'corepkg.li1':'8 x 60-min 1-on-1 sessions','corepkg.li2':'Full diagnostic + custom plan',
+      'corepkg.li3':'Weekly progress reports','corepkg.li4':'Score increase guarantee',
+      'corepkg.cta':'Book This Package','corepkg.note':'Avg. improvement: +100 points',
+      'corepkg.save':'Save $30',
+      'elitepkg.badge':'Most Popular','elitepkg.name':'Elite Package','elitepkg.subtitle':'8 sessions · best value',
+      'elitepkg.desc':'Our best tutors, a full program, and a guarantee — for students who are serious about their score.',
+      'elitepkg.li1':'8 x 60-min 1-on-1 sessions','elitepkg.li2':'Full diagnostic + custom plan',
+      'elitepkg.li3':'Weekly progress reports','elitepkg.li4':'Score increase guarantee',
+      'elitepkg.cta':'Book This Package','elitepkg.note':'Avg. improvement: +130 points',
+      'elitepkg.save':'Save $50',
+      'per.session':'/session','per.8sessions':'/8 sessions',
+      'cta.heading':'Not sure which plan is right?',
+      'cta.sub':"Book a free 30-minute call. We'll tell you exactly what makes sense for your student.",
+      'cta.btn':'Book Free Consult',
+      'referral.heading':'Refer a Friend','referral.desc':'Know a student who could use a score boost? Share ReadySet1600 and both of you benefit.',
+      'referral.code':'Every enrolled student gets a personal referral code to share.',
+      'referral.session.label':'Book a session','referral.session.them':'They get 50% off a session','referral.session.you':'You get 50% off a session',
+      'referral.package.label':'Buy a package','referral.package.them':'They get $25 off','referral.package.you':'You get $50 credit',
+      'footer.tagline':"Expert SAT, SHSAT, ACT, and AMC tutoring for students who are serious about their scores and their futures.",
+      'footer.programs':'Programs','footer.sat':'SAT Prep','footer.shsat':'SHSAT Prep','footer.act':'ACT Prep','footer.amc':'AMC Coaching',
+      'footer.company':'Company','footer.results':'Results','footer.pricing':'Pricing','footer.faq':'FAQ','footer.contactlink':'Contact',
+      'footer.contact':'Contact','footer.location':'New York City, NY','footer.copyright':'© 2026 ReadySet1600. All rights reserved.','footer.tagline2':'SAT · SHSAT · ACT · AMC',
+    },
+    zh: {
+      'nav.home':'首页','nav.services':'服务','nav.howItWorks':'课程流程','nav.results':'成绩案例',
+      'nav.pricing':'价格','nav.faq':'常见问题','nav.about':'关于我们','nav.cta':'预约免费咨询',
+      'pricing.tag':'收费标准','pricing.heading':'透明。灵活。以结果为导向。',
+      'pricing.subtitle':'所有课程均为一对一授课。唯一的区别是导师的经验级别。',
+      'pricing.footer':'所有项目均以免费30分钟诊断咨询开始。· AMC和SHSAT可提供定制方案。',
+      'starter.name':'入门','starter.subtitle':'按课时付费',
+      'starter.desc':'入门级一对一课程，适合刚开始备考的学生。',
+      'starter.li1':'一对一私教课程','starter.li2':'个性化课程计划',
+      'starter.li3':'导师全天候消息支持','starter.li4':'成绩保证','starter.cta':'立即开始',
+      'core.name':'核心','core.subtitle':'按课时付费',
+      'core.desc':'与我们的核心导师进行灵活的一对一课程，无需承诺。',
+      'core.li1':'一对一私教课程','core.li2':'导师全天候消息支持',
+      'core.li3':'个性化课程计划','core.li4':'成绩保证','core.cta':'立即开始',
+      'elite.name':'精英','elite.subtitle':'按课时付费',
+      'elite.desc':'我们最顶尖的导师，专为冲击高分的学生。',
+      'elite.li1':'一对一私教课程','elite.li2':'导师全天候消息支持',
+      'elite.li3':'个性化课程计划','elite.li4':'成绩保证','elite.cta':'立即开始',
+      'corepkg.name':'核心套餐','corepkg.subtitle':'8节课 · 核心导师',
+      'corepkg.desc':'8节专注课程，由核心导师根据你的目标分数量身定制。',
+      'corepkg.li1':'8节60分钟一对一课程','corepkg.li2':'完整诊断 + 定制计划',
+      'corepkg.li3':'每周进度报告','corepkg.li4':'保证提分',
+      'corepkg.cta':'预约此套餐','corepkg.note':'平均提分：+100分',
+      'corepkg.save':'省$30',
+      'elitepkg.badge':'最受欢迎','elitepkg.name':'精英套餐','elitepkg.subtitle':'8节课 · 最优价值',
+      'elitepkg.desc':'最强导师、完整项目、成绩保证——专为认真备考的学生。',
+      'elitepkg.li1':'8节60分钟一对一课程','elitepkg.li2':'完整诊断 + 定制计划',
+      'elitepkg.li3':'每周进度报告','elitepkg.li4':'保证提分',
+      'elitepkg.cta':'预约此套餐','elitepkg.note':'平均提分：+130分',
+      'elitepkg.save':'省$50',
+      'per.session':'/课时','per.8sessions':'/8课时',
+      'cta.heading':'不确定哪个方案适合您？',
+      'cta.sub':'预约免费30分钟通话，我们将告诉您什么最适合您的孩子。',
+      'cta.btn':'预约免费咨询',
+      'referral.heading':'推荐好友','referral.desc':'认识需要提分的学生？分享ReadySet1600，双方共同受益。',
+      'referral.code':'每位在读学生都会获得专属推荐码。',
+      'referral.session.label':'预约单节课','referral.session.them':'他们享受一节课5折优惠','referral.session.you':'你享受一节课5折优惠',
+      'referral.package.label':'购买套餐','referral.package.them':'他们获得$25优惠','referral.package.you':'你获得$50抵扣',
+      'footer.tagline':'为认真对待成绩与未来的学生提供专业SAT、SHSAT、ACT和AMC辅导。',
+      'footer.programs':'课程','footer.sat':'SAT 备考','footer.shsat':'SHSAT 备考','footer.act':'ACT 备考','footer.amc':'AMC 辅导',
+      'footer.company':'关于我们','footer.results':'成绩案例','footer.pricing':'价格','footer.faq':'常见问题','footer.contactlink':'联系我们',
+      'footer.contact':'联系方式','footer.location':'纽约市，纽约州','footer.copyright':'© 2026 ReadySet1600. 保留所有权利。','footer.tagline2':'SAT · SHSAT · ACT · AMC',
+    },
+    ko: {
+      'nav.home':'홈','nav.services':'서비스','nav.howItWorks':'진행 방식','nav.results':'성과',
+      'nav.pricing':'가격','nav.faq':'FAQ','nav.about':'소개','nav.cta':'무료 상담 예약',
+      'pricing.tag':'가격','pricing.heading':'투명한. 유연한. 결과 중심의.',
+      'pricing.subtitle':'모든 수업은 1대1입니다. 유일한 차이는 튜터의 경험 수준입니다.',
+      'pricing.footer':'모든 프로그램은 무료 30분 진단 상담으로 시작됩니다. · AMC & SHSAT 맞춤 패키지도 제공합니다.',
+      'starter.name':'스타터','starter.subtitle':'세션별 결제',
+      'starter.desc':'초보자를 위한 입문 1대1 수업. 막 준비를 시작하는 학생에게 적합합니다.',
+      'starter.li1':'1대1 개인 세션','starter.li2':'맞춤 세션 계획',
+      'starter.li3':'튜터 24/7 메시지 지원','starter.li4':'점수 보장','starter.cta':'시작하기',
+      'core.name':'코어','core.subtitle':'세션별 결제',
+      'core.desc':'코어 튜터와 함께하는 유연한 1대1 수업. 약정 없음.',
+      'core.li1':'1대1 개인 세션','core.li2':'튜터 24/7 메시지 지원',
+      'core.li3':'맞춤 세션 계획','core.li4':'점수 보장','core.cta':'시작하기',
+      'elite.name':'엘리트','elite.subtitle':'세션별 결제',
+      'elite.desc':'최고 점수를 목표로 하는 학생을 위한 최상급 튜터.',
+      'elite.li1':'1대1 개인 세션','elite.li2':'튜터 24/7 메시지 지원',
+      'elite.li3':'맞춤 세션 계획','elite.li4':'점수 보장','elite.cta':'시작하기',
+      'corepkg.name':'코어 패키지','corepkg.subtitle':'8세션 · 코어 튜터',
+      'corepkg.desc':'코어 튜터와 함께 목표 점수 중심으로 설계된 8회 집중 수업.',
+      'corepkg.li1':'8회 60분 1대1 세션','corepkg.li2':'완전 진단 + 맞춤 계획',
+      'corepkg.li3':'주간 진도 보고서','corepkg.li4':'점수 향상 보장',
+      'corepkg.cta':'패키지 예약','corepkg.note':'평균 향상: +100점',
+      'corepkg.save':'$30 절약',
+      'elitepkg.badge':'가장 인기 있는','elitepkg.name':'엘리트 패키지','elitepkg.subtitle':'8세션 · 최고의 가성비',
+      'elitepkg.desc':'최고의 튜터, 완전한 프로그램, 보장 — 점수에 진지한 학생을 위해.',
+      'elitepkg.li1':'8회 60분 1대1 세션','elitepkg.li2':'완전 진단 + 맞춤 계획',
+      'elitepkg.li3':'주간 진도 보고서','elitepkg.li4':'점수 향상 보장',
+      'elitepkg.cta':'패키지 예약','elitepkg.note':'평균 향상: +130점',
+      'elitepkg.save':'$50 절약',
+      'per.session':'/세션','per.8sessions':'/8세션',
+      'cta.heading':'어떤 플랜이 맞는지 모르겠나요?',
+      'cta.sub':'무료 30분 통화를 예약하세요. 학생에게 맞는 방향을 정확히 안내해 드립니다.',
+      'cta.btn':'무료 상담 예약',
+      'referral.heading':'친구 추천','referral.desc':'점수 향상이 필요한 학생을 알고 계신가요? ReadySet1600을 공유하면 두 분 모두 혜택을 받습니다.',
+      'referral.code':'모든 등록 학생은 공유할 개인 추천 코드를 받습니다.',
+      'referral.session.label':'세션 예약','referral.session.them':'상대방도 세션 50% 할인','referral.session.you':'나도 세션 50% 할인',
+      'referral.package.label':'패키지 구매','referral.package.them':'상대방은 $25 할인','referral.package.you':'나는 $50 크레딧',
+      'footer.tagline':'점수와 미래에 진지한 학생들을 위한 전문 SAT, SHSAT, ACT, AMC 튜터링',
+      'footer.programs':'프로그램','footer.sat':'SAT 준비','footer.shsat':'SHSAT 준비','footer.act':'ACT 준비','footer.amc':'AMC 코칭',
+      'footer.company':'회사 소개','footer.results':'성과','footer.pricing':'가격','footer.faq':'FAQ','footer.contactlink':'문의하기',
+      'footer.contact':'연락처','footer.location':'뉴욕시, 뉴욕','footer.copyright':'© 2026 ReadySet1600. 모든 권리 보유.','footer.tagline2':'SAT · SHSAT · ACT · AMC',
+    }
+  };
+
+  let currentLang = localStorage.getItem('rs1600-lang') || 'en';
+
+  function setLang(lang) {
+    currentLang = lang;
+    localStorage.setItem('rs1600-lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      if (T[lang] && T[lang][key]) el.textContent = T[lang][key];
+    });
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : lang === 'ko' ? 'ko' : 'en';
+  }
+
+  // Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyDy-g_ihlNGF19FVZ_-ChX-LfMIAZFKvYM",
+    authDomain: "rs1600-faccd.firebaseapp.com",
+    projectId: "rs1600-faccd",
+    storageBucket: "rs1600-faccd.firebasestorage.app",
+    messagingSenderId: "669933046930",
+    appId: "1:669933046930:web:3179bd9fd14e3e2694ea4b"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+  auth.onAuthStateChanged(() => {
+    document.getElementById('auth-veil').style.opacity = '0';
+    setTimeout(() => document.getElementById('auth-veil').style.display = 'none', 200);
+  });
+
+  function switchMemberTab(tab) {
+    document.getElementById('form-signin').style.display = tab === 'signin' ? '' : 'none';
+    document.getElementById('form-signup').style.display = tab === 'signup' ? '' : 'none';
+    document.getElementById('tab-signin').classList.toggle('active', tab === 'signin');
+    document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+  }
+
+  function openTutorLogin(e) {
+    if (e) e.preventDefault();
+    document.getElementById('tutor-email').value = '';
+    document.getElementById('tutor-password').value = '';
+    document.getElementById('tutor-login-error').style.display = 'none';
+    switchMemberTab('signin');
+    document.getElementById('tutor-login-overlay').classList.add('active');
+    setTimeout(() => document.getElementById('tutor-email').focus(), 100);
+  }
+
+  function closeTutorLogin() {
+    document.getElementById('tutor-login-overlay').classList.remove('active');
+  }
+
+  async function tutorLogin() {
+    const email = document.getElementById('tutor-email').value.trim();
+    const password = document.getElementById('tutor-password').value;
+    const btn = document.getElementById('tutor-login-btn');
+    const errDiv = document.getElementById('tutor-login-error');
+    if (!email || !password) {
+      errDiv.style.display = 'block';
+      errDiv.textContent = 'Please enter email and password.';
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = 'Signing in…';
+    errDiv.style.display = 'none';
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+      window.location.href = 'index.html';
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'Sign In';
+      errDiv.style.display = 'block';
+      errDiv.textContent = 'Incorrect email or password.';
+    }
+  }
+
+  async function tuteeSignUp() {
+    window.location.href = 'index.html';
+  }
+
+  // Init
+  setLang(currentLang);
+</script>
+</body>
+</html>
