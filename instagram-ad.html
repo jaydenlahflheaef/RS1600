@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ReadySet1600 — Instagram Ad</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #05080f;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'Outfit', sans-serif;
+      padding: 40px 20px;
+      gap: 16px;
+    }
+
+    .browser-label {
+      color: rgba(255,255,255,0.35);
+      font-family: 'Outfit', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* ── The ad canvas: 1080×1080, scaled to fit viewport ── */
+    .ad-scale-wrapper {
+      width: min(90vw, 90vh, 700px);
+      aspect-ratio: 1 / 1;
+    }
+
+    .ad {
+      width: 1080px;
+      height: 1080px;
+      position: relative;
+      overflow: hidden;
+      background: #0B1728;
+      transform-origin: top left;
+    }
+
+    /* ── Background layers ── */
+    .bg-glow-1 {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 55% at 85% 10%, rgba(37,99,235,0.28) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 45% at 15% 90%, rgba(16,185,129,0.14) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 60% at 50% 50%, rgba(30,50,80,0.5) 0%, transparent 70%);
+    }
+
+    .bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(37,99,235,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(37,99,235,0.05) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 80%);
+    }
+
+    .bg-noise {
+      position: absolute;
+      inset: 0;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    /* Decorative arc */
+    .bg-arc {
+      position: absolute;
+      width: 900px;
+      height: 900px;
+      border-radius: 50%;
+      border: 1px solid rgba(37,99,235,0.12);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .bg-arc-2 {
+      position: absolute;
+      width: 700px;
+      height: 700px;
+      border-radius: 50%;
+      border: 1px solid rgba(37,99,235,0.08);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* ── Content ── */
+    .ad-inner {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 72px 80px 64px;
+    }
+
+    /* Top bar */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 64px;
+    }
+
+    .logo-lockup {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .logo-img {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      object-fit: cover;
+      filter: drop-shadow(0 0 16px rgba(37,99,235,0.5));
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .logo-wordmark {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 800;
+      font-size: 28px;
+      color: #fff;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .logo-wordmark span { color: #2563EB; }
+
+    .logo-tagline {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 500;
+      font-size: 13px;
+      color: rgba(255,255,255,0.45);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .top-badge {
+      background: rgba(37,99,235,0.15);
+      border: 1px solid rgba(37,99,235,0.3);
+      border-radius: 100px;
+      padding: 10px 24px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      color: #60a5fa;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* Hero headline */
+    .hero-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hero-columns {
+      display: flex;
+      align-items: stretch;
+      gap: 48px;
+      margin-bottom: 52px;
+      flex: 1;
+    }
+
+    .hero-left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero-right {
+      width: 340px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: stretch;
+    }
+
+    .pre-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      color: #10B981;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    .pre-label::before {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 2px;
+      background: #10B981;
+      border-radius: 2px;
+    }
+
+    .headline {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 800;
+      font-size: 80px;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: #fff;
+      margin-bottom: 36px;
+    }
+
+    .headline .blue { color: #2563EB; }
+    .headline .outline {
+      color: rgba(255,255,255,0.75);
+    }
+
+    .sub-copy {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 400;
+      font-size: 22px;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.6);
+      max-width: 520px;
+      margin-bottom: 32px;
+    }
+
+    /* Score transformation */
+    .score-row {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 56px;
+    }
+
+    .score-card {
+      background: rgba(22,34,54,0.85);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 20px;
+      padding: 28px 40px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+
+    .score-card.after {
+      border-color: rgba(37,99,235,0.25);
+      background: rgba(22,34,70,0.9);
+    }
+
+    .score-label {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 500;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 8px;
+    }
+
+    .score-number {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 800;
+      font-size: 52px;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    .score-card.before .score-number { color: rgba(255,255,255,0.5); }
+    .score-card.after .score-number { color: #2563EB; }
+
+    .score-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 32px;
+      gap: 8px;
+    }
+
+    .arrow-line {
+      width: 80px;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(37,99,235,0.3), #10B981);
+      border-radius: 2px;
+      position: relative;
+    }
+
+    .arrow-line::after {
+      content: '';
+      position: absolute;
+      right: -1px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+      border-left: 10px solid #10B981;
+    }
+
+    .delta-badge {
+      background: rgba(16,185,129,0.15);
+      border: 1px solid rgba(16,185,129,0.3);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      color: #10B981;
+    }
+
+    /* Bottom bar */
+    .bottom-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .social-proof {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .stars {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .star {
+      width: 24px;
+      height: 24px;
+      color: #F59E0B;
+    }
+
+    .proof-text {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 500;
+      font-size: 16px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .proof-text strong {
+      color: rgba(255,255,255,0.85);
+      font-weight: 700;
+    }
+
+    .cta-group {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 12px;
+    }
+
+    .cta-btn {
+      background: #2563EB;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      padding: 20px 48px;
+      border-radius: 14px;
+      text-decoration: none;
+      letter-spacing: -0.01em;
+      box-shadow:
+        0 4px 24px rgba(37,99,235,0.45),
+        0 1px 4px rgba(0,0,0,0.4);
+      display: inline-block;
+    }
+
+    /* ── Feature bullets ── */
+    .bullets {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .bullet-item {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      background: rgba(22,34,54,0.85);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      padding: 20px 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+
+    .bullet-check {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(37,99,235,0.15);
+      border: 1px solid rgba(37,99,235,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #2563EB;
+    }
+
+    .bullet-text {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 500;
+      font-size: 22px;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.3;
+    }
+
+    .cta-url {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.04em;
+    }
+
+    /* Decorative floating score pill */
+    .floating-pill {
+      position: absolute;
+      right: 88px;
+      top: 280px;
+      background: rgba(16,185,129,0.1);
+      border: 1px solid rgba(16,185,129,0.22);
+      border-radius: 20px;
+      padding: 24px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+    .pill-label {
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      color: #10B981;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .pill-value {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 800;
+      font-size: 36px;
+      color: #fff;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    .pill-sub {
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px;
+      color: rgba(255,255,255,0.45);
+    }
+
+    /* Decorative dots */
+    .dot-cluster {
+      position: absolute;
+      left: 60px;
+      bottom: 220px;
+      display: grid;
+      grid-template-columns: repeat(4, 10px);
+      gap: 10px;
+      opacity: 0.2;
+    }
+
+    .dot-cluster span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #2563EB;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <p class="browser-label">Instagram Post · 1080 × 1080 px · Preview scaled to fit</p>
+
+  <div class="ad-scale-wrapper">
+    <div class="ad" id="ad">
+
+      <!-- Background layers -->
+      <div class="bg-glow-1"></div>
+      <div class="bg-grid"></div>
+      <div class="bg-arc"></div>
+      <div class="bg-arc-2"></div>
+      <div class="bg-noise"></div>
+
+      <!-- Dot cluster -->
+      <div class="dot-cluster">
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+      </div>
+
+      <!-- Main content -->
+      <div class="ad-inner">
+
+        <!-- Top bar -->
+        <div class="top-bar">
+          <div class="logo-lockup">
+            <img class="logo-img" src="brand assets/newcirclelog.png" alt="ReadySet1600" />
+            <div class="logo-text">
+              <div class="logo-wordmark">ReadySet<span>1600</span></div>
+              <div class="logo-tagline">SAT · SHSAT · ACT · AMC</div>
+            </div>
+          </div>
+          <div class="top-badge">Free Consult</div>
+        </div>
+
+        <!-- Hero -->
+        <div class="hero-section">
+          <div class="hero-columns">
+            <div class="hero-left">
+              <div class="pre-label">Expert Tutoring · NYC</div>
+
+              <h1 class="headline">
+                Your<br />
+                <span class="blue">perfect</span><br />
+                <span class="outline">score.</span>
+              </h1>
+
+              <p class="sub-copy">
+                Personalized 1-on-1 tutoring from top scorers.
+                Custom study plans built around your weak spots.
+              </p>
+            </div>
+
+            <div class="hero-right">
+              <div class="bullets">
+                <div class="bullet-item">
+                  <div class="bullet-check">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <span class="bullet-text">Custom study plan from day 1</span>
+                </div>
+                <div class="bullet-item">
+                  <div class="bullet-check">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <span class="bullet-text">Live 1-on-1 sessions, your schedule</span>
+                </div>
+                <div class="bullet-item">
+                  <div class="bullet-check">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <span class="bullet-text">Session-by-session progress tracking</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Score transformation -->
+          <div class="score-row">
+            <div class="score-card before">
+              <div class="score-label">Before</div>
+              <div class="score-number">1370</div>
+            </div>
+
+            <div class="score-arrow">
+              <div class="arrow-line"></div>
+              <div class="delta-badge">+150 pts</div>
+            </div>
+
+            <div class="score-card after">
+              <div class="score-label">After</div>
+              <div class="score-number">1520</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom bar -->
+        <div class="bottom-bar">
+          <div class="social-proof">
+            <div class="stars">
+              <!-- 5 star SVGs -->
+              <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <div class="proof-text"><strong>100+ students tutored</strong> · Real results, guaranteed</div>
+          </div>
+
+          <div class="cta-group">
+            <a class="cta-btn" href="#">Book a Free Consult</a>
+            <span class="cta-url">readyset1600.com</span>
+          </div>
+        </div>
+
+      </div><!-- /ad-inner -->
+    </div><!-- /ad -->
+  </div>
+
+  <script>
+    // Scale the 1080×1080 ad to fit the wrapper div
+    function scaleAd() {
+      const wrapper = document.querySelector('.ad-scale-wrapper');
+      const ad = document.getElementById('ad');
+      const wrapperSize = wrapper.clientWidth;
+      const scale = wrapperSize / 1080;
+      ad.style.transform = `scale(${scale})`;
+      wrapper.style.height = wrapperSize + 'px';
+    }
+    scaleAd();
+    window.addEventListener('resize', scaleAd);
+  </script>
+</body>
+</html>

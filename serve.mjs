@@ -41,18 +41,34 @@ OUR TUTORS:
 - Cyrus Yau: Gymnastics team captain, badminton team starter, science olympiad & math team
 
 SERVICES & PRICING:
-1. Starter (1-on-1 Private): $35/session (was $50 — 30% off)
-   - Flexible scheduling, diagnostic assessment included, custom session plan
-2. 8-Week Intensive (Most Popular): $500/program (was $750 — 33% off)
-   - 16 x 60-min 1-on-1 sessions, full diagnostic + custom plan, weekly progress reports
-   - +100 point score GUARANTEE — if they don't hit +100 pts, we keep going at no extra cost
-   - Average improvement: +130 points in 8 weeks
-3. Small Group: $25/student/session (was $35 — 29% off)
-   - 2–4 students per session, 90-min structured sessions, collaborative problem-solving
+We have two tutor tiers — Core and Elite. All sessions are 1-on-1 (no group lessons).
+
+Core Tutors ($35/session):
+- Flexible pay-per-session, no commitment
+- Diagnostic assessment included, custom session plan
+- No score guarantee on single sessions
+
+Core Package ($250 for 8 sessions, saves $30):
+- 8 x 60-min 1-on-1 sessions
+- Full diagnostic + custom plan, weekly progress reports
+- Score increase guarantee — avg. improvement +100 points
+
+Elite Tutors ($50/session):
+- Our most experienced tutors, ideal for students targeting top scores
+- Flexible pay-per-session, no commitment
+- Diagnostic assessment included, custom session plan
+- No score guarantee on single sessions
+
+Elite Package — Most Popular ($350 for 8 sessions, saves $50):
+- 8 x 60-min 1-on-1 sessions with an Elite tutor
+- Full diagnostic + custom plan, weekly progress reports
+- Score increase guarantee — avg. improvement +130 points
+- Priority tutor + Slack access
 
 REFERRAL PROGRAM:
 - Every enrolled student gets a personal referral code
-- Both referrer and new student get 50% off a session (or $25/$50 off packages)
+- Book a session: both get 50% off a session
+- Buy a package: referred student gets $25 off, referrer gets $50 credit
 
 RESULTS:
 - 100+ students tutored
