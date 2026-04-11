@@ -135,19 +135,29 @@ const server = http.createServer((req, res) => {
 
   if (urlPath === '/') urlPath = '/index.html';
 
-  const filePath = path.join(__dirname, urlPath);
-  const ext = path.extname(filePath).toLowerCase();
-  const contentType = MIME[ext] || 'application/octet-stream';
+  const tryPaths = [
+    path.join(__dirname, urlPath),
+    // If no extension, try appending .html
+    ...(!path.extname(urlPath) ? [path.join(__dirname, urlPath + '.html')] : []),
+  ];
 
-  fs.readFile(filePath, (err, data) => {
-    if (err) {
-      res.writeHead(404, { 'Content-Type': 'text/plain' });
-      res.end('404 Not Found');
-      return;
-    }
-    res.writeHead(200, { 'Content-Type': contentType });
-    res.end(data);
-  });
+  const serveFile = (paths) => {
+    const filePath = paths[0];
+    fs.readFile(filePath, (err, data) => {
+      if (err) {
+        if (paths.length > 1) return serveFile(paths.slice(1));
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end('404 Not Found');
+        return;
+      }
+      const ext = path.extname(filePath).toLowerCase();
+      const contentType = MIME[ext] || 'application/octet-stream';
+      res.writeHead(200, { 'Content-Type': contentType });
+      res.end(data);
+    });
+  };
+
+  serveFile(tryPaths);
 });
 
 server.listen(PORT, () => {
