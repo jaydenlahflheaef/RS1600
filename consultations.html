@@ -280,6 +280,7 @@
   const db = firebase.firestore();
 
   let allConsultations = [];
+  let isCofounder = false;
 
   auth.onAuthStateChanged(async user => {
     if (!user) { window.location.href = 'index.html'; return; }
@@ -288,6 +289,11 @@
     const userDoc = await db.collection('users').doc(user.uid).get();
     const role = userDoc.exists ? userDoc.data().role : null;
     if (role === 'tutee') { window.location.href = 'index.html'; return; }
+
+    isCofounder = role === 'cofounder';
+
+    // Show/hide modal Done button based on role
+    document.getElementById('detail-done-btn').style.display = isCofounder ? '' : 'none';
 
     document.getElementById('auth-gate').style.display = 'none';
     document.getElementById('app').style.display = 'block';
@@ -388,7 +394,7 @@
         <td>${dash(c.currentScore)}</td>
         <td>${dash(c.targetScore)}</td>
         <td>${dash(c.referralCode)}</td>
-        <td onclick="event.stopPropagation()"><button class="done-btn" onclick="deleteConsultation('${c.id}')">Done</button></td>
+        <td onclick="event.stopPropagation()">${isCofounder ? `<button class="done-btn" onclick="deleteConsultation('${c.id}')">Done</button>` : ''}</td>
       </tr>`;
     }).join('');
   }

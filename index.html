@@ -3870,14 +3870,16 @@
     btn.textContent = 'Posting…';
     btn.disabled = true;
     try {
-      const createAssignment = functions.httpsCallable('createAssignment');
-      await createAssignment({
+      await db.collection('assignments').add({
         tuteeUid,
         tuteeEmail,
         tuteeName,
+        tutorUid: auth.currentUser.uid,
         title,
         description: document.getElementById('assign-desc').value.trim(),
         dueDate: document.getElementById('assign-due').value.trim(),
+        completed: false,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       });
       document.getElementById('assign-title').value = '';
       document.getElementById('assign-desc').value = '';
